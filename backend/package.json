@@ -1,0 +1,11 @@
+{
+  "name": "backendvacunassist",
+  "version": "1.0.0",
+  "description": "el mejor back",
+  "main": "index.js",
+  "scripts": {
+    "star": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cath,Lara,Leti",
+  "license": "ISC"
+}
