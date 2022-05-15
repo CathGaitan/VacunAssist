@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const router = express.Router(); 
 
-//Inicialization buen dia
+//Inicialization
 const app=express();
 
 //Settigs
