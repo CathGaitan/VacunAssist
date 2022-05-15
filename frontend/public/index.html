@@ -1,3 +1,5 @@
+<!-- ANTES DE QUE VEAN ESTO, LE FALTAN COSAS. MUCHAS. IMÁGENES, MÁS FORMAS Y LOS LINKS A OTROS LADOS
+PERO ES UN ESBOZO DE LO QUE HAY POR AHORA -->
 <!DOCTYPE html>
 <html lang="es">
 
@@ -14,13 +16,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- CSS -->
     <link href="../src/css/style.css" rel="stylesheet">
+
+    <!-- PEQUEÑO SCRIPT PARA EL MENU DE LOG IN -->
+    <script>
+        // Prevent dropdown menu from closing when click inside the form
+        $(document).on("click", ".navbar-right .dropdown-menu", function(e) {
+            e.stopPropagation();
+        });
+    </script>
+
 </head>
 
 <body>
     <!-- ======= NAV BAR ======= -->
-    <nav class="navbar navbar-inverse navbar-expand-xl navbar-dark">
+    <nav class="navbar navbar-default navbar-expand-lg navbar-light">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#"><i class="fa fa-cube"></i>Vacun<b>Assist</b></a>
+            <a class="navbar-brand" href="#">Vacun<b>Assist</b></a>
             <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
           <span class="navbar-toggler-icon"></span>
           <span class="icon-bar"></span>
@@ -30,35 +41,53 @@
         </div>
         <!-- Collection of nav links, forms, and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
-            <form class="navbar-form form-inline">
-                <div class="input-group search-box">
-                    <input type="text" id="search" class="form-control" placeholder="Search here...">
-                    <span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
-                </div>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#"><i class="fa fa-home"></i><span>Home</span></a></li>
-                <li><a href="#"><i class="fa fa-gears"></i><span>Projects</span></a></li>
-                <li><a href="#"><i class="fa fa-users"></i><span>Team</span></a></li>
-                <li><a href="#"><i class="fa fa-pie-chart"></i><span>Reports</span></a></li>
-                <li><a href="#"><i class="fa fa-briefcase"></i><span>Careers</span></a></li>
-                <li><a href="#"><i class="fa fa-envelope"></i><span>Messages</span></a></li>
-                <li><a href="#"><i class="fa fa-bell"></i><span>Notifications</span></a></li>
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> Antonio Moreno <b class="caret"></b></a>
+            <ul class="nav navbar-nav">
+                <li><a href="#">Inicio</a></li>
+                <!-- opcion eliminada para esta parte dónde no hay un usuario registrado -->
+                <!-- <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><b>Mis Turnos</b><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-user-o"></i> Profile</a></li>
-                        <li><a href="#"><i class="fa fa-calendar-o"></i> Calendar</a></li>
-                        <li><a href="#"><i class="fa fa-sliders"></i> Settings</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#"><i class="material-icons">&#xE8AC;</i> Logout</a></li>
+                        <li><a href="#">Consultar turnos</a></li>
+                        <li><a href="#">Turnos cancelados</a></li>
+                        <li><a href="#">Solicitar turno</a></li>
+                        <li><a href="#">d</a></li>
                     </ul>
+                </li>< -->
+                <li><a href="#">Sobre Nosotros</a></li>
+                <li><a href="#">Dudas Frecuentes</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Iniciar sesión</a>
+                    <ul class="dropdown-menu form-wrapper">
+                        <li>
+                            <form action="/examples/actions/confirmation.php" method="post">
+                                <p class="hint-text">Iniciar sesión</p>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="E-mail" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Contraseña" required="required">
+                                </div>
+                                <input type="submit" class="btn btn-primary btn-block" value="Iniciar sesión">
+                                <div class="form-footer">
+                                    <a href="#">¿Olvidaste tu contraseña?</a>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle get-started-btn mt-1 mb-1">Registrarse</a>
                 </li>
             </ul>
         </div>
     </nav>
+
+
+
     <!-- End nav bar -->
-    hola mundo? soy un body eeeh
+    hola mundo? soy un body eeeh<br> ANTES DE QUE VEAN ESTO, LE FALTAN COSAS. MUCHAS. IMÁGENES, MÁS FORMAS Y LOS LINKS A OTROS LADOS PERO ES UN ESBOZO DE LO QUE HAY POR AHORA
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
 </body>
