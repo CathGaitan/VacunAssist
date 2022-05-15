@@ -1,15 +1,17 @@
 const express = require('express');
 const morgan = require('morgan');
-const routerPersonUser = require('./modules/userPerson/routerPersonUser');
 
 //Inicialization
 const app=express();
+const routerPersonUser = require('./modules/userPerson/routerPersonUser');
+
 
 //Settigs
 app.set('port',5000); //definir puertos
 
 //Middlewares (funciones que se ejecutan que se envia una peticion al servidor)
 app.use(morgan('dev')); //muestra por consola las peticiones que van llegando
+app.use(express.json());
 app.use('/personUser',routerPersonUser);
 
 //Routes
