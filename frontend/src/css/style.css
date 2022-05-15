@@ -1,10 +1,41 @@
+/* -------------------------------------------------------------
+                    "variables"
+---------------------------------------------------------------*/
+
+:root {
+    --white: #fff;
+    --backgroundColor: #E6E6E6;
+    --gray: #cdcdcd;
+    --gray-dark: #c0c0c0;
+    --textColor: #000;
+    --accent: var(--acent);
+    --accent2: #A2CC84;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: "Segoe UI";
+    --font-family-monospace: "Liberation Mono", monospace;
+    --ms-text-size-adjust: 13px;
+}
+
+
 /*--------------------------------------------------------------
                             general
 --------------------------------------------------------------*/
 
 body {
-    font-family: 'Varela Round', sans-serif;
-    background-color: #fff;
+    font-family: var(--font-family-sans-serif);
+    background-color: var(--backgroundColor);
+    font-size: 16px;
+    /*16px = 1 rem*/
 }
 
 
@@ -15,19 +46,19 @@ body {
 .form-control {
     box-shadow: none;
     font-weight: normal;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .form-control:focus {
-    border-color: #5B7338;
+    border-color: var(--acent);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar {
-    background: #e9e9e9;
+    background: var(--gray);
     padding-left: 16px;
     padding-right: 16px;
-    border-bottom: 1px solid #d5d5d5;
+    border-bottom: 1px solid var(--gray-dark);
     border-radius: 0;
 }
 
@@ -50,7 +81,7 @@ body {
 
 .navbar .navbar-brand b {
     font-weight: bold;
-    color: #5B7338;
+    color: var(--accent);
 }
 
 .navbar .form-inline {
@@ -62,7 +93,7 @@ body {
 }
 
 .navbar .nav li a {
-    color: #000;
+    color: var(--textColor);
 }
 
 .search-box {
@@ -71,7 +102,7 @@ body {
 
 .search-box input {
     padding-right: 35px;
-    border-color: #A2CC84;
+    border-color: var(--gray-dark);
     border-radius: 4px !important;
     box-shadow: none
 }
@@ -88,8 +119,8 @@ body {
 }
 
 .search-box i {
-    color: #a0a5b1;
-    font-size: 19px;
+    color: #555;
+    font-size: 1.5rem;
 }
 
 .navbar .nav .btn-primary,
@@ -100,6 +131,7 @@ body {
     padding-bottom: 6px;
     vertical-align: middle;
     border: none;
+    font-size: 16px;
 }
 
 .navbar .nav .btn-primary:hover,
@@ -114,11 +146,11 @@ body {
 }
 
 .navbar ul li i {
-    font-size: 18px;
+    font-size: 1.5rem;
 }
 
 .navbar .dropdown-menu i {
-    font-size: 16px;
+    font-size: 1rem;
     min-width: 22px;
 }
 
@@ -135,7 +167,7 @@ body {
 
 .navbar ul.nav li.open>a.get-started-btn {
     color: #fff;
-    background: #5B7338 !important;
+    background: var(--accent) !important;
 }
 
 .navbar .dropdown-menu {
@@ -169,7 +201,7 @@ body {
 }
 
 .navbar .dropdown-menu.form-wrapper a {
-    color: #5B7338;
+    color: var(--acent);
     padding: 0 !important;
 }
 
@@ -198,15 +230,15 @@ body {
 }
 
 .navbar .social-btn .btn-primary {
-    background: #507cc0;
+    background: #5B7338;
 }
 
 .navbar .social-btn .btn-primary:hover {
-    background: #4676bd;
+    background: #5B7338;
 }
 
 .navbar .social-btn .btn-info {
-    background: #64ccf1;
+    background: #5B7338;
 }
 
 .navbar .social-btn .btn-info:hover {
