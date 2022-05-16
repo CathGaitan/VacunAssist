@@ -19,21 +19,14 @@ routerPersonUser.get('/showUser/:id',(req,res)=>{
     })
 });
 
-function getAllUsers(){
-    allUsers=[];
-    const sql = 'SELECT * FROM personuser'
+
+function isTheEmail(email){
+    const sql = `SELECT email FROM personuser WHERE email="${email}"`
     DB.query(sql,(error,results)=>{
         if(error) throw error;
-        if(results){
-            allUsers=results.slice();
-        } 
+        let resultsString=JSON.stringify(results);
+        return resultsString!=="[]"
     });
-    return allUsers;
-}
-
-function compareEmails(email){
-    allUsers=getAllUsers();
-    return allUsers.find(i => i.email==="email");
 }
 
 routerPersonUser.post('/addNewUser',(req,res)=>{
@@ -47,8 +40,9 @@ routerPersonUser.post('/addNewUser',(req,res)=>{
         email: req.body.email,
         contrasenia: req.body.contrasenia
     }
-    if(compareEmails(newUser.email)){
-        res.send('Ya existe un usuario con ese email')
+    console.log('booleano: ',isTheEmail(newUser.email));
+    if(isTheEmail(newUser.email)){
+        res.send('Ya existe un usuario con ese email');
     }
     if(((newUser.DNI>0)&&(newUser.DNI<9999999999))&&(newUser.DNI!=41777666)){ //Validacion del ""RENAPER""
         DB.query(sql,newUser,error=>{
