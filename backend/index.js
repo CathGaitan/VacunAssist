@@ -28,9 +28,9 @@ app.use(session({
     saveUninitialized: true
 }));
 
-routerPersonUser.get('/', (req, res)=> {
-    res.render('index', {msg: 'esto es un mensaje desde node'});
-})
+app.get('/', (req, res)=> {
+    res.render('index', {msg: 'esto es un mensaje desde node'});    
+});
 
 app.listen(5000, (req, res) => {
     console.log('SERVER RUNNING IN PORT 5000');
