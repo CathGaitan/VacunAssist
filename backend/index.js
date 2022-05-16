@@ -14,7 +14,7 @@ dotenv.config({path: './env/.env'});
 
 // el directorio public
 var path = require ('path');
-app.use('/resources', express.static(path.join(__dirname+'../public')));
+app.use('/resources', express.static(path.join(__dirname+'/views')));
 
 // establecemos el motor de plantillas ejs
 app.set('view engine', 'ejs');

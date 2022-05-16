@@ -20,9 +20,11 @@ body{
 .login-form input[type="password"],
 .login-form input[type="text"],
 .register-form input[type="password"],
-.register-form input[type="text"]{
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="date"]{
     width: 100%;
-    padding: 15px;
+    padding: 8px;
     border: 1px solid #ced4da;
     margin-bottom: 10px;
     box-sizing: border-box;
@@ -31,7 +33,7 @@ body{
 /*estilos botones*/
 .btn-login, .btn-cancel{
     width: 100%;
-    padding: 15px;
+    padding: 8px;
     background-color: #737473;
     border: 0;
     box-sizing: border-box;
@@ -43,7 +45,7 @@ body{
 
 .btn-register, .btn-save, .btn-cancel{
     width: 100%;
-    padding: 15px;
+    padding: 8px;
     background-color: #737473;
     border: 0;
     box-sizing: border-box;
