@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Registrarme en VacunAssist</title>
+</head>
+<body>
+    <div class="register-form">
+        <h2>Formulario de registro</h2>
+        <form action="register" method="post">
+            <label for="">Nombre</label>
+            <input type="text" name="name" required>
+
+            <label for="">Apellido</label>
+            <input type="text" name="lastname" required>
+
+            <label for="">Email</label>
+            <input type="email" name="email" required>
+
+            <label for="">Contraseña</label>
+            <input type="password" name="password" required>
+
+            <label for="">DNI</label>
+            <input type="text" name="DNI" required>
+
+            <label for="">Fecha de nacimiento</label>
+            <input type="date" name="dateofbirth" required>
+
+            <label for="">Estas dentro del grupo de personas de riesgo?</label>
+            <select type="menu" name="risk" required>
+                <option value="si">Si</option>
+                <option value="no">No</option>
+            </select>
+
+
+
+            <div style="display: inline;">
+                <input type="submit" class="btn-save" value="Guardar"><a href="/" class="btn-cancel">Volver al inicio</a>
+            </div>
+        </form>
+    </div>
+    
+</body>
+</html>

@@ -1,324 +1,73 @@
-/* -------------------------------------------------------------
-                    "variables"
----------------------------------------------------------------*/
-
-:root {
-    --white: #fff;
-    --backgroundColor: #E6E6E6;
-    --gray: #cdcdcd;
-    --gray-dark: #c0c0c0;
-    --textColor: #000;
-    --accent: var(--acent);
-    --accent2: #A2CC84;
-    --success: #28a745;
-    --info: #17a2b8;
-    --warning: #ffc107;
-    --danger: #dc3545;
-    --light: #f8f9fa;
-    --dark: #343a40;
-    --breakpoint-xs: 0;
-    --breakpoint-sm: 576px;
-    --breakpoint-md: 768px;
-    --breakpoint-lg: 992px;
-    --breakpoint-xl: 1200px;
-    --font-family-sans-serif: "Segoe UI";
-    --font-family-monospace: "Liberation Mono", monospace;
-    --ms-text-size-adjust: 13px;
+body{
+    background-color: #ADDFAD;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin:auto;
+    text-align: center;
 }
 
-
-/*--------------------------------------------------------------
-                            general
---------------------------------------------------------------*/
-
-body {
-    font-family: var(--font-family-sans-serif);
-    background-color: var(--backgroundColor);
-    font-size: 16px;
-    /*16px = 1 rem*/
+.login-form, .contenedor, .register-form{
+    width: 300px;
+    margin:0 auto;
 }
 
-
-/*--------------------------------------------------------------
-                            nav bar
---------------------------------------------------------------*/
-
-.form-control {
-    box-shadow: none;
-    font-weight: normal;
-    font-size: 16px;
+.login-form h1, .register-form h1 {
+    text-align: center;
+    color: #ADDFAD;
+    font-size: 28px;
+    padding: 70px 0 10px 0;
 }
 
-.form-control:focus {
-    border-color: var(--acent);
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+.login-form input[type="password"],
+.login-form input[type="text"],
+.register-form input[type="password"],
+.register-form input[type="text"]{
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
-.navbar {
-    background: var(--gray);
-    padding-left: 16px;
-    padding-right: 16px;
-    border-bottom: 1px solid var(--gray-dark);
-    border-radius: 0;
-}
-
-.nav img {
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    margin: -8px 0;
-    float: left;
-    margin-right: 10px;
-}
-
-.navbar .navbar-brand,
-.navbar .navbar-brand:hover,
-.navbar .navbar-brand:focus {
-    padding-left: 0;
-    font-size: 20px;
-    padding-right: 50px;
-}
-
-.navbar .navbar-brand b {
+/*estilos botones*/
+.btn-login, .btn-cancel{
+    width: 100%;
+    padding: 15px;
+    background-color: #737473;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
     font-weight: bold;
-    color: var(--accent);
+    font-size: large;
+    color: #ffffff;
 }
 
-.navbar .form-inline {
-    display: inline-block;
-}
-
-.navbar .nav li {
-    position: relative;
-}
-
-.navbar .nav li a {
-    color: var(--textColor);
-}
-
-.search-box {
-    position: relative;
-}
-
-.search-box input {
-    padding-right: 35px;
-    border-color: var(--gray-dark);
-    border-radius: 4px !important;
-    box-shadow: none
-}
-
-.search-box .input-group-addon {
-    min-width: 35px;
-    border: none;
-    background: transparent;
-    position: absolute;
-    right: 0;
-    z-index: 9;
-    padding: 7px;
-    height: 100%;
-}
-
-.search-box i {
-    color: #555;
-    font-size: 1.5rem;
-}
-
-.navbar .nav .btn-primary,
-.navbar .nav .btn-primary:active {
-    color: #fff;
-    background: #5B7338;
-    padding-top: 8px;
-    padding-bottom: 6px;
-    vertical-align: middle;
-    border: none;
-    font-size: 16px;
-}
-
-.navbar .nav .btn-primary:hover,
-.navbar .nav .btn-primary:focus {
-    color: #fff;
-    outline: none;
-    background: #5B7338;
-}
-
-.navbar .navbar-right li:first-child a {
-    padding-right: 30px;
-}
-
-.navbar ul li i {
-    font-size: 1.5rem;
-}
-
-.navbar .dropdown-menu i {
-    font-size: 1rem;
-    min-width: 22px;
-}
-
-.navbar ul.nav li.active a,
-.navbar ul.nav li.open>a {
-    background: transparent !important;
-}
-
-.navbar .nav .get-started-btn {
-    min-width: 120px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-}
-
-.navbar ul.nav li.open>a.get-started-btn {
-    color: #fff;
-    background: var(--accent) !important;
-}
-
-.navbar .dropdown-menu {
-    border-radius: 1px;
-    border-color: #E6E6E6;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
-}
-
-.navbar .nav .dropdown-menu li {
-    color: #999;
-    font-weight: normal;
-}
-
-.navbar .nav .dropdown-menu li a,
-.navbar .nav .dropdown-menu li a:hover,
-.navbar .nav .dropdown-menu li a:focus {
-    padding: 8px 20px;
-    line-height: normal;
-}
-
-.navbar .navbar-form {
-    border: none;
-}
-
-.navbar .dropdown-menu.form-wrapper {
-    width: 280px;
-    padding: 20px;
-    left: auto;
-    right: 0;
-    font-size: 14px;
-}
-
-.navbar .dropdown-menu.form-wrapper a {
-    color: var(--acent);
-    padding: 0 !important;
-}
-
-.navbar .dropdown-menu.form-wrapper a:hover {
-    text-decoration: underline;
-}
-
-.navbar .form-wrapper .hint-text {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 13px;
-}
-
-.navbar .form-wrapper .social-btn .btn,
-.navbar .form-wrapper .social-btn .btn:hover {
-    color: #fff;
-    margin: 0;
-    padding: 0 !important;
-    font-size: 13px;
-    border: none;
-    transition: all 0.4s;
-    text-align: center;
-    line-height: 34px;
-    width: 47%;
+.btn-register, .btn-save, .btn-cancel{
+    width: 100%;
+    padding: 15px;
+    background-color: #737473;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: large;
+    color: #ffffff;
+    margin-top: 20px;
+    /*apariencia de boton*/
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
     text-decoration: none;
+}  
+
+.btn-register:hover, .btn-register:active, .btn-save:hover, .btn-save:active{
+    color: #ffffff;
+    background-color: #414241;
+    border-color: #414241;
 }
 
-.navbar .social-btn .btn-primary {
-    background: #5B7338;
+.btn-register:focus, .btn-save:focus{
+    box-shadow: 0 0 0 3px #ADDFAD;
 }
 
-.navbar .social-btn .btn-primary:hover {
-    background: #5B7338;
-}
 
-.navbar .social-btn .btn-info {
-    background: #5B7338;
-}
 
-.navbar .social-btn .btn-info:hover {
-    background: #A2CC84;
-}
-
-.navbar .social-btn .btn i {
-    margin-right: 5px;
-    font-size: 16px;
-    position: relative;
-    top: 2px;
-}
-
-.navbar .form-wrapper .form-footer {
-    text-align: center;
-    padding-top: 10px;
-    font-size: 13px;
-}
-
-.navbar .form-wrapper .form-footer a:hover {
-    text-decoration: underline;
-}
-
-.navbar .form-wrapper .checkbox-inline input {
-    margin-top: 3px;
-}
-
-.or-seperator {
-    margin-top: 32px;
-    text-align: center;
-    border-top: 1px solid #e6e6e6;
-}
-
-.or-seperator b {
-    color: #666;
-    padding: 0 8px;
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
-    text-align: center;
-    line-height: 26px;
-    background: #fff;
-    display: inline-block;
-    border: 1px solid #E6E6E6;
-    border-radius: 50%;
-    position: relative;
-    top: -15px;
-    z-index: 1;
-}
-
-.navbar .checkbox-inline {
-    font-size: 13px;
-}
-
-.navbar .navbar-right .dropdown-toggle::after {
-    display: none;
-}
-
-@media (min-width: 1200px) {
-    .form-inline .input-group {
-        width: 300px;
-        margin-left: 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar .dropdown-menu.form-wrapper {
-        width: 100%;
-        padding: 10px 15px;
-        background: transparent;
-        border: none;
-    }
-    .navbar .form-inline {
-        display: block;
-    }
-    .navbar .input-group {
-        width: 100%;
-    }
-    .navbar .nav .btn-primary,
-    .navbar .nav .btn-primary:active {
-        display: block;
-    }
-}

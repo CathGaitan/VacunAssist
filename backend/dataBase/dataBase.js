@@ -1,13 +1,13 @@
-const mysql=require('mysql');
-const {database}= require('./keys');
-
-const connection = mysql.createConnection(database); //conexion con la base de datos
-
-connection.connect((error)=>{
-    if(error){
-        if(error) throw error;
-    }
-    console.log('DB is connected');
+const mysql = require ('mysql');
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 });
 
-module.exports=connection;
+connection.connect((error)=> {
+    if (error) throw error;
+    console.log('Conectado a la base de datos!');
+});
+module.exports = connection;

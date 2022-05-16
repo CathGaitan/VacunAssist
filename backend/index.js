@@ -1,28 +1,40 @@
+const exp = require('constants');
 const express = require('express');
-const morgan = require('morgan');
-
-//Inicialization
-const app=express();
+const app = express();
 const routerPersonUser = require('./modules/userPerson/routerPersonUser');
-
-
-//Settigs
-app.set('port',5000); //definir puertos
-
-//Middlewares (funciones que se ejecutan que se envia una peticion al servidor)
-app.use(morgan('dev')); //muestra por consola las peticiones que van llegando
-app.use(express.json());
 app.use('/personUser',routerPersonUser);
 
-//Routes
-app.get('/',(req,res)=>{ //puedo tenerlo en otro archivo e importarlo
-    res.send('esto anda, creo');
-});
+// seteamos url encoded para caputar los datos del formulario
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
-//Start the server
-app.listen(app.get('port'),()=>{ //se ejecuta al iniciar el server
-    console.log('Server on port: ',app.get('port')); 
-}); 
+// invocamos a dotenv
+const dotenv = require('dotenv');
+dotenv.config({path: './env/.env'});
+
+// el directorio public
+app.use('/resources', express.static('public'));
+app.use('/resources', express.static(__dirname + 'public'));
+
+// establecemos el motor de plantillas ejs
+app.set('view engine', 'ejs');
+
+
+// variables de session
+const session = require ('express-session');
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+routerPersonUser.get('/', (req, res)=> {
+    res.render('index', {msg: 'esto es un mensaje desde node'});
+})
+
+app.listen(5000, (req, res) => {
+    console.log('SERVER RUNNING IN PORT 5000');
+});
 
 
 
