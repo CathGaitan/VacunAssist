@@ -1,6 +1,11 @@
 const express = require('express');
 const routerPersonUser = express.Router();
 const DB = require('../../dataBase/dataBase');
+const bcryptjs = require('bcryptjs');
+const bp = require('body-parser')
+routerPersonUser.use(bp.json())
+routerPersonUser.use(bp.urlencoded({ extended: true }))
+
 
 //estableciendo rutas
 routerPersonUser.get('/login', (req, res)=> {
@@ -13,6 +18,7 @@ routerPersonUser.get('/register', (req, res)=> {
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
     let passwordHash = await bcryptjs.hash(req.body.password, 8);
+    console.log("pass: ",req.body);
     let user = {
         email:req.body.email, 
         name:req.body.name, 
@@ -25,6 +31,7 @@ routerPersonUser.post('/register', async (req, res)=>{
     if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
         DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
             if (error){
+                console.log(error);
                 if (error.code == 'ER_DUP_ENTRY'){
                     res.send('EMAIL EXISTENTE') 
                 }
