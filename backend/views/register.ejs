@@ -41,6 +41,22 @@
                 <input type="submit" class="btn-save" value="Guardar"><a href="/" class="btn-cancel">Volver al inicio</a>
             </div>
         </form>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <% if (typeof alert != "undefined")  { %>
+     <script>
+     Swal.fire({
+       title:'<%= alertTitle %>',
+       text:'<%= alertMessage %>',
+       icon:'<%= alertIcon %>',
+       showConfirmButton: '<%= showConfirmButton %>',
+       timer: 1500
+     }).then(()=>{
+       window.location='/<%= ruta %>'
+     })
+     </script>
+    <% } %>
+    
     </div>
     
 </body>

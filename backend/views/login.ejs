@@ -11,12 +11,28 @@
     <div class="login-form"> 
         <h2>Iniciar sesion en VacunAssist</h2>
         <form action="auth" method="POST">
-            <input type="text" name="email" id="email" placeholder="Email" required>
-            <input type="password" name="pass" id="pass" placeholder="Contraseña" required>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="password" name="password" id="password" placeholder="Contraseña" required>
             <input type="submit" class="btn-login" value="Iniciar Sesion"> 
         </form>
         <a href="register" class="btn-register">Registrarme</a>
         <a href="/" class="btn-cancel">Volver al inicio</a>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+            <script>
+            Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: '<%= showConfirmButton %>',
+            timer: 1500
+            }).then(()=>{
+            window.location='/<%= ruta %>'
+            })
+            </script>
+        <% } %>
     </div>
 </body>
 </html>
