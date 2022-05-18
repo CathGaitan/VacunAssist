@@ -51,43 +51,20 @@ routerPersonUser.post('/register', async (req, res)=>{
     }
 });
 
-// autenticacion
-routerPersonUser.post('/auth', async (req, res)=> {
-	const email = req.body.email;
-	const password = req.body.password;    
+//autenticacion
+routerPersonUser.post('/auth', async (req, res)=>{
+    const email = req.body.email;
+    const password = req.body.password;
     let passwordHash = await bcryptjs.hash(password, 8);
-	if (email && password) {
-		DB.query('SELECT * FROM users WHERE personuser = ?', [email], async (error, results, fields)=> {
-			if( results.length == 0 || !(await bcryptjs.compare(password, results[0].password)) ) {    
-				res.render('login', {
-                        alert: true,
-                        alertTitle: "Error",
-                        alertMessage: "USUARIO y/o PASSWORD incorrectas",
-                        alertIcon:'error',
-                        showConfirmButton: true,
-                        timer: false,
-                        ruta: 'login'    
-                    });	
-			} else {         
-				//creamos una var de session y le asignamos true si INICIO SESSION       
-				req.session.loggedin = true;                
-				req.session.name = results[0].name;
-				res.render('login', {
-					alert: true,
-					alertTitle: "Conexión exitosa",
-					alertMessage: "¡LOGIN CORRECTO!",
-					alertIcon:'success',
-					showConfirmButton: false,
-					timer: 1500,
-					ruta: ''
-				});        			
-			}			
-			res.end();
-		});
-	} else {	
-		res.send('Please enter user and Password!');
-		res.end();
-	}
-});
+    if (email && password){
+        DB.query('SELECT * FROM personuser WHERE email ?', email, async (error, results)=>{
+            if (results.length == 0 || !(await bcryptjs.compare(password, results[0].password))){
+                res.send('usuario o contrasenia incorrecta')
+            } else {
+                res.send('login correcto')
+            }
+        });
+    }
+})
 
 module.exports=routerPersonUser;
