@@ -6,6 +6,13 @@ const bp = require('body-parser')
 routerPersonUser.use(bp.json())
 routerPersonUser.use(bp.urlencoded({ extended: true }))
 
+//7- variables de session
+const session = require('express-session');
+routerPersonUser.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 
 //estableciendo rutas
 routerPersonUser.get('/login', (req, res)=> {
@@ -14,6 +21,7 @@ routerPersonUser.get('/login', (req, res)=> {
 routerPersonUser.get('/register', (req, res)=> {
     res.render('register');
 })
+
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -67,12 +75,52 @@ routerPersonUser.post('/auth', async (req, res)=>{
                     showConfirmButton: true,
                     timer: false,
                     ruta: 'personUser/login'    
-                });
-            } else {
-                res.send('login correcto')
+                }); 
+            } else { //login exitoso
+               //creamos una var de session y le asignamos true si INICIO SESSION       
+				req.session.loggedin = true;                
+				req.session.name = results[0].name;
+				res.render('login', {
+					alert: true,
+					alertTitle: "Conexión exitosa",
+					alertMessage: "¡LOGIN CORRECTO!",
+					alertIcon:'success',
+					showConfirmButton: false,
+					timer: 1500,
+					ruta: 'personUser/dashboard'
+				});       
             }
         });
     }
 })
+
+//metodo todo para controlar que esta auth en todas las páginas
+routerPersonUser.get('/dashboard', (req, res)=> {
+	if (req.session.loggedin) {
+		res.render('dashboard',{
+			login: true,
+			name: req.session.name			
+		});		
+	} else {
+		res.render('dashboard',{
+			login:false,
+			name:'Debe iniciar sesión',			
+		});				
+	}
+	res.end();
+});
+ //Logout: destruye la sesión.
+routerPersonUser.get('/logout', function (req, res) {
+	req.session.destroy(() => {
+	  res.redirect('/') // siempre se ejecutará después de que se destruya la sesión
+	})
+});
+
+//función para limpiar la caché luego del logout
+routerPersonUser.use(function(req, res, next) {
+    if (!req.user)
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    next();
+});
 
 module.exports=routerPersonUser;
