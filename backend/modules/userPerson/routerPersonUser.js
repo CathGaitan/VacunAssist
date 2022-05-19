@@ -33,7 +33,8 @@ routerPersonUser.post('/register', async (req, res)=>{
         password: passwordHash,
         DNI: req.body.DNI,
         dateofbirth: req.body.dateofbirth,
-        risk: req.body.risk
+        risk: req.body.risk,
+        zone: req.body.zone
     }
     if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
         DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
@@ -121,6 +122,11 @@ routerPersonUser.use(function(req, res, next) {
     if (!req.user)
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
+});
+
+routerPersonUser.post('/infoCovid', async(req,res)=>{
+
+
 });
 
 module.exports=routerPersonUser;
