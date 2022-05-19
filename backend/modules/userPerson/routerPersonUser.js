@@ -37,7 +37,7 @@ routerPersonUser.post('/register', async (req, res)=>{
             }else{
                 res.render('register', { //animacion de registro exitoso
                     alert: true,
-                    alertTitle: "Registration",
+                    alertTitle: "Registro",
                     alertMessage: "Registro exitoso!",
                     alertIcon:'success',
                     showConfirmButton: false,
@@ -57,9 +57,17 @@ routerPersonUser.post('/auth', async (req, res)=>{
     const password = req.body.password;
     let passwordHash = await bcryptjs.hash(password, 8);
     if (email && password){
-        DB.query('SELECT * FROM personuser WHERE email ?', email, async (error, results)=>{
+        DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
             if (results.length == 0 || !(await bcryptjs.compare(password, results[0].password))){
-                res.send('usuario o contrasenia incorrecta')
+                res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Email y/o contrasenia incorrectas",
+                    alertIcon:'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'personUser/login'    
+                });
             } else {
                 res.send('login correcto')
             }
