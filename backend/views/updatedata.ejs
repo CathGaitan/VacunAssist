@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <title>VacunAssist: Actualiza tus datos</title>
+</head>
+<body>
+    <div class="update-form">
+        <h2>Actualiza tus datos</h2>
+        <form action="updatedata" method="post">
+            <label for="">Nombre</label>
+            <input type="text" name="name" >
+            <br>
+            <label for="">Apellido</label>
+            <input type="text" name="lastname" >
+            <br>
+            <label for="">Contraseña</label>
+            <input type="password" name="password" >
+            <br>
+            <label for="">Zona de vacunatorio</label>
+            <br>
+
+
+            <div style="display: inline;">
+                <input type="submit" class="btn-save" value="Guardar datos"><a href="/personUser/dashboard" class="btn-cancel">Volver al inicio</a>
+            </div>
+        </form>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <% if (typeof alert != "undefined")  { %>
+     <script>
+     Swal.fire({
+       title:'<%= alertTitle %>',
+       text:'<%= alertMessage %>',
+       icon:'<%= alertIcon %>',
+       showConfirmButton: '<%= showConfirmButton %>',
+       timer: false
+     }).then(()=>{
+       window.location='/<%= ruta %>'
+     })
+     </script>
+    <% } %>
+    
+    </div>
+    
+</body>
+</html>

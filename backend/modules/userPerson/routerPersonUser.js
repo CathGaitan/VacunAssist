@@ -21,6 +21,9 @@ routerPersonUser.get('/login', (req, res)=> {
 routerPersonUser.get('/register', (req, res)=> {
     res.render('register');
 })
+routerPersonUser.get('/updatedata', (req, res)=>{
+    res.render('updatedata')
+})
 
 
 // registracion
@@ -79,7 +82,7 @@ routerPersonUser.post('/auth', async (req, res)=>{
             } else { //login exitoso
                //creamos una var de session y le asignamos true si INICIO SESSION       
 				req.session.loggedin = true;                
-				req.session.name = results[0].name;
+				req.session.name = results[0].email;
 				res.render('login', {
 					alert: true,
 					alertTitle: "Conexión exitosa",
@@ -93,6 +96,102 @@ routerPersonUser.post('/auth', async (req, res)=>{
         });
     }
 })
+
+//actualizar datos personales
+routerPersonUser.post('/updatedata', async (req, res)=>{
+    let newname;
+    let newlastname;
+    let newpassword;
+    let newdateofbirth;
+    let newdni;
+    let newrisk;
+    const email= req.session.name;
+    if (req.body.name){ 
+        newname= req.body.name;
+        DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+    if (req.body.lastname){
+        newlastname= req.body.lastname;
+        DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+    if (req.body.password){
+        newHasshedPassword=  await bcryptjs.hash(req.body.password, 8);
+        DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+    if (req.body.dateofbirth){
+        newdateofbirth= req.body.dateofbirth;
+        DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [newdateofbirth, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+    if (req.body.DNI){
+        newdni= req.body.DNI;
+        DB.query('UPDATE personuser SET DNI = ? WHERE email = ?', [newdni, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+    if (req.body.risk){
+        newrisk= req.body.risk;
+        console.log(risk);
+        DB.query('UPDATE risk SET dateofbirth = ? WHERE email = ?', [newrisk, email], async (error, results)=>{
+            res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });       
+        })
+    }
+});
 
 //metodo todo para controlar que esta auth en todas las páginas
 routerPersonUser.get('/dashboard', (req, res)=> {
