@@ -42,7 +42,7 @@ routerPersonUser.post('/register', async (req, res)=>{
                     alertIcon:'success',
                     showConfirmButton: false,
                     timer: 2000,
-                    ruta: ''
+                    ruta: '' //----------------- aca redirigis a cargar informacion
                 });
             }
         });
