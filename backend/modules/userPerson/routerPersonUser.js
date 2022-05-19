@@ -148,34 +148,6 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
             });       
         })
     }
-    if (req.body.dateofbirth){
-        newdateofbirth= req.body.dateofbirth;
-        DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [newdateofbirth, email], async (error, results)=>{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
-    if (req.body.DNI){
-        newdni= req.body.DNI;
-        DB.query('UPDATE personuser SET DNI = ? WHERE email = ?', [newdni, email], async (error, results)=>{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
     if (req.body.risk){
         newrisk= req.body.risk;
         console.log(risk);
