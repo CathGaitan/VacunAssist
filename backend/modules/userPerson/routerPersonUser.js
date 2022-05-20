@@ -165,25 +165,26 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     }
 });
 
+const formatDate = (date)=>{
+    let formatted_date = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+    return formatted_date;
+}
+
+
 //ver datos personales
-routerPersonUser.post('/viewdata', async (req, res)=>{
+routerPersonUser.get('/listado',async(req, res)=>{
     const email= req.session.name;
-    console.log('entraaaaaa')
-    DB.query('SELECT * FROM personuser WHERE email = ?', email, async(error, results)=>{
-        console.log(results[0].name)
-        req.body.name= results[0].name;
-        req.body.lastname= results[0].lastname;
-        req.body.email= results[0].email;
-        req.body.DNI= results[0].DNI;
-        req.body.zone= results.zone;
-        if (results[0].risk == 0){
-            req.body.risk= 'No'
-        }else{
-            req.body.risk='Si'
-        }
-        
+    DB.query('SELECT * FROM personuser WHERE email = ?',email,async (error, results)=>{
+        console.log(results);
+        if(results[0].risk==0) results[0].risk="No"
+        else results[0].risk="Si";
+        results[0].dateofbirth=formatDate(results[0].dateofbirth);
+        res.render('viewdata',{
+            personuserdata:results
+        });
     });
 });
+
 
 //metodo todo para controlar que esta auth en todas las páginas
 routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard

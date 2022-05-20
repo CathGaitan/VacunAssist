@@ -5,22 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VacunAssist: mis datos</title>
-    <h1>Mis datos</h1>
-    <label for="">Nombre: </label> <label name="name"></label>
-    <br>
-    <label for="">Apellido: </label> <label name="lastname"></label>
-    <br>
-    <label for="">Email: </label> <label name="email"></label>
-    <br>
-    <label for="">DNI: </label> <label name="DNI"></label>
-    <br>
-    <label for="">Fecha de nacimiento: </label> <label name="dateofbirth"></label>
-    <br>
-    <label for="">Zona: </label> <label name="zone"></label>
-    <br>
-    <a href="updatedata" class="">Actualizar mis datos</a>
 </head>
 <body>
-    
+    <table border="1">
+        <tr>
+          <th>nombre</th>
+          <th>apellido</th>
+          <th>email</th>
+          <th>DNI</th>
+          <th>Zona elegida para el vacunatorio</th>
+          <th>Fecha nacimiento</th>
+          <th>riesgo</th>
+        </tr>
+        <tr>
+            <td><%= personuserdata[0].name %></td>
+            <td><%= personuserdata[0].lastname %></td>
+            <td><%= personuserdata[0].email %></td>
+            <td><%= personuserdata[0].DNI %></td>
+            <td><%= personuserdata[0].zone %></td> 
+            <td><%= personuserdata[0].dateofbirth %></td>  
+            <td><%= personuserdata[0].risk %></td>
+        </tr>
+      </table>
+      <a href="/personUser/dashboard">Retornar</a>
 </body>
 </html>
