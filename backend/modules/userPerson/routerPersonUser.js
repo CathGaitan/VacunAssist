@@ -230,4 +230,9 @@ routerPersonUser.use(function(req, res, next) {
     next();
 });
 
+routerPersonUser.post('/infoCovid', async(req,res)=>{
+
+
+});
+
 module.exports=routerPersonUser;

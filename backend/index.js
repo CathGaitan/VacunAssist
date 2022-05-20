@@ -1,3 +1,5 @@
+// invocamos a dotenv
+require('dotenv').config();
 const exp = require('constants');
 const express = require('express');
 const app = express();
@@ -7,10 +9,6 @@ app.use('/personUser',routerPersonUser);
 // seteamos url encoded para caputar los datos del formulario
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-
-// invocamos a dotenv
-const dotenv = require('dotenv');
-dotenv.config({path: './env/.env'});
 
 // el directorio public
 var path = require ('path');
