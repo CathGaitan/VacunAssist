@@ -172,7 +172,7 @@ const formatDate = (date)=>{
 
 
 //ver datos personales
-routerPersonUser.get('/listado',async(req, res)=>{
+routerPersonUser.get('/listData',async(req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?',email,async (error, results)=>{
         console.log(results);
