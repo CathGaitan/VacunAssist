@@ -56,7 +56,7 @@ routerPersonUser.post('/register', async (req, res)=>{
                     alertMessage: "Registro exitoso!",
                     alertIcon:'success',
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: false,
                     ruta: '' //----------------- aca redirigis a cargar informacion
                 });
             }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informacion Gripe</title>
+    <link rel="stylesheet" href="resources/style.css">
+</head>
+<body>
+    <h1>Informacion Gripe</h1>
+    <h2>Ha recibido una vacuna contra la gripe en los ultimos 12 meses?</h2>
+    <select type="menu" name="infoGripe" required>
+        <option value="0">No</option>
+        <option value="1">Si</option>
+    </select>
+    <script>
+        if (req.body.infogripe == "1"){
+            var input = document.createElement("input");
+            input.type = "text";
+            input.className = "css-class-name"; // set the CSS class
+            container.appendChild(input); // put it into the DOM
+        }
+    </script>
+</body>
+</html>
