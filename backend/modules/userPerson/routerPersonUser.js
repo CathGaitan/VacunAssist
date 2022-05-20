@@ -24,6 +24,9 @@ routerPersonUser.get('/register', (req, res)=> {
 routerPersonUser.get('/updatedata', (req, res)=>{
     res.render('updatedata')
 })
+routerPersonUser.get('/viewdata', (req, res)=>{
+    res.render('viewdata')
+})
 
 
 // registracion
@@ -36,7 +39,8 @@ routerPersonUser.post('/register', async (req, res)=>{
         password: passwordHash,
         DNI: req.body.DNI,
         dateofbirth: req.body.dateofbirth,
-        risk: req.body.risk
+        risk: req.body.risk,
+        zone: req.body.zone
     }
     if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
         DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
@@ -101,10 +105,7 @@ routerPersonUser.post('/auth', async (req, res)=>{
 routerPersonUser.post('/updatedata', async (req, res)=>{
     let newname;
     let newlastname;
-    let newpassword;
-    let newdateofbirth;
-    let newdni;
-    let newrisk;
+    let newzone;
     const email= req.session.name;
     if (req.body.name){ 
         newname= req.body.name;
@@ -148,10 +149,9 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
             });       
         })
     }
-    if (req.body.risk){
-        newrisk= req.body.risk;
-        console.log(risk);
-        DB.query('UPDATE risk SET dateofbirth = ? WHERE email = ?', [newrisk, email], async (error, results)=>{
+    if (req.body.zone != 'empty'){
+        newzone= req.body.zone;
+        DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email], async (error, results)=>{
             res.render('updatedata', {
                 alert: true,
                 alertTitle: "Actualizacion de datos exitosa",
@@ -165,8 +165,28 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     }
 });
 
+//ver datos personales
+routerPersonUser.post('/viewdata', async (req, res)=>{
+    const email= req.session.name;
+    console.log('entraaaaaa')
+    DB.query('SELECT * FROM personuser WHERE email = ?', email, async(error, results)=>{
+        console.log(results[0].name)
+        req.body.name= results[0].name;
+        req.body.lastname= results[0].lastname;
+        req.body.email= results[0].email;
+        req.body.DNI= results[0].DNI;
+        req.body.zone= results.zone;
+        if (results[0].risk == 0){
+            req.body.risk= 'No'
+        }else{
+            req.body.risk='Si'
+        }
+        
+    });
+});
+
 //metodo todo para controlar que esta auth en todas las páginas
-routerPersonUser.get('/dashboard', (req, res)=> {
+routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard
 	if (req.session.loggedin) {
 		res.render('dashboard',{
 			login: true,
@@ -180,6 +200,22 @@ routerPersonUser.get('/dashboard', (req, res)=> {
 	}
 	res.end();
 });
+
+routerPersonUser.get('/updatedata', (req, res)=> { //controla el updatedata NO FUNCIONA
+	if (req.session.loggedin) {
+		res.render('updatedata',{
+			login: true,
+			name: req.session.name			
+		});		
+	} else {
+		res.render('updatedata',{
+			login:false,
+			name:'Debe iniciar sesión',			
+		});				
+	}
+	res.end();
+});
+
  //Logout: destruye la sesión.
 routerPersonUser.get('/logout', function (req, res) {
 	req.session.destroy(() => {

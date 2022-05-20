@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido a VacunAssist!</title>
     <h1>Bienvenido a VacunAssist!</h1>
-    <% if (login) { %>                
-        <h1>Usuario conectado: <strong><%= name %></strong></h1>                        
-        <a href="logout" class="a-logout">Logout</a>
-        <a href="updatedata">Actualizar datos</a> 
+    <% if (login) { %>                                     
+        <a href="viewdata">Ver mis datos</a> 
+        <br>
+        <a href="updatedata">Actualizar mis datos</a> 
+        <br>
+        <a href="logout" class="a-logout">Cerrar sesion</a>
     <%} else { %>
         <h1><strong><%= name %></strong></h1>   
         <a href="login" class="a-login">Ir a Login</a>
