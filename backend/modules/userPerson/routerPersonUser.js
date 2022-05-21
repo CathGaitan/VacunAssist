@@ -15,6 +15,21 @@ routerPersonUser.use(session({
 	saveUninitialized: true
 }));
 
+function getEdad(dateString) {
+    let hoy = new Date()
+    let fechaNacimiento = new Date(dateString)
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
+    let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
+    if (
+      diferenciaMeses < 0 ||
+      (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())
+    ) {
+      edad--
+    }
+    return edad
+  }
+
+
 //estableciendo rutas
 routerPersonUser.get('/login', (req, res)=> {
     res.render('login');
@@ -46,6 +61,7 @@ routerPersonUser.get('/viewturns', (req, res)=>{
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
+    let pass= req.body.password;
     let passwordHash = await bcryptjs.hash(req.body.password, 8);
     let user = {
         email:req.body.email, 
@@ -58,27 +74,54 @@ routerPersonUser.post('/register', async (req, res)=>{
         zone: req.body.zone
     }
     userActive= user.email;
-    if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
-        DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
-            if (error){
-                console.log(error);
-                if (error.code == 'ER_DUP_ENTRY'){
-                    res.send('EMAIL EXISTENTE') 
-                }
-            }else{
-                res.render('register', { //animacion de registro exitoso
-                    alert: true,
-                    alertTitle: "Registro",
-                    alertMessage: "Registro exitoso!",
-                    alertIcon:'success',
-                    showConfirmButton: false,
-                    timer: false,
-                    ruta: 'personUser/infoCovid' 
-                });
-            }
+    console.log(pass)
+    if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
+        res.render('register', { //animacion de registro exitoso
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "La contraseña debe ser de como minimo 6 caracteres",
+            alertIcon:'error',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/register' 
         });
-    } else {
-        res.send('DNI NO VALIDADO POR RENAPER')
+    }else{ //si la contrasenia es valida
+        let route;
+        if (getEdad(user.dateofbirth)>=18){ //si es mayor carga info
+            route= 'personUser/infoCovid'
+        }else{ //si es menor va a dashboard
+            route= 'personUser/dashboard'
+        }
+        if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
+            DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
+                if (error){
+                    console.log(error);
+                    if (error.code == 'ER_DUP_ENTRY'){
+                        res.send('EMAIL EXISTENTE') 
+                    }
+                }else{
+                    res.render('register', { //animacion de registro exitoso
+                        alert: true,
+                        alertTitle: "Registro",
+                        alertMessage: "Registro exitoso!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: route 
+                    });
+                }
+            });
+        } else {
+            res.render('register', { //animacion de dni no validado
+                alert: true,
+                alertTitle: "Error en el registro",
+                alertMessage: "El DNI no esta validado por RENAPER",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/register' 
+            });
+        }
     }
 });
 
@@ -201,7 +244,7 @@ routerPersonUser.get('/listData',async(req, res)=>{
     });
 });
 
-//metodo todo para controlar que esta auth en todas las páginas
+//metodo todo para controlar que esta auth en todas las páginas ACA HAY QUE ACOMODAR PARA QUE ANDE, SOLO ANDA EN EL DASHBOARD
 routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard
 	if (req.session.loggedin) {
 		res.render('dashboard',{
@@ -260,11 +303,11 @@ routerPersonUser.post('/infoCovid', async(req,res)=>{
                     date: undefined
                 }
                 let fechanac= results[0].dateofbirth;
-                let edad; //?????????????????????
-                if (results[0].risk){ // si es de riesgo HAY QUE AGREGAR UN || EDAD>=60 PERO NO PUDE CALCULAR LA EDAD 
+                let edad= getEdad(fechanac); 
+                if (results[0].risk || edad>=60){ 
                     const tiempoTranscurrido = Date.now();
                     const fecha = new Date(tiempoTranscurrido);
-                    let dia= fecha.getDate()+7
+                    let dia= fecha.getDate()+7 //asigno turno a una semana
                     fecha.setDate(dia);
                     turn.state= "Otorgado";
                     turn.date= fecha
@@ -294,6 +337,8 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
         if (results[0].fluevaccine == 0){
             const tiempoTranscurrido = Date.now();
             const fecha = new Date(tiempoTranscurrido);
+            fechanac= results[0].dateofbirth;
+            let edad= getEdad(fechanac);
             let turn={
                 idpersonuser: results[0].id,
                 vaccinename: "Gripe",
@@ -301,13 +346,13 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
                 state: "Otorgado",
                 date: undefined
             }
-            if (results[0].risk == 1){ // HAY QUE CAMBIARLO POR IF EDAD>=60 PERO NO PUDE CALCULAR LA EDAD 
+            if (edad>=60){ // si es mayor de 60 ---> es de riesgo
                 let mes= fecha.getMonth()+2
                 fecha.setMonth(mes);
                 turn.date= fecha;
             }
             else{ //si no es de riesgo
-                let mes= fecha.getMonth()+5
+                let mes= fecha.getMonth()+4
                 fecha.setMonth(mes);
                 turn.date= fecha
             }
@@ -348,7 +393,7 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
     DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
         if (results[0].fevervaccine == 0){ //si no tiene la vacuna
             let fechanac= results[0].dateofbirth;
-            let edad= 18;
+            let edad= getEdad(fechanac);
             if (edad < 60){ //si es menor de 60 HAY QUE ACOMODAR CON EL CALCULO DE LA EDAD
                 let turn={
                     idpersonuser: results[0].id,
