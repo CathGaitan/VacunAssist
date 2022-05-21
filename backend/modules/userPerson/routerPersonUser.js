@@ -5,6 +5,7 @@ const bcryptjs = require('bcryptjs');
 const bp = require('body-parser')
 routerPersonUser.use(bp.json())
 routerPersonUser.use(bp.urlencoded({ extended: true }))
+var userActive;
 
 //7- variables de session
 const session = require('express-session');
@@ -27,6 +28,15 @@ routerPersonUser.get('/updatedata', (req, res)=>{
 routerPersonUser.get('/viewdata', (req, res)=>{
     res.render('viewdata')
 })
+routerPersonUser.get('/infoCovid', (req, res)=>{
+    res.render('infoCovid')
+})
+routerPersonUser.get('/infoGripe', (req, res)=>{
+    res.render('infoGripe')
+})
+routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
+    res.render('infoFiebreAmarilla')
+})
 
 
 // registracion
@@ -42,6 +52,7 @@ routerPersonUser.post('/register', async (req, res)=>{
         risk: req.body.risk,
         zone: req.body.zone
     }
+    userActive= user.email;
     if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
         DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
             if (error){
@@ -57,7 +68,7 @@ routerPersonUser.post('/register', async (req, res)=>{
                     alertIcon:'success',
                     showConfirmButton: false,
                     timer: false,
-                    ruta: '' //----------------- aca redirigis a cargar informacion
+                    ruta: 'personUser/infoCovid' 
                 });
             }
         });
@@ -232,8 +243,53 @@ routerPersonUser.use(function(req, res, next) {
 });
 
 routerPersonUser.post('/infoCovid', async(req,res)=>{
+    const email= userActive;
+    const doses= req.body.doses;
+    DB.query('UPDATE personuser SET coviddoses = ? WHERE email = ?', [doses, email], async (error, results)=>{
+        res.render('infoCovid', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/infoGripe'
+        });       
+    })
+});
 
+routerPersonUser.post('/infoGripe', async(req,res)=>{
+    const email= userActive;
+    const fluevaccine= req.body.fluevaccine;
+    const datefluevaccine= req.body.datefluevaccine;
+    DB.query('UPDATE personuser SET fluevaccine = ?, datefluevaccine = ? WHERE email = ?', [fluevaccine, datefluevaccine, email], async (error, results)=>{
+        res.render('infoGripe', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/infoFiebreAmarilla'
+        });       
+    })
+});
 
+routerPersonUser.post('/infoFiebreAmarilla', async(req,res)=>{
+    const email= userActive;
+    const fevervaccine= req.body.fevervaccine;
+    const datefevervaccine= req.body.datefevervaccine;
+    DB.query('UPDATE personuser SET fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [fevervaccine, datefevervaccine, email], async (error, results)=>{
+        res.render('infoFiebreAmarilla', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/dashboard'
+        });       
+    })
 });
 
 module.exports=routerPersonUser;
