@@ -256,7 +256,9 @@ routerPersonUser.post('/infoCovid', async(req,res)=>{
                     state: " ",
                     date: undefined
                 }
-                if (results[0].risk == 1){ // si es de riesgo 
+                let fechanac= results[0].dateofbirth;
+                let edad; //?????????????????????
+                if (results[0].risk){ // si es de riesgo HAY QUE AGREGAR UN || EDAD>=60 PERO NO PUDE CALCULAR LA EDAD 
                     const tiempoTranscurrido = Date.now();
                     const fecha = new Date(tiempoTranscurrido);
                     let dia= fecha.getDate()+7
@@ -292,11 +294,11 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
             let turn={
                 idpersonuser: results[0].id,
                 vaccinename: "Gripe",
-                dose: "unica por anio",
+                dose: "Unica por año",
                 state: "Otorgado",
                 date: undefined
             }
-            if (results[0].risk == 1){ // si es de riesgo 
+            if (results[0].risk == 1){ // HAY QUE CAMBIARLO POR IF EDAD>=60 PERO NO PUDE CALCULAR LA EDAD 
                 let mes= fecha.getMonth()+2
                 fecha.setMonth(mes);
                 turn.date= fecha;
