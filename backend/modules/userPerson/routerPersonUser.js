@@ -242,10 +242,34 @@ routerPersonUser.use(function(req, res, next) {
     next();
 });
 
+
 routerPersonUser.post('/infoCovid', async(req,res)=>{
     const email= userActive;
     const doses= req.body.doses;
     DB.query('UPDATE personuser SET coviddoses = ? WHERE email = ?', [doses, email], async (error, results)=>{
+        DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+            if (results[0].coviddoses<2){
+                let turn={
+                    idpersonuser: results[0].id,
+                    vaccinename: "Covid-19",
+                    dose: results[0].coviddoses+1,
+                    state: " ",
+                    date: undefined
+                }
+                if (results[0].risk == 1){ // si es de riesgo 
+                    const tiempoTranscurrido = Date.now();
+                    const fecha = new Date(tiempoTranscurrido);
+                    let dia= fecha.getDate()+7
+                    fecha.setDate(dia);
+                    turn.state= "Otorgado";
+                    turn.date= fecha
+                }
+                else{ //si no es de riesgo
+                    turn.state= "Pendiente";
+                }
+                DB.query('INSERT INTO turn SET ?', turn)}
+            });
+        });
         res.render('infoCovid', {
             alert: true,
             alertTitle: "Tu informacion se guardo exitosamente",
@@ -254,14 +278,36 @@ routerPersonUser.post('/infoCovid', async(req,res)=>{
             showConfirmButton: false,
             timer: false,
             ruta: 'personUser/infoGripe'
-        });       
-    })
+        });
 });
 
 routerPersonUser.post('/infoGripe', async(req,res)=>{
     const email= userActive;
     const fluevaccine= req.body.fluevaccine;
     const datefluevaccine= req.body.datefluevaccine;
+    DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+        if (results[0].fluevaccine == 0){
+            const tiempoTranscurrido = Date.now();
+            const fecha = new Date(tiempoTranscurrido);
+            let turn={
+                idpersonuser: results[0].id,
+                vaccinename: "Gripe",
+                dose: "unica por anio",
+                state: "Otorgado",
+                date: undefined
+            }
+            if (results[0].risk == 1){ // si es de riesgo 
+                let mes= fecha.getMonth()+2
+                fecha.setMonth(mes);
+                turn.date= fecha;
+            }
+            else{ //si no es de riesgo
+                let mes= fecha.getMonth()+5
+                fecha.setMonth(mes);
+                turn.date= fecha
+            }
+            DB.query('INSERT INTO turn SET ?', turn)}
+        });
     DB.query('UPDATE personuser SET fluevaccine = ?, datefluevaccine = ? WHERE email = ?', [fluevaccine, datefluevaccine, email], async (error, results)=>{
         res.render('infoGripe', {
             alert: true,
