@@ -37,7 +37,12 @@ routerPersonUser.get('/infoGripe', (req, res)=>{
 routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
     res.render('infoFiebreAmarilla')
 })
-
+routerPersonUser.get('/requestturn', (req, res)=>{
+    res.render('requestturn')
+})
+routerPersonUser.get('/viewturns', (req, res)=>{
+    res.render('viewturns')
+})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -196,7 +201,6 @@ routerPersonUser.get('/listData',async(req, res)=>{
     });
 });
 
-
 //metodo todo para controlar que esta auth en todas las páginas
 routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard
 	if (req.session.loggedin) {
@@ -241,7 +245,6 @@ routerPersonUser.use(function(req, res, next) {
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
 });
-
 
 routerPersonUser.post('/infoCovid', async(req,res)=>{
     const email= userActive;
@@ -339,5 +342,61 @@ routerPersonUser.post('/infoFiebreAmarilla', async(req,res)=>{
         });       
     })
 });
+
+routerPersonUser.post('/requestturn', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
+        if (results[0].fevervaccine == 0){ //si no tiene la vacuna
+            let fechanac= results[0].dateofbirth;
+            let edad= 18;
+            if (edad < 60){ //si es menor de 60 HAY QUE ACOMODAR CON EL CALCULO DE LA EDAD
+                let turn={
+                    idpersonuser: results[0].id,
+                    vaccinename: "Fiebre Amarilla",
+                    dose: "Unica en la vida",
+                    state: "Pendiente",
+                    date: undefined}
+                DB.query('INSERT INTO turn SET ?', turn)
+                res.render('requestturn', {
+                    alert: true,
+                    alertTitle: "Turno solicitado exitosamente",
+                    alertMessage: "Se ha registrado la solicitud de su turno!",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    ruta: 'personUser/dashboard'
+                });   
+            }else{ //si es mayor de 60
+                res.render('requestturn', {
+                    alert: true,
+                    alertTitle: "Turno no solicitado",
+                    alertMessage: "Usted no puede aplicarse esta vacuna por ser mayor de 60",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    ruta: 'personUser/dashboard'
+                });   
+            }
+        }else{ //si tiene la vacuna
+            res.render('requestturn', {
+                alert: true,
+                alertTitle: "Turno no solicitado",
+                alertMessage: "Usted ya posee esta vacuna",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: 4000,
+                ruta: 'personUser/dashboard'
+            });   
+        }
+    });
+});
+
+routerPersonUser.post('/cancelturn', async (req, res)=>{
+
+})
+
+routerPersonUser.post('/viewturns', async (req, res)=>{
+
+})
 
 module.exports=routerPersonUser;
