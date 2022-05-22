@@ -57,7 +57,7 @@ routerPersonUser.post('/register', async (req, res)=>{
                     alertIcon:'success',
                     showConfirmButton: false,
                     timer: false,
-                    ruta: '' //----------------- aca redirigis a cargar informacion
+                    ruta: 'personUser/saveInfoCovid' //----------------- aca redirigis a cargar informacion
                 });
             }
         });
@@ -175,7 +175,6 @@ const formatDate = (date)=>{
 routerPersonUser.get('/listData',async(req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?',email,async (error, results)=>{
-        console.log(results);
         if(results[0].risk==0) results[0].risk="No"
         else results[0].risk="Si";
         results[0].dateofbirth=formatDate(results[0].dateofbirth);
@@ -231,9 +230,17 @@ routerPersonUser.use(function(req, res, next) {
     next();
 });
 
-routerPersonUser.post('/infoCovid', async(req,res)=>{
 
-
+//almacenar datos covid
+routerPersonUser.post('/saveInfoCovid', async(req,res)=>{
+    res.render('infoCovid',{success:true})
+    const email= req.session.name;
+    let idUser=0;
+    DB.query('SELECT id FROM personuser WHERE email = ?',email,async (error, result)=>{
+        console.log(result);
+    });
+    const dosis=req.body.dosisCovid;
+    console.log('idUser: ',idUser,"-- cantDosis: ",dosis);
 });
 
 module.exports=routerPersonUser;
