@@ -15,6 +15,18 @@ routerPersonUser.use(session({
 	saveUninitialized: true
 }));
 
+const pastAYear=(dateflueString)=>{
+    let today=Date.now();
+    const datefluevaccine=Date.parse(dateflueString);
+    let dif=today-datefluevaccine;
+    return dif > 31609046081;
+}
+
+const formatDate = (date)=>{
+    let formatted_date = date.getDay() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
+    return formatted_date;
+}
+
 function getEdad(dateString) {
     let hoy = new Date()
     let fechaNacimiento = new Date(dateString)
@@ -55,9 +67,6 @@ routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
 routerPersonUser.get('/requestturn', (req, res)=>{
     res.render('requestturn')
 })
-routerPersonUser.get('/viewturns', (req, res)=>{
-    res.render('viewturns')
-})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -74,7 +83,6 @@ routerPersonUser.post('/register', async (req, res)=>{
         zone: req.body.zone
     }
     userActive= user.email;
-    console.log(pass)
     if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
         res.render('register', { //animacion de registro exitoso
             alert: true,
@@ -90,14 +98,22 @@ routerPersonUser.post('/register', async (req, res)=>{
         if (getEdad(user.dateofbirth)>=18){ //si es mayor carga info
             route= 'personUser/infoCovid'
         }else{ //si es menor va a dashboard
-            route= 'personUser/dashboard'
+            route= 'personUser/infoGripe'
         }
         if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
             DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
                 if (error){
                     console.log(error);
                     if (error.code == 'ER_DUP_ENTRY'){
-                        res.send('EMAIL EXISTENTE') 
+                        res.render('register', { //animacion de dni no validado
+                            alert: true,
+                            alertTitle: "Error en el registro",
+                            alertMessage: "Ese DNI ya existe en el sistema",
+                            alertIcon:'error',
+                            showConfirmButton: false,
+                            timer: false,
+                            ruta: 'personUser/register' 
+                        });
                     }
                 }else{
                     res.render('register', { //animacion de registro exitoso
@@ -224,11 +240,6 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     }
 });
 
-const formatDate = (date)=>{
-    let formatted_date = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-    return formatted_date;
-}
-
 
 //ver datos personales
 routerPersonUser.get('/listData',async(req, res)=>{
@@ -303,7 +314,7 @@ routerPersonUser.post('/infoCovid', async(req,res)=>{
                 }
                 let fechanac= results[0].dateofbirth;
                 let edad= getEdad(fechanac); 
-                if (results[0].risk || edad>=60){ 
+                if (results[0].risk || edad>=60){ //si es de riesgo o si tiene 60 o mas anios
                     const tiempoTranscurrido = Date.now();
                     const fecha = new Date(tiempoTranscurrido);
                     let dia= fecha.getDate()+7 //asigno turno a una semana
@@ -333,9 +344,10 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
     const fluevaccine= req.body.fluevaccine;
     const datefluevaccine= req.body.datefluevaccine;
     DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
-        if (results[0].fluevaccine == 0){
-            const tiempoTranscurrido = Date.now();
-            const fecha = new Date(tiempoTranscurrido);
+        console.log(pastAYear(datefluevaccine));
+        if (results[0].fluevaccine == 0 || pastAYear(datefluevaccine)){ //si no tiene la vacuna de la gripe
+            const hoy = Date.now();
+            const fecha = new Date(hoy);
             fechanac= results[0].dateofbirth;
             let edad= getEdad(fechanac);
             let turn={
@@ -390,7 +402,7 @@ routerPersonUser.post('/infoFiebreAmarilla', async(req,res)=>{
 routerPersonUser.post('/requestturn', async (req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
-        if (results[0].fevervaccine == 0){ //si no tiene la vacuna
+        if (results[0].fevervaccine == "0"){ //si no tiene la vacuna
             let fechanac= results[0].dateofbirth;
             let edad= getEdad(fechanac);
             if (edad < 60){ //si es menor de 60 HAY QUE ACOMODAR CON EL CALCULO DE LA EDAD
@@ -439,8 +451,23 @@ routerPersonUser.post('/cancelturn', async (req, res)=>{
 
 })
 
-routerPersonUser.post('/viewturns', async (req, res)=>{
-
-})
+routerPersonUser.get('/listTurns', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error,result)=>{
+        idpersonuser=result[0].id;
+        DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
+            for(let i=0; i<results.length; i++){
+                if(results[i].date!=null){
+                    //results[i].date=formatDate(results[0].date); encontrar forma de poner linda fecha
+                }else{
+                    results[i].date="---";
+                }
+            }
+            res.render('viewturns',{
+                turnsinfo:results
+            });
+        });
+    });
+});
 
 module.exports=routerPersonUser;
