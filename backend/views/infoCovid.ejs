@@ -8,12 +8,34 @@
     <link rel="stylesheet" href="resources/style.css">
 </head>
 <body>
-    <h1>Informacion Covid-19</h1>
+    <h1>Informacion sobre la vacuna de Covid-19</h1>
     <h2>Cuantas dosis se aplico de la vacuna contra el covid-19?</h2>
-    <select type="menu" name="dosisCovid" required>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-    </select>
+    <form action="infoCovid" method="post">
+        <label for="">Cantidad de dosis</label>
+        <select type="menu" name="doses" required>
+            <option selected="true" disabled="disabled" value="empty"></option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+        <input type="submit" class="btn-save" value="Continuar">
+    </form>
+    <div style="display: inline;">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+         <script>
+         Swal.fire({
+           title:'<%= alertTitle %>',
+           text:'<%= alertMessage %>',
+           icon:'<%= alertIcon %>',
+           showConfirmButton: '<%= showConfirmButton %>',
+           timer: false
+         }).then(()=>{
+           window.location='/<%= ruta %>'
+         })
+         </script>
+        <% } %>
+    </div>
 </body>
 </html>

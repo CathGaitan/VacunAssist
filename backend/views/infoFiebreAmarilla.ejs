@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informacion Gripe</title>
+    <link rel="stylesheet" href="resources/style.css">
+</head>
+<body>
+    <h1>Informacion sobre la vacuna de la Fiebre Amarilla</h1>
+    <h2>Ha recibido una vacuna contra la Fiebre Amarilla?</h2>
+    <form action="infoFiebreAmarilla" method="post">
+        <select type="menu" name="fevervaccine" required>
+            <option selected="true" disabled="disabled" value="empty"></option>
+            <option value="0">Si</option>
+            <option value="1">No</option>
+        </select>
+        <script>
+            if (req.body.fevervaccine == "1"){
+                var input = document.createElement("input");
+                input.type = "date";
+                input.name="datefevervaccine"
+                input.className = "css-class-name"; // set the CSS class
+                container.appendChild(input); // put it into the DOM
+            }
+        </script>
+        <input type="submit" class="btn-save" value="Continuar">
+    </form>
+    <div style="display: inline;">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+         <script>
+         Swal.fire({
+           title:'<%= alertTitle %>',
+           text:'<%= alertMessage %>',
+           icon:'<%= alertIcon %>',
+           showConfirmButton: '<%= showConfirmButton %>',
+           timer: false
+         }).then(()=>{
+           window.location='/<%= ruta %>'
+         })
+         </script>
+        <% } %>
+    </div>
+</body>
+</html>

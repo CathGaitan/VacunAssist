@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informacion Gripe</title>
+    <link rel="stylesheet" href="resources/style.css">
+</head>
+<body>
+    <h1>Solicitar turno para la vacuna de la Fiebre Amarilla</h1>
+    <form action="requestturn" method="post">
+        <input type="submit" class="btn-save" value="Solicitar turno">
+    </form>
+    <div style="display: inline;">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+         <script>
+         Swal.fire({
+           title:'<%= alertTitle %>',
+           text:'<%= alertMessage %>',
+           icon:'<%= alertIcon %>',
+           showConfirmButton: '<%= showConfirmButton %>',
+           timer: false
+         }).then(()=>{
+           window.location='/<%= ruta %>'
+         })
+         </script>
+        <% } %>
+    </div>
+</body>
+</html>

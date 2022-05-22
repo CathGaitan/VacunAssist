@@ -5,6 +5,7 @@ const bcryptjs = require('bcryptjs');
 const bp = require('body-parser')
 routerPersonUser.use(bp.json())
 routerPersonUser.use(bp.urlencoded({ extended: true }))
+var userActive;
 
 //7- variables de session
 const session = require('express-session');
@@ -13,6 +14,21 @@ routerPersonUser.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
+
+function getEdad(dateString) {
+    let hoy = new Date()
+    let fechaNacimiento = new Date(dateString)
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
+    let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
+    if (
+      diferenciaMeses < 0 ||
+      (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())
+    ) {
+      edad--
+    }
+    return edad
+  }
+
 
 //estableciendo rutas
 routerPersonUser.get('/login', (req, res)=> {
@@ -27,10 +43,25 @@ routerPersonUser.get('/updatedata', (req, res)=>{
 routerPersonUser.get('/viewdata', (req, res)=>{
     res.render('viewdata')
 })
-
+routerPersonUser.get('/infoCovid', (req, res)=>{
+    res.render('infoCovid')
+})
+routerPersonUser.get('/infoGripe', (req, res)=>{
+    res.render('infoGripe')
+})
+routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
+    res.render('infoFiebreAmarilla')
+})
+routerPersonUser.get('/requestturn', (req, res)=>{
+    res.render('requestturn')
+})
+routerPersonUser.get('/viewturns', (req, res)=>{
+    res.render('viewturns')
+})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
+    let pass= req.body.password;
     let passwordHash = await bcryptjs.hash(req.body.password, 8);
     let user = {
         email:req.body.email, 
@@ -42,27 +73,55 @@ routerPersonUser.post('/register', async (req, res)=>{
         risk: req.body.risk,
         zone: req.body.zone
     }
-    if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
-        DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
-            if (error){
-                console.log(error);
-                if (error.code == 'ER_DUP_ENTRY'){
-                    res.send('EMAIL EXISTENTE') 
-                }
-            }else{
-                res.render('register', { //animacion de registro exitoso
-                    alert: true,
-                    alertTitle: "Registro",
-                    alertMessage: "Registro exitoso!",
-                    alertIcon:'success',
-                    showConfirmButton: false,
-                    timer: false,
-                    ruta: 'personUser/saveInfoCovid' //----------------- aca redirigis a cargar informacion
-                });
-            }
+    userActive= user.email;
+    console.log(pass)
+    if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
+        res.render('register', { //animacion de registro exitoso
+            alert: true,
+            alertTitle: "Error",
+            alertMessage: "La contraseña debe ser de como minimo 6 caracteres",
+            alertIcon:'error',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/register' 
         });
-    } else {
-        res.send('DNI NO VALIDADO POR RENAPER')
+    }else{ //si la contrasenia es valida
+        let route;
+        if (getEdad(user.dateofbirth)>=18){ //si es mayor carga info
+            route= 'personUser/infoCovid'
+        }else{ //si es menor va a dashboard
+            route= 'personUser/dashboard'
+        }
+        if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
+            DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
+                if (error){
+                    console.log(error);
+                    if (error.code == 'ER_DUP_ENTRY'){
+                        res.send('EMAIL EXISTENTE') 
+                    }
+                }else{
+                    res.render('register', { //animacion de registro exitoso
+                        alert: true,
+                        alertTitle: "Registro",
+                        alertMessage: "Registro exitoso!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: route 
+                    });
+                }
+            });
+        } else {
+            res.render('register', { //animacion de dni no validado
+                alert: true,
+                alertTitle: "Error en el registro",
+                alertMessage: "El DNI no esta validado por RENAPER",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/register' 
+            });
+        }
     }
 });
 
@@ -184,8 +243,7 @@ routerPersonUser.get('/listData',async(req, res)=>{
     });
 });
 
-
-//metodo todo para controlar que esta auth en todas las páginas
+//metodo todo para controlar que esta auth en todas las páginas ACA HAY QUE ACOMODAR PARA QUE ANDE, SOLO ANDA EN EL DASHBOARD
 routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard
 	if (req.session.loggedin) {
 		res.render('dashboard',{
@@ -230,17 +288,159 @@ routerPersonUser.use(function(req, res, next) {
     next();
 });
 
-
-//almacenar datos covid
-routerPersonUser.post('/saveInfoCovid', async(req,res)=>{
-    res.render('infoCovid',{success:true})
-    const email= req.session.name;
-    let idUser=0;
-    DB.query('SELECT id FROM personuser WHERE email = ?',email,async (error, result)=>{
-        console.log(result);
-    });
-    const dosis=req.body.dosisCovid;
-    console.log('idUser: ',idUser,"-- cantDosis: ",dosis);
+routerPersonUser.post('/infoCovid', async(req,res)=>{
+    const email= userActive;
+    const doses= req.body.doses;
+    DB.query('UPDATE personuser SET coviddoses = ? WHERE email = ?', [doses, email], async (error, results)=>{
+        DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+            if (results[0].coviddoses<2){
+                let turn={
+                    idpersonuser: results[0].id,
+                    vaccinename: "Covid-19",
+                    dose: results[0].coviddoses+1,
+                    state: " ",
+                    date: undefined
+                }
+                let fechanac= results[0].dateofbirth;
+                let edad= getEdad(fechanac); 
+                if (results[0].risk || edad>=60){ 
+                    const tiempoTranscurrido = Date.now();
+                    const fecha = new Date(tiempoTranscurrido);
+                    let dia= fecha.getDate()+7 //asigno turno a una semana
+                    fecha.setDate(dia);
+                    turn.state= "Otorgado";
+                    turn.date= fecha
+                }
+                else{ //si no es de riesgo
+                    turn.state= "Pendiente";
+                }
+                DB.query('INSERT INTO turn SET ?', turn)}
+            });
+        });
+        res.render('infoCovid', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/infoGripe'
+        });
 });
+
+routerPersonUser.post('/infoGripe', async(req,res)=>{
+    const email= userActive;
+    const fluevaccine= req.body.fluevaccine;
+    const datefluevaccine= req.body.datefluevaccine;
+    DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+        if (results[0].fluevaccine == 0){
+            const tiempoTranscurrido = Date.now();
+            const fecha = new Date(tiempoTranscurrido);
+            fechanac= results[0].dateofbirth;
+            let edad= getEdad(fechanac);
+            let turn={
+                idpersonuser: results[0].id,
+                vaccinename: "Gripe",
+                dose: "Unica por año",
+                state: "Otorgado",
+                date: undefined
+            }
+            if (edad>=60){ // si es mayor de 60 ---> es de riesgo
+                let mes= fecha.getMonth()+2
+                fecha.setMonth(mes);
+                turn.date= fecha;
+            }
+            else{ //si no es de riesgo
+                let mes= fecha.getMonth()+4
+                fecha.setMonth(mes);
+                turn.date= fecha
+            }
+            DB.query('INSERT INTO turn SET ?', turn)}
+        });
+    DB.query('UPDATE personuser SET fluevaccine = ?, datefluevaccine = ? WHERE email = ?', [fluevaccine, datefluevaccine, email], async (error, results)=>{
+        res.render('infoGripe', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/infoFiebreAmarilla'
+        });       
+    })
+});
+
+routerPersonUser.post('/infoFiebreAmarilla', async(req,res)=>{
+    const email= userActive;
+    const fevervaccine= req.body.fevervaccine;
+    const datefevervaccine= req.body.datefevervaccine;
+    DB.query('UPDATE personuser SET fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [fevervaccine, datefevervaccine, email], async (error, results)=>{
+        res.render('infoFiebreAmarilla', {
+            alert: true,
+            alertTitle: "Tu informacion se guardo exitosamente",
+            alertMessage: "¡INFORMACION GUARDADA!",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: false,
+            ruta: 'personUser/dashboard'
+        });       
+    })
+});
+
+routerPersonUser.post('/requestturn', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
+        if (results[0].fevervaccine == 0){ //si no tiene la vacuna
+            let fechanac= results[0].dateofbirth;
+            let edad= getEdad(fechanac);
+            if (edad < 60){ //si es menor de 60 HAY QUE ACOMODAR CON EL CALCULO DE LA EDAD
+                let turn={
+                    idpersonuser: results[0].id,
+                    vaccinename: "Fiebre Amarilla",
+                    dose: "Unica en la vida",
+                    state: "Pendiente",
+                    date: undefined}
+                DB.query('INSERT INTO turn SET ?', turn)
+                res.render('requestturn', {
+                    alert: true,
+                    alertTitle: "Turno solicitado exitosamente",
+                    alertMessage: "Se ha registrado la solicitud de su turno!",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    ruta: 'personUser/dashboard'
+                });   
+            }else{ //si es mayor de 60
+                res.render('requestturn', {
+                    alert: true,
+                    alertTitle: "Turno no solicitado",
+                    alertMessage: "Usted no puede aplicarse esta vacuna por ser mayor de 60",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    ruta: 'personUser/dashboard'
+                });   
+            }
+        }else{ //si tiene la vacuna
+            res.render('requestturn', {
+                alert: true,
+                alertTitle: "Turno no solicitado",
+                alertMessage: "Usted ya posee esta vacuna",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: 4000,
+                ruta: 'personUser/dashboard'
+            });   
+        }
+    });
+});
+
+routerPersonUser.post('/cancelturn', async (req, res)=>{
+
+})
+
+routerPersonUser.post('/viewturns', async (req, res)=>{
+
+})
 
 module.exports=routerPersonUser;

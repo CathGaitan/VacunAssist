@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/style.css">
     <title>Bienvenido a VacunAssist!</title>
     <h1>Bienvenido a VacunAssist!</h1>
     <% if (login) { %>                                     
         <a href="listData">Ver mis datos</a> 
         <br>
         <a href="updatedata">Actualizar mis datos</a> 
+        <br>
+        <a href="requestturn">Solicitar turno para vacuna de fiebre amarilla</a> 
         <br>
         <a href="logout" class="a-logout">Cerrar sesion</a>
     <%} else { %>
