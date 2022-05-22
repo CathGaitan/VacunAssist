@@ -11,19 +11,25 @@
     <h1>Informacion sobre la vacuna de la Fiebre Amarilla</h1>
     <h2>Ha recibido una vacuna contra la Fiebre Amarilla?</h2>
     <form action="infoFiebreAmarilla" method="post">
-        <select type="menu" name="fevervaccine" required>
-            <option selected="true" disabled="disabled" value="empty"></option>
-            <option value="0">Si</option>
-            <option value="1">No</option>
+        <select type="menu" name="fevervaccine" id="menuFiebre" required>
+            <option selected="true" disabled="disabled"></option>
+            <option value="1">Si</option>
+            <option value="0">No</option>
         </select>
+        <input type="date" name="datefevervaccine" id="inputDate" disabled/>
         <script>
-            if (req.body.fevervaccine == "1"){
-                var input = document.createElement("input");
-                input.type = "date";
-                input.name="datefevervaccine"
-                input.className = "css-class-name"; // set the CSS class
-                container.appendChild(input); // put it into the DOM
-            }
+            let menuFiebre= document.getElementById("menuFiebre");
+            menuFiebre.addEventListener('change',()=>{
+                let selectedOption = menuFiebre.options[menuFiebre.selectedIndex];
+                let inputDate= document.getElementById("inputDate");
+                if(selectedOption.value=="1"){
+                    console.log("activo calendario");
+                    inputDate.disabled=false;
+                }else{
+                    console.log("desactivo calendario");
+                    inputDate.disabled=true;
+                }
+            });
         </script>
         <input type="submit" class="btn-save" value="Continuar">
     </form>

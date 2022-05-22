@@ -9,27 +9,35 @@
 </head>
 <body>
     <h1>Informacion sobre la vacuna de la Gripe</h1>
-    <h2>Ha recibido una vacuna contra la gripe en los ultimos 12 meses??</h2>
-    <form action="infoGripe" method="post">
-        <select type="menu" name="fluevaccine" required>
-            <option selected="true" disabled="disabled" value="empty"></option>
-            <option value="0">Si</option>
-            <option value="1">No</option>
-        </select>
-        <script>
-            if (req.body.fluevaccine == "1"){
-                var input = document.createElement("input");
-                input.type = "date";
-                input.name="datefluevaccine"
-                input.className = "css-class-name"; // set the CSS class
-                container.appendChild(input); // put it into the DOM
-            }
-        </script>
-        <input type="submit" class="btn-save" value="Continuar">
-    </form>
+    <h2>Ha recibido una vacuna contra la gripe alguna vez?</h2>
+    <div id="divForm">
+        <form action="infoGripe" method="post">
+            <select type="menu" name="fluevaccine" id="menuFlue" required>
+                <option selected="true" disabled="disabled"></option>
+                <option value="1">Si</option>
+                <option value="0">No</option>
+            </select>
+            <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se ha vacunado: </h2>
+            <input type="date" name="datefluevaccine" id="inputDate" disabled/>
+            <script>
+                let menuFlue= document.getElementById("menuFlue");
+                menuFlue.addEventListener('change',()=>{
+                    let selectedOption = menuFlue.options[menuFlue.selectedIndex];
+                    let inputDate= document.getElementById("inputDate");
+                    if(selectedOption.value=="1"){
+                        console.log("activo calendario");
+                        inputDate.disabled=false;
+                    }else{
+                        console.log("desactivo calendario");
+                        inputDate.disabled=true;
+                    }
+                });
+            </script>
+            <input type="submit" class="btn-save" value="Continuar">
+        </form>
+    </div>
     <div style="display: inline;">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
         <% if (typeof alert != "undefined")  { %>
          <script>
          Swal.fire({
