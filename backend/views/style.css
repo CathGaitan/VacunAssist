@@ -52,7 +52,7 @@ body, .body{
 .register-form input[type="text"],
 .register-form input[type="email"],
 .register-form input[type="date"], input{
-    width: 100%;
+    width: 200px;
     border-radius: 20px;
     padding: 6px;
     font-weight: bold;

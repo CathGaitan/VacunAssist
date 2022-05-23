@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/resources/style.css">
 </head>
 <body>
+    <br>
     <h1>Informacion sobre la vacuna de la Fiebre Amarilla</h1>
+    <br>
     <h2>Ha recibido una vacuna contra la Fiebre Amarilla?</h2>
     <form action="infoFiebreAmarilla" method="post">
         <select type="menu" name="fevervaccine" id="menuFiebre" required>
@@ -16,7 +18,10 @@
             <option value="1">Si</option>
             <option value="0">No</option>
         </select>
-        <input type="date" name="datefevervaccine" id="inputDate" disabled/>
+        <br>
+        <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplico la vacuna:</h2>
+        <br>
+        <input class="datef" type="date" name="datefevervaccine" id="inputDate" disabled/>
         <script>
             let menuFiebre= document.getElementById("menuFiebre");
             menuFiebre.addEventListener('change',()=>{
@@ -31,7 +36,7 @@
                 }
             });
         </script>
-        <input type="submit" class="btn-save" value="Continuar">
+        <input type="submit" class="indexbtn" value="Continuar">
     </form>
     <div style="display: inline;">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

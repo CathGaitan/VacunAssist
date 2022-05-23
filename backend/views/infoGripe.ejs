@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/resources/style.css">
 </head>
 <body>
+    <br>
     <h1>Informacion sobre la vacuna de la Gripe</h1>
+    <br>
     <h2>Ha recibido una vacuna contra la gripe alguna vez?</h2>
     <div id="divForm">
         <form action="infoGripe" method="post">
@@ -17,7 +19,8 @@
                 <option value="1">Si</option>
                 <option value="0">No</option>
             </select>
-            <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se ha vacunado: </h2>
+            <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplico la vacuna: </h2>
+            <br>
             <input type="date" name="datefluevaccine" id="inputDate" disabled/>
             <script>
                 let menuFlue= document.getElementById("menuFlue");
@@ -33,7 +36,7 @@
                     }
                 });
             </script>
-            <input type="submit" class="btn-save" value="Continuar">
+            <input type="submit" class="indexbtn" value="Continuar">
         </form>
     </div>
     <div style="display: inline;">
