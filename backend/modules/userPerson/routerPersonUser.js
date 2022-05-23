@@ -521,4 +521,7 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
     
 });
 
+routerPersonUser.get('/viewMap',async(req,res)=>{
+    res.render('viewMap');
+})
 module.exports=routerPersonUser;
