@@ -12,15 +12,21 @@
         <br>
         <h2>Actualiza tus datos</h2>
         <br>
-        <form action="updatedata" method="post">
-            <label for="">Nuevo nombre</label>
+        <form name="update-form" action="updatedata" method="post">
+            <label for="">Nuevo nombre:</label>
+            <br>
             <input type="text" name="name" >
             <br>
+            <br>
             <label for="">Nuevo apellido</label>
+            <br>
             <input type="text" name="lastname" >
             <br>
+            <br>
             <label for="">Nueva contraseña</label>
+            <br>
             <input type="password" name="password" >
+            <br>
             <br>
             <label for="">Zona de vacunatorio</label>
             <br>
@@ -31,13 +37,16 @@
                 <option value="cementerio">Cementerio</option>
             </select>
             <br>
-            <h3>Ingrese su contraseña para poder modificar los datos: </h3>
+            <br>
+            <h4>Ingrese su contraseña para poder modificar los datos: </h4>
+            
             <input type="password" name="oldpassword" required>
             <br>
             
 
                 <input type="submit" class="btn-save" value="Guardar datos"><a href="/personUser/dashboard" class="btn-cancel">Volver al inicio</a>
-        </form>
+        <br>
+            </form>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <% if (typeof alert != "undefined")  { %>

@@ -254,9 +254,13 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
 routerPersonUser.get('/listData',async(req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?',email,async (error, results)=>{
-        if(results[0].risk==0) results[0].risk="No"
-        else results[0].risk="Si";
-        results[0].dateofbirth=formatDate(results[0].dateofbirth);
+        if (results[0].risk==0) 
+            results[0].risk="No"
+        else 
+            results[0].risk="Si";
+        birthdate= new Date();
+        birthdate= results[0].dateofbirth;
+        results[0].dateofbirth= birthdate.toLocaleDateString();
         res.render('viewdata',{
             personuserdata:results
         });

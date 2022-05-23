@@ -9,17 +9,20 @@
 </head>
 <body>
     <br>
-    <h1>Informacion sobre la vacuna de la Gripe</h1>
+    <h1>Información sobre la vacuna de la Gripe</h1>
     <br>
     <h2>Ha recibido una vacuna contra la gripe alguna vez?</h2>
+    <br>
     <div id="divForm">
-        <form action="infoGripe" method="post">
+        <form class="gripeform" action="infoGripe" method="post">
             <select type="menu" name="fluevaccine" id="menuFlue" required>
                 <option selected="true" disabled="disabled"></option>
                 <option value="1">Si</option>
                 <option value="0">No</option>
             </select>
-            <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplico la vacuna: </h2>
+            <br>
+            <br>
+            <h2>Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplicó esta vacuna: </h2>
             <br>
             <input type="date" name="datefluevaccine" id="inputDate" disabled/>
             <script>
@@ -36,8 +39,8 @@
                     }
                 });
             </script>
-            <input type="submit" class="indexbtn" value="Continuar">
-        </form>
+                <input type="submit" class="indexbtn" value="Continuar">    
+    </form>
     </div>
     <div style="display: inline;">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
