@@ -470,7 +470,6 @@ routerPersonUser.post('/cancelturn', async (req, res)=>{
         idpersonuser=result[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
             let turn=results.find(r => r.vaccinename === nameturn)
-            console.log(turn);
             if(turn == null){
                 res.render('cancelturn',{
                     alert: true,
@@ -508,9 +507,7 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
                 if(results[i].date!=null){
                     fecha = new Date();
                     fecha= results[i].date;
-                    console.log(fecha)
                     results[i].date= fecha.toLocaleDateString();
-                    console.log(results[i].date) 
                 }else{
                     results[i].date="---";
                 }
