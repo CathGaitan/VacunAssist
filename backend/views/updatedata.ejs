@@ -9,18 +9,24 @@
 </head>
 <body>
     <div class="update-form">
+        <br>
         <h2>Actualiza tus datos</h2>
+        <br>
         <form action="updatedata" method="post">
             <label for="">Nombre</label>
+            <br>
             <input type="text" name="name" >
             <br>
             <label for="">Apellido</label>
+            <br>
             <input type="text" name="lastname" >
             <br>
             <label for="">Contraseña</label>
+            <br>
             <input type="password" name="password" >
             <br>
             <label for="">Zona de vacunatorio</label>
+            <br>
             <select type="menu" name="zone" >
                 <option selected="true" disabled="disabled" value="empty"></option>
                 <option value="terminal">Terminal</option>
@@ -29,10 +35,7 @@
             </select>
             <br>
 
-
-            <div style="display: inline;">
                 <input type="submit" class="btn-save" value="Guardar datos"><a href="/personUser/dashboard" class="btn-cancel">Volver al inicio</a>
-            </div>
         </form>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 

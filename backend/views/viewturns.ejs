@@ -4,27 +4,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
     <title>Ver mis turnos</title>
 </head>
+
 <body>
-    <table border="1">
-        <tr>
-          <th>Vacuna</th>
-          <th>Nro Dosis</th>
-          <th>Estado</th>
-          <th>Fecha</th>
-        </tr>
-        
-        <% for(let i=0;i<turnsinfo.length;i++){ %>
-          <tr>
-            <td><%= turnsinfo[i].vaccinename %></td>
-            <td><%= turnsinfo[i].dose %></td>
-            <td><%= turnsinfo[i].state %></td>
-            <td><%= turnsinfo[i].date %></td>
-          </tr>
-        <% } %>
-      </table>
-      <a href="/personUser/dashboard">Retornar</a>
-      <a href="/personUser/cancelTurn">Cancelar un turno</a>
-</body>
+  <br>
+  <h2>Mis turnos</h2>
+  <br>
+  <label for="">--------------------------------------------------------------------------------------</label>
+  <br>
+  <% for(let i=0;i<turnsinfo.length;i++){ %>
+    <label for="">Vacuna:</label>
+    <br>
+    <label for=""><%= turnsinfo[i].vaccinename %></label>
+    <br>
+    <br>
+    <label for="">Numero de dosis:</label>
+    <label for=""><%= turnsinfo[i].dose %></label>
+    <br>
+    <br>
+    <label for="">Estado del turno:</label>
+    <br>
+    <label for=""><%= turnsinfo[i].state %></label>
+    <br>
+    <br>
+    <label for="">Fecha: </label>
+    <br>
+    <label for=""><%= turnsinfo[i].date %></label>
+    <br>
+    <label for="">--------------------------------------------------------------------------------------</label>
+    <br>
+    <% } %>
+      <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
+      <br>
+      <br>
+    </body>
 </html>

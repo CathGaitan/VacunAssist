@@ -9,34 +9,39 @@
 </head>
 <body>
     <div class="register-form">
-        <h2>Formulario de registro</h2>
+        <br>
+        <h2>Registrarme</h2>
+        <br>
         <form action="register" method="post">
-            <label for="">Nombre</label>
-            <input type="text" name="name" required>
+            <label class="label" for="">Nombre</label>
+            <input type="text" name="name" placeholder="Nombre" required>
 
-            <label for="">Apellido</label>
-            <input type="text" name="lastname" required>
+            <label class="label" for="">Apellido</label>
+            <input type="text" name="lastname" placeholder="Apellido"required>
 
-            <label for="">Email</label>
-            <input type="email" name="email" required>
+            <label class="label" for="">Email</label>
+            <input type="email" name="email" placeholder="Email" required>
 
-            <label for="">Contraseña</label>
-            <input type="password" name="password" required>
+            <label class="label" for="">Contraseña</label>
+            <input type="password" name="password" placeholder="Contraseña" required>
 
-            <label for="">DNI</label>
-            <input type="text" name="DNI" required>
+            <label class="label" for="">DNI</label>
+            <input type="text" name="DNI" placeholder="DNI" required>
 
-            <label for="">Fecha de nacimiento</label>
+            <label class="label" for="">Fecha de nacimiento</label>
             <input type="date" name="dateofbirth" required>
 
-            <label for="">Estas dentro del grupo de personas de riesgo?</label>
-            <select type="menu" name="risk" required>
+            <label class="label" for="">Estas dentro del grupo de personas de riesgo?</label>
+            <br>
+            <select class="select" type="menu" name="risk" required>
                 <option value="0">No</option>
                 <option value="1">Si</option>
             </select>
-            
-            <label for="">Zona del vacunatorio que quiera</label>
-            <select type="menu" name="zone" required>
+            <br>
+            <br>
+            <label class="label" for="">Seleccione una zona de vacunatorio</label>
+            <br>
+            <select class="select" type="menu" name="zone" required>
                 <option value="municipalidad">Zona Municipalidad (51 e/10 y 11 nro 770)</option>
                 <option value="cementerio">Zona Cementerio (138 e/73 y 74 Nro 2035)</option>
                 <option value="terminal">Zona Terminal (3 e/41 y 42 nro 770)</option>

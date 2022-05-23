@@ -452,31 +452,37 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
 
 let turns;
 
-routerPersonUser.get('/cancelturn', async (req, res)=>{
+routerPersonUser.post('/cancelturn', async (req, res)=>{
     const email= req.session.name;
     let nameturn=req.body.selectTurns;
-    console.log(nameturn);
-    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error,results)=>{
-        idpersonuser=results[0].id;
+    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error,result)=>{
+        idpersonuser=result[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
-            for(let i=0;i<results.length;i++){
-                if(results[i].vaccinename == nameturn){
-                    let idturn= results[i].id;
-                    let state='cancel'
-                    DB.query('UPDATE turn SET state = ?',state,async(error,result)=>{
-                        res.render('cancelturn', {
-                            alert: true,
-                            alertTitle: "Se ha cancelado tu turno",
-                            alertMessage: "Turno cancelado",
-                            alertIcon:'success',
-                            showConfirmButton: false,
-                            timer: false,
-                            ruta: 'personUser/listTurns'
-                        });  
-                    });
-                }
+            let turn=results.find(r => r.vaccinename === nameturn)
+            console.log(turn);
+            if(turn == null){
+                res.render('cancelturn',{
+                    alert: true,
+                    alertTitle: "No tiene turno para esa vacuna",
+                    alertMessage: "No puede cancelar el turno ya que no tiene un turno para esa vacuna",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: false,
+                    ruta: 'personUser/cancelturn'
+                })
+            }else{
+                DB.query('UPDATE turn SET state = ? WHERE id= ?',["Cancelado",turn.id],async(error,result)=>{
+                    res.render('cancelturn', {
+                        alert: true,
+                        alertTitle: "Se ha cancelado tu turno",
+                        alertMessage: "Turno cancelado",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'personUser/cancelTurn'
+                    });  
+                });
             }
-
         })
     })
 })
@@ -489,7 +495,11 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
             turns=results;
             for(let i=0; i<results.length; i++){
                 if(results[i].date!=null){
-                    //results[i].date=formatDate(results[0].date); encontrar forma de poner linda fecha
+                    fecha = new Date();
+                    fecha= results[i].date;
+                    console.log(fecha)
+                    results[i].date= fecha.toLocaleDateString();
+                    console.log(results[i].date) 
                 }else{
                     results[i].date="---";
                 }
