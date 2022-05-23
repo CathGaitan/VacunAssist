@@ -47,6 +47,10 @@ body, .body{
     padding: 70px 0 10px 0;
 }
 
+.text{
+    font-weight: bolder;
+}
+
 .login-form input[type="password"],
 .login-form input[type="email"],
 .register-form input[type="password"],
@@ -58,7 +62,8 @@ body, .body{
 .gripeform input[type="submit"],
 .gripeform input[type="date"],
 .update-form input[type="text"],
-.update-form input[type="password"] {
+.update-form input[type="password"],
+.login-form input[type="number"] {
     width: 100%;
     border-radius: 20px;
     padding: 6px;
