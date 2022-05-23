@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs');
 const bp = require('body-parser')
 routerPersonUser.use(bp.json())
 routerPersonUser.use(bp.urlencoded({ extended: true }));
-//const transporter=require('../mailConfig/mailer');
+const transporter=require('../mailConfig/mailer');
 
 var userActive;
 

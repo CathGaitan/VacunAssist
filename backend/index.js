@@ -4,7 +4,7 @@ const exp = require('constants');
 const express = require('express');
 const app = express();
 const routerPersonUser = require('./modules/userPerson/routerPersonUser');
-//const nodemailer=require('nodemailer');
+const nodemailer=require('nodemailer');
 app.use('/personUser',routerPersonUser);
 
 // seteamos url encoded para caputar los datos del formulario
