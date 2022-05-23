@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs');
 const bp = require('body-parser')
 routerPersonUser.use(bp.json())
 routerPersonUser.use(bp.urlencoded({ extended: true }));
-const transporter=require('../mailer');
+//const transporter=require('../mailConfig/mailer');
 
 var userActive;
 
@@ -123,12 +123,12 @@ routerPersonUser.post('/register', async (req, res)=>{
                     }
                 }else{
                     let randomCode=Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000);
-                    await transporter.sendMail({
-                        from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
-                        to: user.email, // list of receivers
-                        subject: "Nueva cuenta en vacunassist!", // Subject line
-                        text: "Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ",randomCode // plain text body
-                    });
+                    // await transporter.sendMail({
+                    //     from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                    //     to: user.email, // list of receivers
+                    //     subject: "Nueva cuenta en vacunassist!", // Subject line
+                    //     text: "Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ",randomCode // plain text body
+                    // });
                     res.render('register', { //animacion de registro exitoso
                         alert: true,
                         alertTitle: "Registro",
