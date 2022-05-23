@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
     <title>Ver mis turnos</title>
 </head>
 <body>
-      <h1>Desea cancelar un turno? Seleccione el que quiera cancelar y aprete "cancelar turno"</h1>
+  <br>
+      <h1>Seleccione la vacuna para la cual desea cancelar el turno y oprima "Cancelar turno"</h1>
+      <br>
       <form action="cancelturn" method="post">
         <select type="menu" name="selectTurns" required>
-          <option selected="true" disabled="disabled" value="empty">turnos</option>
+          <option selected="true" disabled="disabled" value="empty">Seleccione tipo de vacuna</option>
           <option value="Covid-19">Covid-19</option>
           <option value="Gripe">Gripe</option>
           <option value="Fiebre Amarilla">Fiebre Amarilla</option>
       </select>
-      <input type="submit" class="btn-save" value="Cancelar turno">
+      <label for="">   </label>
+      <input type="submit" class="indexbtn" value="Cancelar turno">
     </form>
-      <a href="/personUser/listTurns">Retornar</a>
+      <a href="/personUser/dashboard" class="indexbtn">Volver al inicio</a>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
       <% if (typeof alert != "undefined")  { %>
         <script>

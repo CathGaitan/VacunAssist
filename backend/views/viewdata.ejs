@@ -3,30 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/resources/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver mis datos</title>
 </head>
-<body>
-    <table border="1">
-        <tr>
-          <th>nombre</th>
-          <th>apellido</th>
-          <th>email</th>
-          <th>DNI</th>
-          <th>Zona elegida para el vacunatorio</th>
-          <th>Fecha nacimiento</th>
-          <th>riesgo</th>
-        </tr>
-        <tr>
-            <td><%= personuserdata[0].name %></td>
-            <td><%= personuserdata[0].lastname %></td>
-            <td><%= personuserdata[0].email %></td>
-            <td><%= personuserdata[0].DNI %></td>
-            <td><%= personuserdata[0].zone %></td> 
-            <td><%= personuserdata[0].dateofbirth %></td>  
-            <td><%= personuserdata[0].risk %></td>
-        </tr>
-      </table>
-      <a href="/personUser/dashboard">Retornar</a>
+<body class="viewdata">
+          <br>
+          <h1>Mis datos</h1>
+          <br>
+          <h4>
+          <label class="caja" for="">Nombre:</label>
+          <br>
+          <label for=""><%= personuserdata[0].name %></label>
+          <br>
+          <br>
+          <label class="caja" for="">Apellido:</label>
+          <br>
+          <label for=""><%= personuserdata[0].lastname %></label>
+          <br>
+          <br>
+          <label class="caja" for="">Email:</label>
+          <br>
+          <label for=""><%= personuserdata[0].email %></label>
+          <br>
+          <br>
+          <label class="caja" for="">DNI:</label>
+          <br>
+          <label for=""><%= personuserdata[0].DNI %></label>
+          <br>
+          <br>
+          <label class="caja" for="">Fecha de Nacimiento:</label>
+          <br>
+          <label for=""><%= personuserdata[0].dateofbirth %></label>
+          <br>
+          <br>
+          <label class="caja" for="">Se encuentra dentro del grupo de riesgo: </label>
+          <br>
+          <label for=""><%= personuserdata[0].risk %></label>
+          <br>
+          <br>
+          <label class="caja" for="">Zona de vacunatorio seleccionada: </label>
+          <br>
+          <label for=""><%= personuserdata[0].zone %></label>
+          <br>
+        </h4>
+      
+      <a class="indexbtn" href="/personUser/updatedata">Actualizar mis datos</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
+      <br>
+      <br>
 </body>
 </html>

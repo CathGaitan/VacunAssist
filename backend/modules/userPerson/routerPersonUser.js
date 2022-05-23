@@ -478,7 +478,7 @@ routerPersonUser.post('/cancelturn', async (req, res)=>{
                     ruta: 'personUser/cancelturn'
                 })
             }else{
-                DB.query('UPDATE turn SET state = ? WHERE id= ?',["cancelado",turn.id],async(error,result)=>{
+                DB.query('UPDATE turn SET state = ? WHERE id= ?',["Cancelado",turn.id],async(error,result)=>{
                     res.render('cancelturn', {
                         alert: true,
                         alertTitle: "Se ha cancelado tu turno",
@@ -502,7 +502,11 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
             turns=results;
             for(let i=0; i<results.length; i++){
                 if(results[i].date!=null){
-                    //results[i].date=formatDate(results[0].date); encontrar forma de poner linda fecha
+                    fecha = new Date();
+                    fecha= results[i].date;
+                    console.log(fecha)
+                    results[i].date= fecha.toLocaleDateString();
+                    console.log(results[i].date) 
                 }else{
                     results[i].date="---";
                 }
