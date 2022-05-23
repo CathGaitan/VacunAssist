@@ -254,9 +254,13 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
 routerPersonUser.get('/listData',async(req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?',email,async (error, results)=>{
-        if(results[0].risk==0) results[0].risk="No"
-        else results[0].risk="Si";
-        results[0].dateofbirth=formatDate(results[0].dateofbirth);
+        if (results[0].risk==0) 
+            results[0].risk="No"
+        else 
+            results[0].risk="Si";
+        birthdate= new Date();
+        birthdate= results[0].dateofbirth;
+        results[0].dateofbirth= birthdate.toLocaleDateString();
         res.render('viewdata',{
             personuserdata:results
         });
@@ -466,7 +470,6 @@ routerPersonUser.post('/cancelturn', async (req, res)=>{
         idpersonuser=result[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
             let turn=results.find(r => r.vaccinename === nameturn)
-            console.log(turn);
             if(turn == null){
                 res.render('cancelturn',{
                     alert: true,
@@ -504,9 +507,7 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
                 if(results[i].date!=null){
                     fecha = new Date();
                     fecha= results[i].date;
-                    console.log(fecha)
                     results[i].date= fecha.toLocaleDateString();
-                    console.log(results[i].date) 
                 }else{
                     results[i].date="---";
                 }

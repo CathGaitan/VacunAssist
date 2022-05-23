@@ -23,6 +23,7 @@ body, .body{
 .indexbtn{
     width: 15%;
     padding: 6px;
+    font-family: 'Roboto';
     background-color: #737473;
     border: 0;
     border-radius: 20px;
@@ -51,13 +52,19 @@ body, .body{
 .register-form input[type="password"],
 .register-form input[type="text"],
 .register-form input[type="email"],
-.register-form input[type="date"], input{
-    width: 200px;
+.register-form input[type="date"], 
+.fiebreform input[type="date"],
+.fiebreform input[type="submit"],
+.gripeform input[type="submit"],
+.gripeform input[type="date"],
+.update-form input[type="text"],
+.update-form input[type="password"] {
+    width: 100%;
     border-radius: 20px;
     padding: 6px;
     font-weight: bold;
     font-family: 'Roboto';
-    border: 1px solid #ced4da;
+    border: 1px solid #000000;
     margin-bottom: 10px;
     box-sizing: border-box;
 }
