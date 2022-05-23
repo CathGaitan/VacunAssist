@@ -447,8 +447,34 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
     });
 });
 
-routerPersonUser.post('/cancelturn', async (req, res)=>{
+let turns;
 
+routerPersonUser.get('/cancelTurn', async (req, res)=>{
+    const email= req.session.name;
+    let nameturn=req.body.selectTurns;
+    console.log(nameturn);
+    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error,result)=>{
+        idpersonuser=result[0].id;
+        DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
+            for(let i=0;i<results.length;i++){
+                if(results[i].vaccinename == nameturn){
+                    let idturn=results[i].id;
+                    DB.query('UPDATED turn SET state=cancelado',async(error,result)=>{
+                        res.render('cancelturn', {
+                            alert: true,
+                            alertTitle: "Se ha cancelado tu turno",
+                            alertMessage: "Turno cancelado",
+                            alertIcon:'success',
+                            showConfirmButton: false,
+                            timer: false,
+                            ruta: 'personUser/listTurns'
+                        });  
+                    });
+                }
+            }
+
+        })
+    })
 })
 
 routerPersonUser.get('/listTurns', async (req, res)=>{
@@ -456,6 +482,7 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
     DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error,result)=>{
         idpersonuser=result[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
+            turns=results;
             for(let i=0; i<results.length; i++){
                 if(results[i].date!=null){
                     //results[i].date=formatDate(results[0].date); encontrar forma de poner linda fecha
@@ -468,6 +495,7 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
             });
         });
     });
+    
 });
 
 module.exports=routerPersonUser;

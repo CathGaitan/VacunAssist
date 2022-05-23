@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver mis turnos</title>
+</head>
+<body>
+      <h1>Desea cancelar un turno? Seleccione el que quiera cancelar y aprete "cancelar turno"</h1>
+      <form action="cancelTurn" method="post">
+        <select type="menu" name="selectTurns" required>
+          <option selected="true" disabled="disabled" value="empty">turnos</option>
+          <option value="holaa">holaa</option>
+      </select>
+      <input type="submit" class="btn-save" value="Cancelar turno">
+    </form>
+      <a href="/personUser/dashboard">Retornar</a>
+      <% if (typeof alert != "undefined")  { %>
+        <script>
+        Swal.fire({
+          title:'<%= alertTitle %>',
+          text:'<%= alertMessage %>',
+          icon:'<%= alertIcon %>',
+          showConfirmButton: '<%= showConfirmButton %>',
+          timer: false
+        }).then(()=>{
+          window.location='/<%= ruta %>'
+        })
+        </script>
+       <% } %>
+</body>
+</html>
