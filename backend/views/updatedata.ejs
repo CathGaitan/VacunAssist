@@ -13,16 +13,13 @@
         <h2>Actualiza tus datos</h2>
         <br>
         <form action="updatedata" method="post">
-            <label for="">Nombre</label>
-            <br>
+            <label for="">Nuevo nombre</label>
             <input type="text" name="name" >
             <br>
-            <label for="">Apellido</label>
-            <br>
+            <label for="">Nuevo apellido</label>
             <input type="text" name="lastname" >
             <br>
-            <label for="">Contraseña</label>
-            <br>
+            <label for="">Nueva contraseña</label>
             <input type="password" name="password" >
             <br>
             <label for="">Zona de vacunatorio</label>
@@ -34,6 +31,10 @@
                 <option value="cementerio">Cementerio</option>
             </select>
             <br>
+            <h3>Ingrese su contraseña para poder modificar los datos: </h3>
+            <input type="password" name="oldpassword" required>
+            <br>
+            
 
                 <input type="submit" class="btn-save" value="Guardar datos"><a href="/personUser/dashboard" class="btn-cancel">Volver al inicio</a>
         </form>
