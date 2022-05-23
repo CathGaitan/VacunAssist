@@ -184,63 +184,78 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     let newname;
     let newlastname;
     let newzone;
+    const oldpassword=req.body.oldpassword;
     const email= req.session.name;
-    if (req.body.name){ 
-        newname= req.body.name;
-        DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email], async (error, results)=>{
+    DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
+        if (await bcryptjs.compare(oldpassword, results[0].password)){
+            if (req.body.name){ 
+                newname= req.body.name;
+                DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email], async (error, results)=>{
+                    res.render('updatedata', {
+                        alert: true,
+                        alertTitle: "Actualizacion de datos exitosa",
+                        alertMessage: "¡ACTUALIZACION CORRECTA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'personUser/updatedata'
+                    });       
+                })
+            }
+            if (req.body.lastname){
+                newlastname= req.body.lastname;
+                DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email], async (error, results)=>{
+                    res.render('updatedata', {
+                        alert: true,
+                        alertTitle: "Actualizacion de datos exitosa",
+                        alertMessage: "¡ACTUALIZACION CORRECTA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'personUser/updatedata'
+                    });       
+                })
+            }
+            if (req.body.password){
+                newHasshedPassword=  await bcryptjs.hash(req.body.password, 8);
+                DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email], async (error, results)=>{
+                    res.render('updatedata', {
+                        alert: true,
+                        alertTitle: "Actualizacion de datos exitosa",
+                        alertMessage: "¡ACTUALIZACION CORRECTA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'personUser/updatedata'
+                    });       
+                })
+            }
+            if (req.body.zone != 'empty'){
+                newzone= req.body.zone;
+                DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email], async (error, results)=>{
+                    res.render('updatedata', {
+                        alert: true,
+                        alertTitle: "Actualizacion de datos exitosa",
+                        alertMessage: "¡ACTUALIZACION CORRECTA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'personUser/updatedata'
+                    });       
+                })
+            }
+        }else{
             res.render('updatedata', {
                 alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
+                alertTitle: "Error",
+                alertMessage: "Contraseña incorrecta",
+                alertIcon:'error',
+                showConfirmButton: true,
                 timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
-    if (req.body.lastname){
-        newlastname= req.body.lastname;
-        DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email], async (error, results)=>{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
-    if (req.body.password){
-        newHasshedPassword=  await bcryptjs.hash(req.body.password, 8);
-        DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email], async (error, results)=>{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
-    if (req.body.zone != 'empty'){
-        newzone= req.body.zone;
-        DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email], async (error, results)=>{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });       
-        })
-    }
+                ruta: 'personUser/updatedata'    
+            }); 
+        }
+    })
 });
 
 
