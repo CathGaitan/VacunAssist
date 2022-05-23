@@ -9,6 +9,7 @@ var userActive;
 
 //7- variables de session
 const session = require('express-session');
+const e = require('express');
 routerPersonUser.use(session({
 	secret: 'secret',
 	resave: true,
@@ -190,60 +191,41 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
         if (await bcryptjs.compare(oldpassword, results[0].password)){
             if (req.body.name){ 
                 newname= req.body.name;
-                DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email], async (error, results)=>{
-                    res.render('updatedata', {
-                        alert: true,
-                        alertTitle: "Actualizacion de datos exitosa",
-                        alertMessage: "¡ACTUALIZACION CORRECTA!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: 'personUser/updatedata'
-                    });       
-                })
+                DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email])
             }
             if (req.body.lastname){
                 newlastname= req.body.lastname;
-                DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email], async (error, results)=>{
-                    res.render('updatedata', {
-                        alert: true,
-                        alertTitle: "Actualizacion de datos exitosa",
-                        alertMessage: "¡ACTUALIZACION CORRECTA!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: 'personUser/updatedata'
-                    });       
-                })
+                DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email])
             }
             if (req.body.password){
-                newHasshedPassword=  await bcryptjs.hash(req.body.password, 8);
-                DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email], async (error, results)=>{
-                    res.render('updatedata', {
+                if(req.body.password.length >= 6){
+                    newHasshedPassword=await bcryptjs.hash(req.body.password, 8);
+                    DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email])
+                }else{
+                    return res.render('updatedata', {
                         alert: true,
-                        alertTitle: "Actualizacion de datos exitosa",
-                        alertMessage: "¡ACTUALIZACION CORRECTA!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
+                        alertTitle: "Error",
+                        alertMessage: "La contraseña debe tener tener 6 o mas caracteres",
+                        alertIcon:'error',
+                        showConfirmButton: true,
                         timer: false,
-                        ruta: 'personUser/updatedata'
-                    });       
-                })
+                        ruta: 'personUser/updatedata'    
+                    }); 
+                }
             }
-            if (req.body.zone != 'empty'){
+            if (req.body.zone != null){
                 newzone= req.body.zone;
-                DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email], async (error, results)=>{
-                    res.render('updatedata', {
-                        alert: true,
-                        alertTitle: "Actualizacion de datos exitosa",
-                        alertMessage: "¡ACTUALIZACION CORRECTA!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: 'personUser/updatedata'
-                    });       
-                })
+                DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email])
             }
+            return res.render('updatedata', {
+                alert: true,
+                alertTitle: "Actualizacion de datos exitosa",
+                alertMessage: "¡ACTUALIZACION CORRECTA!",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'personUser/updatedata'
+            });
         }else{
             res.render('updatedata', {
                 alert: true,
