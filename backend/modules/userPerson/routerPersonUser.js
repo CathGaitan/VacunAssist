@@ -67,6 +67,9 @@ routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
 routerPersonUser.get('/requestturn', (req, res)=>{
     res.render('requestturn')
 })
+routerPersonUser.get('/cancelturn', (req, res)=>{
+    res.render('cancelturn')
+})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -449,17 +452,17 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
 
 let turns;
 
-routerPersonUser.get('/cancelTurn', async (req, res)=>{
+routerPersonUser.get('/cancelturn', async (req, res)=>{
     const email= req.session.name;
     let nameturn=req.body.selectTurns;
     console.log(nameturn);
-    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error,result)=>{
-        idpersonuser=result[0].id;
+    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error,results)=>{
+        idpersonuser=results[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
             for(let i=0;i<results.length;i++){
                 if(results[i].vaccinename == nameturn){
                     let idturn=results[i].id;
-                    DB.query('UPDATED turn SET state=cancelado',async(error,result)=>{
+                    DB.query('UPDATE turn SET state = ?',async(error,result)=>{
                         res.render('cancelturn', {
                             alert: true,
                             alertTitle: "Se ha cancelado tu turno",
@@ -479,8 +482,8 @@ routerPersonUser.get('/cancelTurn', async (req, res)=>{
 
 routerPersonUser.get('/listTurns', async (req, res)=>{
     const email= req.session.name;
-    DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error,result)=>{
-        idpersonuser=result[0].id;
+    DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error, results)=>{
+        idpersonuser=results[0].id;
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
             turns=results;
             for(let i=0; i<results.length; i++){
