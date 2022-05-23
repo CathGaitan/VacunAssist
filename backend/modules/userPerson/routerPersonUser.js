@@ -111,7 +111,7 @@ routerPersonUser.post('/register', async (req, res)=>{
                         res.render('register', { //animacion de dni no validado
                             alert: true,
                             alertTitle: "Error en el registro",
-                            alertMessage: "Ese DNI ya existe en el sistema",
+                            alertMessage: "Ese email ya existe en el sistema",
                             alertIcon:'error',
                             showConfirmButton: false,
                             timer: false,
@@ -348,7 +348,8 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
     const datefluevaccine= req.body.datefluevaccine;
     DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
         console.log(pastAYear(datefluevaccine));
-        if (results[0].fluevaccine == 0 || pastAYear(datefluevaccine)){ //si no tiene la vacuna de la gripe
+        console.log('se dio la de la gripe?: ',fluevaccine);
+        if (fluevaccine == 0 || pastAYear(datefluevaccine)){ //si no tiene la vacuna de la gripe
             const hoy = Date.now();
             const fecha = new Date(hoy);
             fechanac= results[0].dateofbirth;
@@ -429,7 +430,7 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
                 res.render('requestturn', {
                     alert: true,
                     alertTitle: "Turno no solicitado",
-                    alertMessage: "Usted no puede aplicarse esta vacuna por ser mayor de 60",
+                    alertMessage: "Usted no puede aplicarse esta vacuna ya que es mayor de 60 años.",
                     alertIcon:'error',
                     showConfirmButton: false,
                     timer: 4000,
