@@ -78,6 +78,7 @@ routerPersonUser.get('/cancelturn', (req, res)=>{
 routerPersonUser.post('/register', async (req, res)=>{
     let pass= req.body.password;
     let passwordHash = await bcryptjs.hash(req.body.password, 8);
+    let randomCode=Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000);
     let user = {
         email:req.body.email, 
         name:req.body.name, 
@@ -86,8 +87,10 @@ routerPersonUser.post('/register', async (req, res)=>{
         DNI: req.body.DNI,
         dateofbirth: req.body.dateofbirth,
         risk: req.body.risk,
-        zone: req.body.zone
+        zone: req.body.zone,
+        securecode: randomCode
     }
+    console.log(user.securecode);
     userActive= user.email;
     if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
         res.render('register', { //animacion de registro exitoso
@@ -109,7 +112,6 @@ routerPersonUser.post('/register', async (req, res)=>{
         if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
             DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
                 if (error){
-                    console.log(error);
                     if (error.code == 'ER_DUP_ENTRY'){
                         res.render('register', { //animacion de dni no validado
                             alert: true,
@@ -122,7 +124,6 @@ routerPersonUser.post('/register', async (req, res)=>{
                         });
                     }
                 }else{
-                    let randomCode=Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000);
                     // await transporter.sendMail({
                     //     from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
                     //     to: user.email, // list of receivers
@@ -158,14 +159,16 @@ routerPersonUser.post('/register', async (req, res)=>{
 routerPersonUser.post('/auth', async (req, res)=>{
     const email = req.body.email;
     const password = req.body.password;
+    const secureCode = req.body.secureCode;
     let passwordHash = await bcryptjs.hash(password, 8);
     if (email && password){
         DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
-            if (results.length == 0 || !(await bcryptjs.compare(password, results[0].password))){
+            console.log(secureCode,'-',results[0].securecode);
+            if (results.length == 0 || !(await bcryptjs.compare(password, results[0].password)) || (secureCode!=results[0].securecode)){
                 res.render('login', {
                     alert: true,
                     alertTitle: "Error",
-                    alertMessage: "Email y/o contrasenia incorrectas",
+                    alertMessage: "Email,contraseña y/o codigo incorrecto",
                     alertIcon:'error',
                     showConfirmButton: true,
                     timer: false,
@@ -357,8 +360,6 @@ routerPersonUser.post('/infoGripe', async(req,res)=>{
     const fluevaccine= req.body.fluevaccine;
     const datefluevaccine= req.body.datefluevaccine;
     DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
-        console.log(pastAYear(datefluevaccine));
-        console.log('se dio la de la gripe?: ',fluevaccine);
         if (fluevaccine == 0 || pastAYear(datefluevaccine)){ //si no tiene la vacuna de la gripe
             const hoy = Date.now();
             const fecha = new Date(hoy);
