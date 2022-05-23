@@ -461,8 +461,9 @@ routerPersonUser.get('/cancelturn', async (req, res)=>{
         DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
             for(let i=0;i<results.length;i++){
                 if(results[i].vaccinename == nameturn){
-                    let idturn=results[i].id;
-                    DB.query('UPDATE turn SET state = ?',async(error,result)=>{
+                    let idturn= results[i].id;
+                    let state='cancel'
+                    DB.query('UPDATE turn SET state = ?',state,async(error,result)=>{
                         res.render('cancelturn', {
                             alert: true,
                             alertTitle: "Se ha cancelado tu turno",

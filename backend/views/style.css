@@ -5,7 +5,7 @@ body{
     text-align: center;
 }
 
-.login-form, .contenedor, .register-form{
+.login-form, .contenedor, .register-form, .update-form{
     width: 300px;
     margin:0 auto;
 }
