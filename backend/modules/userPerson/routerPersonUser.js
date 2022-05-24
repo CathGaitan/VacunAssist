@@ -168,7 +168,7 @@ routerPersonUser.post('/auth', async (req, res)=>{
                 res.render('login', {
                     alert: true,
                     alertTitle: "Error",
-                    alertMessage: "Email,contraseña y/o codigo incorrecto",
+                    alertMessage: "Email, contraseña y/o codigo incorrecto",
                     alertIcon:'error',
                     showConfirmButton: true,
                     timer: false,
