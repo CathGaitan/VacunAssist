@@ -124,12 +124,12 @@ routerPersonUser.post('/register', async (req, res)=>{
                         });
                     }
                 }else{
-                    // await transporter.sendMail({
-                    //     from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
-                    //     to: user.email, // list of receivers
-                    //     subject: "Nueva cuenta en vacunassist!", // Subject line
-                    //     text: "Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ",randomCode // plain text body
-                    // });
+                    await transporter.sendMail({
+                        from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: "Nueva cuenta en vacunassist!", // Subject line
+                        text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
+                    });
                     res.render('register', { //animacion de registro exitoso
                         alert: true,
                         alertTitle: "Registro",
