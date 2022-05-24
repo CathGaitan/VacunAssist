@@ -73,6 +73,9 @@ routerPersonUser.get('/requestturn', (req, res)=>{
 routerPersonUser.get('/cancelturn', (req, res)=>{
     res.render('cancelturn')
 })
+routerPersonUser.get('/viewMap',async(req,res)=>{
+    res.render('viewMap');
+})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -197,20 +200,24 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     let newname;
     let newlastname;
     let newzone;
+    let datoACambiar="";
     const oldpassword=req.body.oldpassword;
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
         if (await bcryptjs.compare(oldpassword, results[0].password)){
             if (req.body.name){ 
                 newname= req.body.name;
+                datoACambiar+="nombre";
                 DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email])
             }
             if (req.body.lastname){
                 newlastname= req.body.lastname;
+                datoACambiar+=" apellido";
                 DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email])
             }
             if (req.body.password){
                 if(req.body.password.length >= 6){
+                    datoACambiar+=" contraseña";
                     newHasshedPassword=await bcryptjs.hash(req.body.password, 8);
                     DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email])
                 }else{
@@ -227,8 +234,15 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
             }
             if (req.body.zone != null){
                 newzone= req.body.zone;
+                datoACambiar+=" zona"
                 DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email])
             }
+            await transporter.sendMail({
+                from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                to: email, // list of receivers
+                subject: "Se han cambiado tus datos!", // Subject line
+                text: `Se han cambiado exitosamente los siguientes datos de tu cuenta de vacunassist: ${datoACambiar}`
+            });
             return res.render('updatedata', {
                 alert: true,
                 alertTitle: "Actualizacion de datos exitosa",
@@ -518,10 +532,17 @@ routerPersonUser.get('/listTurns', async (req, res)=>{
             });
         });
     });
-    
 });
 
-routerPersonUser.get('/viewMap',async(req,res)=>{
-    res.render('viewMap');
-})
+routerPersonUser.get('/notifications',async(req,res)=>{
+    const email= req.session.name;
+    DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error, results)=>{
+        idpersonuser=results[0].id;
+        DB.query('SELECT * FROM turn WHERE (idpersonuser = ?) and (state = ?) ',[idpersonuser,"Otorgado"],async(error,results)=>{
+            console.log(results.length);
+            res.send(results.length)
+        });
+    });
+});
+
 module.exports=routerPersonUser;
