@@ -287,17 +287,24 @@ routerPersonUser.get('/listData',async(req, res)=>{
 //metodo todo para controlar que esta auth en todas las páginas ACA HAY QUE ACOMODAR PARA QUE ANDE, SOLO ANDA EN EL DASHBOARD
 routerPersonUser.get('/dashboard', (req, res)=> { //controla el dashboard
 	if (req.session.loggedin) {
-		res.render('dashboard',{
-			login: true,
-			name: req.session.name			
-		});		
+        const email= req.session.name;
+        DB.query('SELECT id FROM personuser WHERE email = ?',email,async(error, results)=>{
+            idpersonuser=results[0].id;
+            DB.query('SELECT * FROM turn WHERE (idpersonuser = ?) and (state = ?) ',[idpersonuser,"Otorgado"],async(error,results)=>{
+                res.render('dashboard',{
+                    login: true,
+                    name: req.session.name,
+                    notif: results.length		
+                });	
+            });
+        });	
 	} else {
 		res.render('dashboard',{
 			login:false,
 			name:'Debe iniciar sesión',			
-		});				
+		});
+        res.end();			
 	}
-	res.end();
 });
 
 routerPersonUser.get('/updatedata', (req, res)=> { //controla el updatedata NO FUNCIONA

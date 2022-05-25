@@ -51,6 +51,11 @@ body, .body{
     font-weight: bolder;
 }
 
+#noti{
+    color: red;
+    font-weight: bold;
+}
+
 .login-form input[type="password"],
 .login-form input[type="email"],
 .register-form input[type="password"],

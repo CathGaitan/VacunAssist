@@ -21,15 +21,23 @@
 						</li>
 					</ul>
 				</li>
-				<li><a href="">Mis turnos</a>
+	
+				<li><a href="" onclick="ocultar()" >Mis turnos <span id="noti"> (<%= notif %>) </span></a>
 					<ul>
-						<li><a class="desplegable" href="listTurns">Ver mis turnos</a></li>
+						<li onclick="ocultar()"><a class="desplegable" href="listTurns">Ver mis turnos <span id="noti"> (<%= notif %>) </span></a></li>
 						<li><a class="desplegable" href="cancelturn">Cancelar mis turnos</a></li>
 						<li><a class="desplegable" href="requestturn">Solicitar turno para vacuna contra la fiebre amarilla</a></li>
 					</ul>
 				</li>
 			</ul>
-		</div>       
+		</div>   
+		<script>
+			function ocultar(){		
+				var contenedor = document.getElementById("noti");		
+				contenedor.style.display = "block";		
+				console.log("oculte")
+			}
+		</script>    
 		<br>
 		<br>
 		<br>
