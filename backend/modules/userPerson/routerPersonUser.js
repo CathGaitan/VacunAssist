@@ -495,6 +495,7 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
         if (results[0].coviddoses < "2"){ //si tiene menos de 2 dosis
             let dosis = results[0].coviddoses +1;
             let fechanac= results[0].dateofbirth;
+            let id= results[0].id;
             let edad= getEdad(fechanac);
             if (edad > 18){ //si es mayor de 18
                 let turn={
@@ -517,16 +518,30 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                 else{ //si no es de riesgo
                     turn.state= "Pendiente";
                 }
-                DB.query('INSERT INTO turn SET ?', turn)
-                res.render('requestcovidturn', {
-                    alert: true,
-                    alertTitle: "Turno solicitado exitosamente",
-                    alertMessage: "Se ha registrado la solicitud de su turno!",
-                    alertIcon:'success',
-                    showConfirmButton: false,
-                    timer: 5000,
-                    ruta: 'personUser/dashboard'
-                });  
+                DB.query('SELECT * FROM turn WHERE idpersonuser = ?, vaccinename = ?, (state = ?) or (state = ?)', id, "Covid-19", "Pendiente", "Otorgado", async (error, results)=>{
+                    if (results.length() == 0){
+                        DB.query('INSERT INTO turn SET ?', turn)
+                        res.render('requestcovidturn', {
+                            alert: true,
+                            alertTitle: "Turno solicitado exitosamente",
+                            alertMessage: "Se ha registrado la solicitud de su turno!",
+                            alertIcon:'success',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            ruta: 'personUser/dashboard'
+                        });  
+                    } else {
+                        res.render('requestcovidturn', {
+                            alert: true,
+                            alertTitle: "Turno no solicitado",
+                            alertMessage: "Usted ya cuenta con un turno pendiente u otorgado",
+                            alertIcon:'error',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            ruta: 'personUser/dashboard'
+                        });
+                    }
+                })
             } else {
                 res.render('requestcovidturn', {
                     alert: true,
