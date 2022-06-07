@@ -70,6 +70,12 @@ routerPersonUser.get('/infoFiebreAmarilla', (req, res)=>{
 routerPersonUser.get('/requestturn', (req, res)=>{
     res.render('requestturn')
 })
+routerPersonUser.get('/requestcovidturn', (req, res)=>{
+    res.render('requestcovidturn')
+})
+routerPersonUser.get('/requestflueturn', (req, res)=>{
+    res.render('requestflueturn')
+})
 routerPersonUser.get('/cancelturn', (req, res)=>{
     res.render('cancelturn')
 })
@@ -441,7 +447,7 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
         if (results[0].fevervaccine == "0"){ //si no tiene la vacuna
             let fechanac= results[0].dateofbirth;
             let edad= getEdad(fechanac);
-            if (edad < 60){ //si es menor de 60 HAY QUE ACOMODAR CON EL CALCULO DE LA EDAD
+            if (edad < 60){ //si es menor de 60 
                 let turn={
                     idpersonuser: results[0].id,
                     vaccinename: "Fiebre Amarilla",
@@ -479,6 +485,69 @@ routerPersonUser.post('/requestturn', async (req, res)=>{
                 timer: 4000,
                 ruta: 'personUser/dashboard'
             });   
+        }
+    });
+});
+
+routerPersonUser.post('/requestcovidturn', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
+        if (results[0].coviddoses < "2"){ //si tiene menos de 2 dosis
+            let dosis = results[0].coviddoses +1;
+            let fechanac= results[0].dateofbirth;
+            let edad= getEdad(fechanac);
+            if (edad > 18){ //si es mayor de 18
+                let turn={
+                    idpersonuser: results[0].id,
+                    vaccinename: "Covid-19",
+                    dose: results[0].coviddoses+1,
+                    state: " ",
+                    date: undefined
+                }
+                let fechanac= results[0].dateofbirth;
+                let edad= getEdad(fechanac); 
+                if (results[0].risk || edad>=60){ //si es de riesgo o si tiene 60 o mas anios
+                    const tiempoTranscurrido = Date.now();
+                    const fecha = new Date(tiempoTranscurrido);
+                    let dia= fecha.getDate()+7 //asigno turno a una semana
+                    fecha.setDate(dia);
+                    turn.state= "Otorgado";
+                    turn.date= fecha
+                }
+                else{ //si no es de riesgo
+                    turn.state= "Pendiente";
+                }
+                DB.query('INSERT INTO turn SET ?', turn)
+                res.render('requestcovidturn', {
+                    alert: true,
+                    alertTitle: "Turno solicitado exitosamente",
+                    alertMessage: "Se ha registrado la solicitud de su turno!",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    ruta: 'personUser/dashboard'
+                });  
+            } else {
+                res.render('requestcovidturn', {
+                    alert: true,
+                    alertTitle: "Turno no solicitado",
+                    alertMessage: "Usted no puede aplicarse esta vacuna ya que es menor de 18 años.",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    ruta: 'personUser/dashboard'
+                });
+            }
+        } else {
+            res.render('requestcovidturn', {
+                alert: true,
+                alertTitle: "Turno no solicitado",
+                alertMessage: "Usted no puede aplicarse esta vacuna ya que cuenta con 2 dosis aplicadas",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: 5000,
+                ruta: 'personUser/dashboard'
+            });
         }
     });
 });
