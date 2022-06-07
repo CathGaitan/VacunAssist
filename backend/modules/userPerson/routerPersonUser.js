@@ -76,6 +76,13 @@ routerPersonUser.get('/cancelturn', (req, res)=>{
 routerPersonUser.get('/viewMap',async(req,res)=>{
     res.render('viewMap');
 })
+routerPersonUser.get('/FAQ',async(req,res)=>{
+    res.render('FAQ');
+})
+routerPersonUser.get('/sobreNosotros',async(req,res)=>{
+    res.render('SobreNosotros');
+})
+
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
