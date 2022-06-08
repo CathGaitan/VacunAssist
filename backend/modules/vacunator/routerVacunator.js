@@ -10,7 +10,6 @@ var userActive;
 
 //7- variables de session
 const session = require('express-session');
-const e = require('express');
 routerVacunator.use(session({
 	secret: 'secret',
 	resave: true,
@@ -19,10 +18,6 @@ routerVacunator.use(session({
 
 routerVacunator.get('/login', (req, res)=> {
     res.render('loginVacunator');
-});
-
-routerVacunator.get('/dashboard', (req, res)=> {
-    res.render('dashboardVacunator');
 });
 routerVacunator.get('/registerVacunator', (req, res)=> {
     res.render('registerVacunator');
@@ -64,6 +59,25 @@ routerVacunator.post('/auth', async (req, res)=>{
         });
     }
 })
+
+routerVacunator.get('/dashboard', (req, res)=> { //controla el dashboard
+	if (req.session.loggedin) {
+        const email= req.session.email;
+        DB.query('SELECT id FROM vacunator WHERE email = ?',email,async(error, results)=>{
+            res.render('dashboardVacunator',{
+                login: true,
+                name: req.session.name,	
+            });
+        });	
+	} else {
+		res.render('dashboard',{
+			login:false,
+			name:'Debe iniciar sesión',			
+		});
+        res.end();			
+	}
+});
+
 
 //registro
 routerVacunator.post('registerVacunator', async (req, res)=> {
