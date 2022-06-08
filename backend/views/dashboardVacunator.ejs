@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <br>
+	<img src="/resources/logodashboard.png" alt="">
+    <title>VacunAssist</title>
+    <h1>VacunAssist</h1>
+    <% if (login) { %>
+        <br>
+        <div id="header">
+			<ul class="nav">
+				<li><a href="">Operaciones</a>
+					<ul>
+                        <li><a class="desplegable" href="">Marcar vacuna aplicada</a></li>
+						<li><a class="desplegable" href="">Registrar usuario</a></li>
+						<li><a class="desplegable" href="">Ver listado</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>   
+		<script>
+		</script>    
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<a href="viewMap" class="indexbtn">Ver mapa</a>
+		<br>
+		<a href="logout" class="indexbtn">Cerrar sesion</a>           
+    <%} else { %>
+        <h1><strong><%= name %></strong></h1> 
+		<br>  
+        <a href="login" class="indexbtn">Ir a Login</a>
+    <% } %>
+</head>
+</html>

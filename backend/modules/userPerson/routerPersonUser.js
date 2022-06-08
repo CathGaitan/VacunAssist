@@ -530,7 +530,7 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                     turn.state= "Pendiente";
                 }
                 console.log(id)
-                DB.query ('SELECT * FROM turn WHERE idpersonuser = ? AND (state = ? OR state = ?', [id, 'Otorgado', 'Pendiente'], async (error, results)=>{
+                DB.query ('SELECT * FROM turn WHERE idpersonuser = ? AND vaccinename=?', [id, 'Covid-19'], async (error, results)=>{
                     console.log(results);
                     if (results == undefined){
                         DB.query('INSERT INTO turn SET ?', turn)
