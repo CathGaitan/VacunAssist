@@ -24,7 +24,7 @@
 					</ul>
 				</li>
 	
-				<li><a href="" onclick="ocultar()" >Mis turnos <span id="noti"> (<%= notif %>) </span></a>
+				<li><a href="">Mis turnos <span id="noti"> (<%= notif %>) </span></a>
 					<ul>
 						<li onclick="ocultar()"><a class="desplegable" href="listTurns">Ver mis turnos <span id="noti"> (<%= notif %>) </span></a></li>
 						<li><a class="desplegable" href="cancelturn">Cancelar mis turnos</a></li>
@@ -38,10 +38,6 @@
 			</ul>
 		</div>   
 		<script>
-			function ocultar(){		
-				var contenedor = document.getElementById("noti");		
-				contenedor.style.display = "block";		
-			}
 		</script>    
 		<br>
 		<br>
@@ -63,6 +59,9 @@
 		<br>
 		<a href="logout" class="indexbtn">Cerrar sesion</a>           
 		<br>
+		<a href="FAQ"class="indexbtn">Preguntas Frecuentes</a>
+		<br>
+		<a href="sobreNosotros" class="indexbtn">Sobre Nosotros</a> 
     <%} else { %>
         <h1><strong><%= name %></strong></h1> 
 		<br>  

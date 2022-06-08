@@ -85,6 +85,13 @@ routerPersonUser.get('/viewMap',async(req,res)=>{
 routerPersonUser.get('/solicitarbaja',async(req,res)=>{
     res.render('solicitarbaja');
 })
+routerPersonUser.get('/FAQ',async(req,res)=>{
+    res.render('FAQ');
+})
+routerPersonUser.get('/sobreNosotros',async(req,res)=>{
+    res.render('SobreNosotros');
+})
+
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -500,9 +507,10 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
         if (results[0].coviddoses < "2"){ //si tiene menos de 2 dosis
             let dosis = results[0].coviddoses +1;
             let fechanac= results[0].dateofbirth;
+            console.log("ENTRE ACAAA, TENGO MENOS DE DOS DOSIS")
             let id= results[0].id;
             let edad= getEdad(fechanac);
-            if (edad > 18){ //si es mayor de 18
+            if (edad >= 18){ //si es mayor de 18
                 let turn={
                     idpersonuser: results[0].id,
                     vaccinename: "Covid-19",
@@ -518,7 +526,7 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                     let dia= fecha.getDate()+7 //asigno turno a una semana
                     fecha.setDate(dia);
                     turn.state= "Otorgado";
-                    turn.date= fecha
+                    turn.date= fecha;
                 }
                 else{ //si no es de riesgo
                     turn.state= "Pendiente";
