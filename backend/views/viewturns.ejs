@@ -15,28 +15,33 @@
   <br>
   <label for="">--------------------------------------------------------------------------------------</label>
   <br>
-  <% for(let i=0;i<turnsinfo.length;i++){ %>
-    <label for="">Vacuna:</label>
-    <br>
-    <label for=""><%= turnsinfo[i].vaccinename %></label>
-    <br>
-    <br>
-    <label for="">Numero de dosis:</label>
-    <label for=""><%= turnsinfo[i].dose %></label>
-    <br>
-    <br>
-    <label for="">Estado del turno:</label>
-    <br>
-    <label for=""><%= turnsinfo[i].state %></label>
-    <br>
-    <br>
-    <label for="">Fecha: </label>
-    <br>
-    <label for=""><%= turnsinfo[i].date %></label>
-    <br>
-    <label for="">--------------------------------------------------------------------------------------</label>
-    <br>
-    <% } %>
+  <% if (turnsinfo.length != 0) {
+    for(let i=0;i<turnsinfo.length;i++){ %>
+      <label for="">Vacuna:</label>
+      <br>
+      <label for=""><%= turnsinfo[i].vaccinename %></label>
+      <br>
+      <br>
+      <label for="">Numero de dosis:</label>
+      <label for=""><%= turnsinfo[i].dose %></label>
+      <br>
+      <br>
+      <label for="">Estado del turno:</label>
+      <br>
+      <label for=""><%= turnsinfo[i].state %></label>
+      <br>
+      <br>
+      <label for="">Fecha: </label>
+      <br>
+      <label for=""><%= turnsinfo[i].date %></label>
+      <br>
+      <label for="">--------------------------------------------------------------------------------------</label>
+      <br>
+  <%  }
+    } else {  %>
+      <p>No contas con turnos pendientes</p>
+      <%  
+    } %>
       <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
       <br>
       <br>

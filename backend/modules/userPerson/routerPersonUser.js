@@ -82,6 +82,9 @@ routerPersonUser.get('/cancelturn', (req, res)=>{
 routerPersonUser.get('/viewMap',async(req,res)=>{
     res.render('viewMap');
 })
+routerPersonUser.get('/solicitarbaja',async(req,res)=>{
+    res.render('solicitarbaja');
+})
 
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
@@ -200,6 +203,8 @@ routerPersonUser.post('/auth', async (req, res)=>{
         });
     }
 })
+
+
 
 //actualizar datos personales
 routerPersonUser.post('/updatedata', async (req, res)=>{
@@ -518,8 +523,8 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                 else{ //si no es de riesgo
                     turn.state= "Pendiente";
                 }
-                DB.query('SELECT * FROM turn WHERE idpersonuser = ?, vaccinename = ?, (state = ?) or (state = ?)', id, "Covid-19", "Pendiente", "Otorgado", async (error, results)=>{
-                    if (results.length() == 0){
+                DB.query('SELECT * FROM turn WHERE idpersonuser = ?, vaccinename = ?, (state = ?) or (state = ?)', [id, "Covid-19", "Pendiente", "Otorgado"], async (error, results)=>{
+                    if (results.length == 0){
                         DB.query('INSERT INTO turn SET ?', turn)
                         res.render('requestcovidturn', {
                             alert: true,
@@ -564,6 +569,22 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                 ruta: 'personUser/dashboard'
             });
         }
+    });
+});
+
+//solicitud de baja
+routerPersonUser.post('/solicitarbaja', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('UPDATE personuser SET state = ? WHERE email = ?', ["accountcancelationreq", email], async (error, results)=>{
+        res.render('solicitarbaja', {
+            alert: true,
+            alertTitle: "Baja de cuenta solicitada",
+            alertMessage: "Se ha solicitado la baja de su cuenta",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: 5000,
+            ruta: 'personUser/dashboard'
+        });
     });
 });
 
