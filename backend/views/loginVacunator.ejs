@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesion Vacunador</title>
+    <link rel="stylesheet" href="/resources/style.css">
+</head>
+<body>
+    <div class="login-form"> 
+        <br>
+        <img src="/resources/logodashboard.png" alt="">
+        <br>
+        <h2>Iniciar sesion en VacunAssist</h2>
+        <br>
+        <form name="loginform" action="auth" method="POST">
+            <label class="label" for="">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <label class="label" for="">Contraseña</label>
+            <input type="password" name="password" id="password" placeholder="Contraseña" required>
+            <label class="label" for="">Codigo seguridad</label>
+            <input type="submit" class="btn-login" value="Iniciar Sesion"> 
+        </form>
+        <a href="/" class="btn-cancel">Volver al inicio</a>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+            <script>
+            Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: '<%= showConfirmButton %>',
+            timer: false
+            }).then(()=>{
+            window.location='/<%= ruta %>'
+            })
+            </script>
+        <% } %>
+    </div>
+</body>
+</html>

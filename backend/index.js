@@ -4,8 +4,10 @@ const exp = require('constants');
 const express = require('express');
 const app = express();
 const routerPersonUser = require('./modules/userPerson/routerPersonUser');
-const nodemailer=require('nodemailer');
+const routerVacunator=require('./modules/vacunator/routerVacunator');
+
 app.use('/personUser',routerPersonUser);
+app.use('/vacunator',routerVacunator);
 
 // seteamos url encoded para caputar los datos del formulario
 app.use(express.urlencoded({extended: false}));

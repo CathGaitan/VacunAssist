@@ -502,9 +502,10 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
         if (results[0].coviddoses < "2"){ //si tiene menos de 2 dosis
             let dosis = results[0].coviddoses +1;
             let fechanac= results[0].dateofbirth;
+            console.log("ENTRE ACAAA, TENGO MENOS DE DOS DOSIS")
             let id= results[0].id;
             let edad= getEdad(fechanac);
-            if (edad > 18){ //si es mayor de 18
+            if (edad >= 18){ //si es mayor de 18
                 let turn={
                     idpersonuser: results[0].id,
                     vaccinename: "Covid-19",
@@ -520,13 +521,16 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                     let dia= fecha.getDate()+7 //asigno turno a una semana
                     fecha.setDate(dia);
                     turn.state= "Otorgado";
-                    turn.date= fecha
+                    turn.date= fecha;
                 }
                 else{ //si no es de riesgo
                     turn.state= "Pendiente";
                 }
-                DB.query('SELECT * FROM turn WHERE idpersonuser = ?, vaccinename = ?, (state = ?) or (state = ?)', id, "Covid-19", "Pendiente", "Otorgado", async (error, results)=>{
-                    if (results.length() == 0){
+                console.log(turn);
+                 
+                DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND vaccinename = ? AND (state = ? OR state = ?)', [id, "Covid-19"], async (error, results)=>{
+                    console.log(results);
+                    if (results.length == 0){
                         DB.query('INSERT INTO turn SET ?', turn)
                         res.render('requestcovidturn', {
                             alert: true,
@@ -573,8 +577,6 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
         }
     });
 });
-
-let turns;
 
 routerPersonUser.post('/cancelturn', async (req, res)=>{
     const email= req.session.name;
