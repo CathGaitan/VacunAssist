@@ -529,10 +529,20 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                 else{ //si no es de riesgo
                     turn.state= "Pendiente";
                 }
-                console.log(id)
                 DB.query ('SELECT * FROM turn WHERE idpersonuser = ? AND vaccinename=?', [id, 'Covid-19'], async (error, results)=>{
-                    console.log(results);
-                    if (results == undefined){
+                    darTurno=results.some((turno)=>(turno.state=="Pendiente")||(turno.state=="Otorgado"));
+                    console.log(darTurno); 
+                    if (darTurno){
+                        res.render('requestcovidturn', {
+                            alert: true,
+                            alertTitle: "Turno no solicitado",
+                            alertMessage: "Usted no puede solicitar este turno debido a que ya ha solicitado uno",
+                            alertIcon:'error',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            ruta: 'personUser/dashboard'
+                        }); 
+                    } else {
                         DB.query('INSERT INTO turn SET ?', turn)
                         res.render('requestcovidturn', {
                             alert: true,
@@ -542,17 +552,7 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
                             showConfirmButton: false,
                             timer: 5000,
                             ruta: 'personUser/dashboard'
-                        });  
-                    } else {
-                        res.render('requestcovidturn', {
-                            alert: true,
-                            alertTitle: "Turno no solicitado",
-                            alertMessage: "Usted no puede solicitar este turno debido a que ya ha solicitado uno",
-                            alertIcon:'error',
-                            showConfirmButton: false,
-                            timer: 5000,
-                            ruta: 'personUser/dashboard'
-                        });
+                        }); 
                     }
                 });
             } else {
