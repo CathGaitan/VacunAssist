@@ -19,10 +19,15 @@ routerPersonUser.use(session({
 }));
 
 const pastAYear=(dateflueString)=>{
-    let today=Date.now();
-    const datefluevaccine=Date.parse(dateflueString);
-    let dif=today-datefluevaccine;
-    return dif > 31609046081;
+    if(dateflueString!= undefined){
+        let today=Date.now();
+        const datefluevaccine=Date.parse(dateflueString);
+        let dif=today-datefluevaccine;
+        return dif > 31609046081;
+    }else{
+        return true;
+    }
+
 }
 
 const formatDate = (date)=>{
@@ -579,6 +584,74 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
         }
     });
 });
+
+routerPersonUser.post('/requestflueturn', async (req, res)=>{
+    const email= req.session.name;
+    DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+        console.log(results.datefluevaccine)
+        if (results.fluevaccine == 0 || pastAYear(results.datefluevaccine)){ //si no tiene la vacuna de la gripe
+            const hoy = Date.now();
+            const fecha = new Date(hoy);
+            fechanac= results[0].dateofbirth;
+            let edad= getEdad(fechanac);
+            let id=results[0].id;
+            let turn={
+                idpersonuser: results[0].id,
+                vaccinename: "Gripe",
+                dose: "Unica por año",
+                state: "Otorgado",
+                date: undefined
+            }
+            if (edad>=60){ // si es mayor de 60 ---> es de riesgo
+                let mes= fecha.getMonth()+2
+                fecha.setMonth(mes);
+                turn.date= fecha;
+            }
+            else{ //si no es de riesgo
+                let mes= fecha.getMonth()+4
+                fecha.setMonth(mes);
+                turn.date= fecha
+            }
+            DB.query ('SELECT * FROM turn WHERE idpersonuser = ? AND vaccinename=?', [id, 'Gripe'], async (error, results)=>{
+                darTurno=results.some((turno)=>(turno.state=="Pendiente")||(turno.state=="Otorgado"));
+                console.log(darTurno); 
+                if (darTurno){
+                    res.render('requestflueturn', {
+                        alert: true,
+                        alertTitle: "Turno no solicitado",
+                        alertMessage: "Usted no puede solicitar este turno debido a que ya ha solicitado uno",
+                        alertIcon:'error',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        ruta: 'personUser/dashboard'
+                    }); 
+                } else {
+                    DB.query('INSERT INTO turn SET ?', turn)
+                    res.render('requestflueturn', {
+                        alert: true,
+                        alertTitle: "Turno solicitado exitosamente",
+                        alertMessage: "Se ha registrado la solicitud de su turno!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        ruta: 'personUser/dashboard'
+                    }); 
+                }
+            })
+        }else{ 
+            res.render('requestflueturn', {
+                alert: true,
+                alertTitle: "Turno no solicitado",
+                alertMessage: "Usted no puede aplicarse esta vacuna ya que se la aplico hace menos de un año.",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: 5000,
+                ruta: 'personUser/dashboard'
+            }); 
+        }
+    });      
+});
+
 
 //solicitud de baja
 routerPersonUser.post('/solicitarbaja', async (req, res)=>{
