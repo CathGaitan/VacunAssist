@@ -19,6 +19,11 @@ body, .body{
     font-size: medium;
 }
 
+#label{
+    width: 320px;
+    margin: 15px;
+}
+
 
 .indexbtn{
     width: 15%;
