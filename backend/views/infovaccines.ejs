@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información Covid-19</title>
+    <link rel="stylesheet" href="/resources/style.css">
+</head>
+<body>
+    <br>
+    <h1>Información sobre las vacunas</h1>
+    <br>
+    <br>
+    <form class="covidform" action="infoCovid" method="post">
+        <label for="">Que vacuna desea aplicarse hoy?</label>
+        <select type="menu" id="menuVacuna" required>
+            <option selected="true" disabled="disabled" value="empty" required></option>
+            <option value="covid">Covid-19</option>
+            <option value="gripe">Gripe</option>
+            <option value="fiebre">Fiebre Amarilla</option>
+        </select>
+        <div id="nrodosis">
+            <p id="nrodosis">*En caso de ya contar con una dosis, consultar al usuario si transcurrio el tiempo recomendado luego de su primera dosis</p>
+            <label for="" id="nrodosis">Que numero de dosis se aplicara?</label>
+            <select id="nrodosis" type="menu" required>
+                <option selected="true" disabled="disabled"></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+        <br>
+        <br>
+        <label for="">Alguna vez se ha aplicado la vacuna de la gripe?</label>
+        <select type="menu" name="fluevaccine" id="menuFlue" required>
+            <option selected="true" disabled="disabled"></option>
+            <option value="1">Si</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+        <br>
+        <label for="">Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplicó esta vacuna: </label>
+        <br>
+        <input type="date" name="datefluevaccine" id="inputDate" disabled required/>
+        <script>
+            let menuFlue= document.getElementById("menuFlue");
+            menuFlue.addEventListener('change',()=>{
+                let selectedOption = menuFlue.options[menuFlue.selectedIndex];
+                let inputDate= document.getElementById("inputDate");
+                if(selectedOption.value=="1"){
+                    console.log("activo calendario");
+                    inputDate.disabled=false;
+                }else{
+                    console.log("desactivo calendario");
+                    inputDate.disabled=true;
+                }
+            });
+        </script>
+        <br>
+        <br>
+        <label for="">Alguna vez se ha aplicado la vacuna contra la fiebre amarilla?</label>
+        <select type="menu" name="fevervaccine" id="menuFiebre" required>
+            <option selected="true" disabled="disabled" required></option>
+            <option value="1">Si</option>
+            <option value="0">No</option>
+        </select>
+        <br>
+        <br>
+        <label for="">Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplico la vacuna:</label>
+        <br>
+        <input class="datef" type="date" name="datefevervaccine" id="inputDate" disabled/>
+        <script>
+            let menuFiebre= document.getElementById("menuFiebre");
+            menuFiebre.addEventListener('change',()=>{
+                let selectedOption = menuFiebre.options[menuFiebre.selectedIndex];
+                let inputDate= document.getElementById("inputDate");
+                if(selectedOption.value=="1"){
+                    console.log("activo calendario");
+                    inputDate.disabled=false;
+                }else{
+                    console.log("desactivo calendario");
+                    inputDate.disabled=true;
+                }
+            });
+        </script>
+        <br>
+        <br>
+        <label for="">Cuantas dosis de la vacuna de Covid-19 ha recibido?</label>
+        <select type="menu" name="doses" id="menuCovid" required>
+            <option selected="true" disabled="disabled" value="empty" required></option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+
+        <input type="submit" class="btn-save" value="Continuar">
+    </form>
+
+    <script>
+        let divcovid= document.getElementById("nrodosis");
+        divcovid.style.display= "none";
+        let menu= document.getElementById("menuVacuna");
+        menu.addEventListener('change',()=>{
+            let selectedOption = menu.options[menu.selectedIndex];
+            let infogripe= document.getElementById("menuFlue");
+            let infofiebre= document.getElementById("menuFiebre");
+            let infocovid= document.getElementById("menuCovid");
+            if(selectedOption.value== "gripe"){
+                infogripe.disabled=true;
+                infofiebre.disabled=false;
+
+            }else{
+                if (selectedOption.value== "fiebre"){
+                    infofiebre.disabled=true;
+                    infogripe.disabled=false;
+                    infocovid.disabled=false;
+                } else { //si selecciona la del covid
+                    divcovid.style.display= "inline";
+                    infofiebre.disabled=false;
+                    infocovid.disabled= true;
+                    infogripe.disabled=false;
+                }
+
+            }
+        });
+    </script>
+
+    <div style="display: inline;">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <% if (typeof alert != "undefined")  { %>
+         <script>
+         Swal.fire({
+           title:'<%= alertTitle %>',
+           text:'<%= alertMessage %>',
+           icon:'<%= alertIcon %>',
+           showConfirmButton: '<%= showConfirmButton %>',
+           timer: false
+         }).then(()=>{
+           window.location='/<%= ruta %>'
+         })
+         </script>
+        <% } %>
+    </div>
+</body>
+</html>

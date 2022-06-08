@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <title>Registro de usuario</title>
+</head>
+<body>
+    <div class="register-form">
+        <br>
+        <img src="/resources/logodashboard.png" alt="">
+        <br>
+        <h2>Registro de usuario</h2>
+        <br>
+        <form action="register" method="post">
+            <label class="label" for="">Nombre</label>
+            <input type="text" name="name" placeholder="Nombre" required>
+
+            <label class="label" for="">Apellido</label>
+            <input type="text" name="lastname" placeholder="Apellido"required>
+
+            <label class="label" for="">Email</label>
+            <input type="email" name="email" placeholder="Email" required>
+            <p>*Recordar al usuario ver su codigo de identificacion en su casilla de email y que su contraseña sera su numero de DNI</p>
+            <br>
+            <label class="label" for="">DNI</label>
+            <input type="text" name="DNI" placeholder="DNI" required>
+
+            <label class="label" for="">Fecha de nacimiento</label>
+            <input type="date" name="dateofbirth" required>
+
+            <label class="label" for="">Estas dentro del grupo de personas de riesgo?</label>
+            <br>
+            <select class="select" type="menu" name="risk" required>
+                <option value="0">No</option>
+                <option value="1">Si</option>
+            </select>
+            <br>
+            <br>
+            <div style="display: inline;">
+                <input type="submit" class="btn-save" value="Guardar" href="/vacunator/infovaccines">
+            </div>
+        </form>
+        <a href="/" class="btn-cancel">Volver al inicio</a>
+        <br>
+        <br>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <% if (typeof alert != "undefined")  { %>
+     <script>
+     Swal.fire({
+       title:'<%= alertTitle %>',
+       text:'<%= alertMessage %>',
+       icon:'<%= alertIcon %>',
+       showConfirmButton: '<%= showConfirmButton %>',
+       timer: false
+     }).then(()=>{
+       window.location='/<%= ruta %>'
+     })
+     </script>
+    <% } %>
+    
+    </div>
+    
+</body>
+</html>
