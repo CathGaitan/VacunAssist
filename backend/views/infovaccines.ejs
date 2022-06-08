@@ -69,12 +69,12 @@
         <br>
         <label for="">Si su respuesta fue: 'si', ingrese en la fecha de cuando se aplico la vacuna:</label>
         <br>
-        <input class="datef" type="date" name="datefevervaccine" id="inputDate" disabled/>
+        <input class="datef" type="date" name="datefevervaccine" id="inputDatefiebre" disabled/>
         <script>
             let menuFiebre= document.getElementById("menuFiebre");
             menuFiebre.addEventListener('change',()=>{
                 let selectedOption = menuFiebre.options[menuFiebre.selectedIndex];
-                let inputDate= document.getElementById("inputDate");
+                let inputDate= document.getElementById("inputDatefiebre");
                 if(selectedOption.value=="1"){
                     console.log("activo calendario");
                     inputDate.disabled=false;
@@ -109,12 +109,14 @@
             if(selectedOption.value== "gripe"){
                 infogripe.disabled=true;
                 infofiebre.disabled=false;
-
+                infocovid.disabled=false;
+                divcovid.style.display= "none";
             }else{
                 if (selectedOption.value== "fiebre"){
                     infofiebre.disabled=true;
                     infogripe.disabled=false;
                     infocovid.disabled=false;
+                    divcovid.style.display= "none";
                 } else { //si selecciona la del covid
                     divcovid.style.display= "inline";
                     infofiebre.disabled=false;
