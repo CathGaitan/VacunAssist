@@ -614,7 +614,6 @@ routerPersonUser.post('/requestflueturn', async (req, res)=>{
             }
             DB.query ('SELECT * FROM turn WHERE idpersonuser = ? AND vaccinename=?', [id, 'Gripe'], async (error, results)=>{
                 darTurno=results.some((turno)=>(turno.state=="Pendiente")||(turno.state=="Otorgado"));
-                console.log(darTurno); 
                 if (darTurno){
                     res.render('requestflueturn', {
                         alert: true,
@@ -655,16 +654,19 @@ routerPersonUser.post('/requestflueturn', async (req, res)=>{
 
 //solicitud de baja
 routerPersonUser.post('/solicitarbaja', async (req, res)=>{
-    const email= req.session.name;
+    const email=req.session.name;
+    const motivo=req.body.motivoBaja;
     DB.query('UPDATE personuser SET state = ? WHERE email = ?', ["accountcancelationreq", email], async (error, results)=>{
-        res.render('solicitarbaja', {
-            alert: true,
-            alertTitle: "Baja de cuenta solicitada",
-            alertMessage: "Se ha solicitado la baja de su cuenta",
-            alertIcon:'success',
-            showConfirmButton: false,
-            timer: 5000,
-            ruta: 'personUser/dashboard'
+        DB.query('UPDATE  personUser SET unsubscribemotive = ? WHERE email = ?',[motivo,email], async (error, results)=>{
+            res.render('solicitarbaja', {
+                alert: true,
+                alertTitle: "Baja de cuenta solicitada",
+                alertMessage: "Se ha solicitado la baja de su cuenta",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: 5000,
+                ruta: 'personUser/dashboard'
+            });
         });
     });
 });
@@ -704,6 +706,37 @@ routerPersonUser.post('/cancelturn', async (req, res)=>{
         })
     })
 })
+
+routerPersonUser.get('/listvaccines', async (req, res)=>{
+    const email= req.session.name;
+    let flueVaccineString="";
+    let feverVaccineString="";
+    DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error, results)=>{
+        let fechaFlueVaccine=results[0].datefluevaccine;
+        let fechaFeverVaccine=results[0].datefevervaccine;
+        if(results[0].fluevaccine==0){
+            flueVaccineString="Usted no tiene aplicada la vacuna de la fiebre amarrilla"
+            fechaFlueVaccine="---"
+        }else{
+            flueVaccineString="Ya se aplico la vacuna"
+            fechaFlueVaccine=fechaFlueVaccine.toLocaleDateString()
+        }
+        if(results[0].fevervaccine==0){
+            feverVaccineString="Usted no tiene aplicada la vacuna de la gripe"
+            fechaFeverVaccine="---"
+        }else{
+            feverVaccineString="Ya se aplico la vacuna"
+            fechaFeverVaccine=FechaFeverVaccine.toLocaleDateString()
+        }
+        res.render('viewvaccines',{
+            coviddoses:results[0].coviddoses,
+            fluevaccine: flueVaccineString,
+            datefluevaccine: fechaFlueVaccine,
+            fevervaccine: feverVaccineString,
+            datefevervaccine: fechaFeverVaccine,
+        });
+    });
+});
 
 routerPersonUser.get('/listTurns', async (req, res)=>{
     const email= req.session.name;

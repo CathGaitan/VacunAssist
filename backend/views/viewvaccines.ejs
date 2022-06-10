@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <title>Ver mis turnos</title>
+</head>
+
+<body>
+  <br>
+  <h1>Mis vacunas</h1>
+  <br>
+  <br>
+    <div name="Covid19">
+      <h2>COVID-19:</h2>
+      <label for="">dosis: <%= coviddoses %></label><br>
+    </div>
+    <br>
+    <div name="Fiebre">
+        <h2>Fiebre amarilla: </h2>
+        <label for="">Estado: <%= fluevaccine  %></label><br>
+        <label for="">Fecha: <%= datefluevaccine  %></label><br>
+    </div>
+    <br>
+    <div>
+        <h2>Gripe: </h2>
+        <label for="">Estado: <%= fevervaccine  %></label><br>
+        <label for="">Fecha: <%= datefevervaccine  %></label>
+    </div>  
+    <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
+    <br>
+    <br>
+    </body>
+</html>

@@ -13,6 +13,9 @@
     <h1>Solicitar baja de mi cuenta</h1>
     <br>
     <form action="solicitarbaja" method="post">
+      <h2>Motivo de la baja (minimo 10 caracteres): </h2>
+        <input type="text" name="motivoBaja" style="width:500px;height:15px" minlength="10" required>
+        <br>
         <input type="submit" class="indexbtn" value="Solicitar baja">
     </form>
     <a href="/personUser/dashboard" class="indexbtn">Volver al inicio</a>
