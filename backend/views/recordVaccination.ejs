@@ -11,19 +11,40 @@
     <h1>Marcar vacuna como aplicada</h1>
     <br>
     <h2>Seleccione a la persona que se vacuno: </h2>
-    <% if (results.length != 0) { 
-        for(let i=0;i<results.length;i++){ %>
-        <% console.log(results[i].name) %>
-        <% console.log(results[i].lastname) %>
-        <text for=""><% results[i].name %></text>
-        <text for=""><% results[i].lastname %></text>
-    <%  }
-        } else {  %>
-        <p>No hay personas para hoy</p>
-        <%  
-        } %>
-        <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
+    <br>
+    <form name="recordVaccination" method="POST">
+        <% if (results.length != 0) { %>
+            <select name="selectNameUser" required>
+                <option></option>
+                <% for(let i=0;i<results.length;i++){ %>
+                    <option value="<%= results[i] %>"><%= results[i] %></option>
+        <%      } %>
+            </select>
+        <% } %>
         <br>
+        <select name="vaccineName" required>
+            <option></option>
+            <option value="Covid-19">Covid-19</option>
+            <option value="Gripe">Gripe</option>
+            <option value="Fiebre Amarilla">Fiebre Amarilla</option>
+        </select>
         <br>
+    <input type="submit" class="indexbtn" value="Seleccionar persona" href="/vacunator/recordVaccination">
+    </form>
+    <a class="indexbtn" href="/vacunator/dashboard">Volver al inicio</a>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <% if (typeof alert != "undefined")  { %>
+        <script>
+        Swal.fire({
+        title:'<%= alertTitle %>',
+        text:'<%= alertMessage %>',
+        icon:'<%= alertIcon %>',
+        showConfirmButton: '<%= showConfirmButton %>',
+        timer: false
+        }).then(()=>{
+        window.location='/<%= ruta %>'
+        })
+        </script>
+    <% } %>
 </html>

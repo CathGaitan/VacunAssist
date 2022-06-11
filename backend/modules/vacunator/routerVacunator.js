@@ -6,8 +6,8 @@ const bp = require('body-parser')
 routerVacunator.use(bp.json())
 routerVacunator.use(bp.urlencoded({ extended: true }));
 const transporter=require('../mailConfig/mailer');
-
 var userActive;
+
 
 function getEdad(dateString) {
     let hoy = new Date()
@@ -210,7 +210,7 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
         }
         console.log(turn);
         //genero el turno
-        DB.queryDB.query('INSERT INTO turn SET ?', turn)
+        DB.query('INSERT INTO turn SET ?', turn)
         //si seleccione turno para covid updateo la info de esta manera
         
         
@@ -230,11 +230,35 @@ routerVacunator.use(function(req, res, next) {
     next();
 });
 
-
 routerVacunator.get('/recordVaccination', async(req,res)=>{
     DB.query('SELECT name,lastname FROM personuser',async(error, results)=>{
-        res.render('recordVaccination',{results: results});
+        let newResults=[];
+        for(let i=0; i<results.length; i++){
+            newResults.push(results[i].name+" "+results[i].lastname);
+        }
+        console.log(newResults);
+        res.render('recordVaccination',{results:newResults});
     });
 });
+
+routerVacunator.post('/recordVaccination', async(req,res)=>{
+    let nameAndLastname=req.body.selectNameUser;
+    let vaccinename=req.body.vaccineName;
+    let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido
+    DB.query('SELECT id FROM personuser WHERE (name = ? AND lastname = ?)',[separacion[0],separacion[1]],async(error,results)=>{
+        const idpersonuser=results[0].id;
+        DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
+            let hoy = new Date(Date.now());
+            let hoyformateada = hoy.toISOString().split('T')[0];
+            tieneTurno=results.some((turno)=>(turno.vaccinename==vaccinename)&&(turno.state=="Otorgado"));
+            if(tieneTurno){
+                console.log("tiene turno");
+            }else{
+                console.log("no tiene turno para hoy");
+            }
+        })
+    });
+});
+
 
 module.exports=routerVacunator;
