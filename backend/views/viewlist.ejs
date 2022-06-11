@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personas con turno para el dia de la fecha</title>
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <link rel="stylesheet" href="/resources/style.css">
+</head>
+<body>
+    <br>
+    <h2>Listado de personas con turno para vacunacion en zona <%= zonav %> el dia de la fecha</h2>
+    <br>
+    <h4>Filtrar por zonas: </h4>
+        <select name="zonafilter" id="zonafilter">
+            <option value="ver todas las zonas">Todas las zonas</option>
+            <option value="cementerio">Cementerio</option>
+            <option value="municipalidad">Municipalidad</option>
+            <option value="terminal">Terminal de omnibus</option>
+        </select>
+        <br>
+        <br>
+    <% if (turnsinfo.length != 0) {
+        for(let i=0;i<turnsinfo.length;i++){ %>
+        <label for="">Nombre:</label>
+        <br>
+        <label for=""><%= turnsinfo[i].name %></label>
+        <br>
+        <br>
+        <label for="">Apellido:</label>
+        <br>
+        <label for=""><%= turnsinfo[i].lastname %></label>
+        <br>
+        <br>
+        <label for="">Vacuna:</label>
+        <br>
+        <label for=""><%= turnsinfo[i].vaccinename %></label>
+        <br>
+        <br>
+        <label for="">Numero de dosis:</label>
+        <label for=""><%= turnsinfo[i].dose %></label>
+        <br>
+        <br>
+        <label for="">--------------------------------------------------------------------------------------</label>
+        <br>
+    <%  }
+    } else {  %>
+        <p>No hay turnos para hoy en esta zona</p>
+        <%  
+    } %>
+
+    <a href="/vacunator/dashboard" class="indexbtn">Volver al inicio</a>
+    <br>
+    <br>
+
+</body>
+</html>

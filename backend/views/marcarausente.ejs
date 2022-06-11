@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar ausencia a un turno</title>
+    <link rel="stylesheet" href="/resources/style.css">
+<body>
+    <h1>Marcar ausencia a un turno</h1>
+    <br>
+    <h2>Seleccione a la persona que no asistio a su turno: </h2>
+    <br>
+    <form name="registrarausente" method="POST">
+        <% if (results.length != 0) { %>
+            <select name="selectNameUser" required>
+                <option></option>
+                <% for(let i=0;i<results.length;i++){ %>
+                    <option value="<%= results[i] %>"><%= results[i] %></option>
+        <%      } %>
+            </select>
+        <% } %>
+        <br>
+        <br>
+    <input type="submit" class="indexbtn" value="Marcar ausente" href="/personUser/registrarausente">
+    </form>
+    <a class="indexbtn" href="/vacunator/dashboard">Volver al inicio</a>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <% if (typeof alert != "undefined")  { %>
+        <script>
+        Swal.fire({
+        title:'<%= alertTitle %>',
+        text:'<%= alertMessage %>',
+        icon:'<%= alertIcon %>',
+        showConfirmButton: '<%= showConfirmButton %>',
+        timer: false
+        }).then(()=>{
+        window.location='/<%= ruta %>'
+        })
+        </script>
+    <% } %>
+</html>

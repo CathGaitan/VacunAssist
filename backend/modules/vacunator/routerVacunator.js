@@ -40,6 +40,9 @@ routerVacunator.get('/registerVacunator', (req, res)=> {
 routerVacunator.get('/infovaccines', (req, res)=> {
     res.render('infovaccines');
 })
+routerVacunator.get('/viewlist', (req, res)=> {
+    res.render('viewlist');
+})
 
 //autenticacion
 routerVacunator.post('/auth', async (req, res)=>{
@@ -172,11 +175,46 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
     });
 });
 
+routerVacunator.get('/registrarausente', async(req,res)=>{
+    let vacunador= req.session.name;
+    DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
+        let zonevac = results[0].zonaVacunatorio;
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async(error, results)=>{
+            let newResults=[];
+            for(let i=0; i<results.length; i++){
+                newResults.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
+            }
+            res.render('marcarausente',{results:newResults});
+        });
+    });
+});
+
+routerVacunator.post('/registrarausente', async(req,res)=>{
+    let nameAndLastname=req.body.selectNameUser;
+    let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido posicion2= email
+    let usuarioausente= separacion[3];
+    let date = new Date(Date.now());
+    let fecha = date.toISOString().split('T')[0];
+    let vacuna = separacion[6];
+    if (vacuna == 'Fiebre'){
+        vacuna='Fiebre Amarilla'
+    }
+    DB.query('SELECT id FROM personuser WHERE ', async (error, results)=> {
+
+    })
+        DB.query('UPDATE state = Ausencia FROM turn WHERE vaccinename = ? ', async (error, results)=> {
+        
+        });
+});
+
 routerVacunator.post('/infovaccines', async(req,res)=>{
     const email= userActive;
-    let vacturn= req.body.menuvacuna;
-    console.log('vacccccccccccccc',req.body.menuvacuna);
+    let vacturn= req.body.menuvacunas;
     let dosis;
+    const hoy = Date.now();
+    const fecha = new Date(hoy);
     if (vacturn == 'Covid-19'){
         dosis= req.body.nrodosisc;
     } else{
@@ -187,8 +225,8 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
         }
     }
     DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
-        //calculo las edades por las dudas
         let edad= getEdad(results[0].dateofbirth);
+        console.log('edad ',edad);
         let esmayor18;
         if (edad > 17){
             esmayor18= true;
@@ -206,14 +244,100 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
             vaccinename: vacturn,
             dose: dosis,
             state: "Otorgado",
-            date: Date.now()
+            date: fecha
         }
         console.log(turn);
         //genero el turno
-        DB.query('INSERT INTO turn SET ?', turn)
-        //si seleccione turno para covid updateo la info de esta manera
-        
-        
+        DB.query('INSERT INTO turn SET ?', turn, async (error, results)=> {    
+            //si seleccione turno para covid updateo la info de esta manera
+            if (vacturn == 'Covid-19' && esmayor18){//updateo todos los campos
+                //info covid
+                let vacgripe= req.body.menuFlue;
+                let vacgripedate= req.body.inputDate;
+                let vacfiebre= req.body.menuFiebre;
+                let vacfiebredate= req.body.inputDatefiebre;
+                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosis, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
+                    res.render('infovaccines', {
+                        alert: true,
+                        alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
+                        alertMessage: "¡INFORMACION GUARDADA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'vacunator/dashboard'
+                    });       
+                })
+            } else {
+                res.render('infovaccines', {
+                    alert: true,
+                    alertTitle: "Los datos se han almacenado pero el turno no ha sido asignado ya que el usuario es menor de edad",
+                    alertMessage: "¡INFORMACION GUARDADA!",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: false,
+                    ruta: 'vacunator/dashboard'
+                });    
+            }
+            //si seleccione turno para la fiebre, updateo de esta manera
+            if (vacturn == 'Fiebre Amarilla' && !esmayor60) {
+                let vacgripe= req.body.menuFlue;
+                let vacgripedate= req.body.inputDate;
+                let dosiscovid= req.body.menuCovid;
+                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosiscovid, vacgripe, vacgripedate, 1, Date.now(), email], async (error, results)=>{
+                    res.render('infovaccines', {
+                        alert: true,
+                        alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
+                        alertMessage: "¡INFORMACION GUARDADA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'vacunator/dashboard'
+                    });       
+                })
+            } else {
+                res.render('infovaccines', {
+                    alert: true,
+                    alertTitle: "Los datos se han almacenado pero el turno no ha sido asignado ya que el usuario es mayor de 60",
+                    alertMessage: "¡INFORMACION GUARDADA!",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: false,
+                    ruta: 'vacunator/dashboard'
+                });   
+            }
+            //si seleccione turno para gripe, updateo de esta manera
+            if (vacturn = 'Gripe') {
+                let dosiscovid= req.body.menuCovid;
+                let vacfiebre= req.body.menuFiebre;
+                let vacfiebredate= req.body.inputDatefiebre;
+                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosiscovid, 1, Date.now(), vacfiebre, vacfiebredate, email], async (error, results)=>{
+                    res.render('infovaccines', {
+                        alert: true,
+                        alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
+                        alertMessage: "¡INFORMACION GUARDADA!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'vacunator/dashboard'
+                    });       
+                })
+            }
+        }) 
+    });
+});
+
+routerVacunator.get('/listtodayturns', async (req, res)=> {
+    let vacunador = req.session.name;
+    DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
+        let zonevac= results[0].zonaVacunatorio;
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT name, lastname, zone, vaccinename, dose FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
+            res.render('viewlist',{
+                turnsinfo:results,
+                zonav: zonevac
+            });
+        });
     });
 });
 
