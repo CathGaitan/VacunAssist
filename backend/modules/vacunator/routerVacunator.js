@@ -163,5 +163,10 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
 })
 
 
+routerVacunator.get('/recordVaccination', async(req,res)=>{
+    DB.query('SELECT name,lastname FROM personuser',async(error, results)=>{
+        res.render('recordVaccination',{results: results});
+    });
+});
 
 module.exports=routerVacunator;
