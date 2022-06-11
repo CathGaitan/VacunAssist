@@ -13,18 +13,18 @@
     <h1>Información sobre las vacunas</h1>
     <br>
     <br>
-    <form class="covidform" action="infoCovid" method="post">
+    <form class="covidform" action="infovaccines" method="post">
         <label for="">Que vacuna desea aplicarse hoy?</label>
-        <select type="menu" id="menuVacuna" required>
+        <select type="menu" id="menuvacuna" required>
             <option selected="true" disabled="disabled" value="empty" required></option>
-            <option value="covid">Covid-19</option>
-            <option value="gripe">Gripe</option>
-            <option value="fiebre">Fiebre Amarilla</option>
+            <option value="Covid-19">Covid-19</option>
+            <option value="Gripe">Gripe</option>
+            <option value="Fiebre Amarilla">Fiebre Amarilla</option>
         </select>
         <div id="nrodosis">
-            <p id="nrodosis">*En caso de ya contar con una dosis, consultar al usuario si transcurrio el tiempo recomendado luego de su primera dosis</p>
-            <label for="" id="nrodosis">Que numero de dosis se aplicara?</label>
-            <select id="nrodosis" type="menu" required>
+            <p>*En caso de ya contar con una dosis, consultar al usuario si transcurrio el tiempo recomendado luego de su primera dosis</p>
+            <label for="">Que numero de dosis se aplicara?</label>
+            <select id="nrodosisc" type="menu">
                 <option selected="true" disabled="disabled"></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -33,7 +33,7 @@
         <br>
         <br>
         <label for="">Alguna vez se ha aplicado la vacuna de la gripe?</label>
-        <select type="menu" name="fluevaccine" id="menuFlue" required>
+        <select type="menu" name="fluevaccine" id="menuFlue">
             <option selected="true" disabled="disabled"></option>
             <option value="1">Si</option>
             <option value="0">No</option>
@@ -88,7 +88,7 @@
         <br>
         <label for="">Cuantas dosis de la vacuna de Covid-19 ha recibido?</label>
         <select type="menu" name="doses" id="menuCovid" required>
-            <option selected="true" disabled="disabled" value="empty" required></option>
+            <option selected="true" disabled="disabled" value="empty"></option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -96,29 +96,38 @@
 
         <input type="submit" class="btn-save" value="Continuar">
     </form>
+    <br>
+    <br>
 
     <script>
+        //////aca manejo los display
         let divcovid= document.getElementById("nrodosis");
         divcovid.style.display= "none";
-        let menu= document.getElementById("menuVacuna");
+        let menu= document.getElementById("menuvacuna");
         menu.addEventListener('change',()=>{
             let selectedOption = menu.options[menu.selectedIndex];
             let infogripe= document.getElementById("menuFlue");
             let infofiebre= document.getElementById("menuFiebre");
             let infocovid= document.getElementById("menuCovid");
-            if(selectedOption.value== "gripe"){
+            if(selectedOption.value== "Gripe"){
                 infogripe.disabled=true;
                 infofiebre.disabled=false;
                 infocovid.disabled=false;
-                divcovid.style.display= "none";
+                if (divcovid.style.display== 'inline'){
+                    divcovid.style.display= 'none';
+                }
             }else{
-                if (selectedOption.value== "fiebre"){
+                if (selectedOption.value== 'Fiebre Amarilla'){
                     infofiebre.disabled=true;
                     infogripe.disabled=false;
                     infocovid.disabled=false;
-                    divcovid.style.display= "none";
+                    if (divcovid.style.display== 'inline'){
+                        divcovid.style.display= 'none';
+                    }
                 } else { //si selecciona la del covid
-                    divcovid.style.display= "inline";
+                    if (divcovid.style.display== 'none'){
+                        divcovid.style.display= 'inline';
+                    }
                     infofiebre.disabled=false;
                     infocovid.disabled= true;
                     infogripe.disabled=false;

@@ -575,7 +575,7 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
             res.render('requestcovidturn', {
                 alert: true,
                 alertTitle: "Turno no solicitado",
-                alertMessage: "Usted no puede aplicarse esta vacuna ya que cuenta con 2 dosis aplicadas",
+                alertMessage: "Usted no puede aplicarse esta vacuna ya que cuenta con 2 dosis aplicadas o con un turno para su 2da dosis",
                 alertIcon:'error',
                 showConfirmButton: false,
                 timer: 5000,

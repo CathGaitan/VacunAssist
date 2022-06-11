@@ -9,6 +9,20 @@ const transporter=require('../mailConfig/mailer');
 
 var userActive;
 
+function getEdad(dateString) {
+    let hoy = new Date()
+    let fechaNacimiento = new Date(dateString)
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear()
+    let diferenciaMeses = hoy.getMonth() - fechaNacimiento.getMonth()
+    if (
+      diferenciaMeses < 0 ||
+      (diferenciaMeses === 0 && hoy.getDate() < fechaNacimiento.getDate())
+    ) {
+      edad--
+    }
+    return edad
+  }
+
 //7- variables de session
 const session = require('express-session');
 routerVacunator.use(session({
@@ -160,7 +174,61 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
 
 routerVacunator.post('/infovaccines', async(req,res)=>{
     const email= userActive;
-})
+    let vacturn= req.body.menuvacuna;
+    console.log('vacccccccccccccc',req.body.menuvacuna);
+    let dosis;
+    if (vacturn == 'Covid-19'){
+        dosis= req.body.nrodosisc;
+    } else{
+        if (vacturn == 'Gripe'){
+            dosis= "Unica por año";
+        } else {
+            dosis= "Unica en la vida"
+        }
+    }
+    DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
+        //calculo las edades por las dudas
+        let edad= getEdad(results[0].dateofbirth);
+        let esmayor18;
+        if (edad > 17){
+            esmayor18= true;
+        }else{
+            esmayor18= false;
+        }
+        let esmayor60;
+        if (edad > 59){
+            esmayor60= true;
+        }else{
+            esmayor60= false;
+        }
+        let turn={
+            idpersonuser: results[0].id,
+            vaccinename: vacturn,
+            dose: dosis,
+            state: "Otorgado",
+            date: Date.now()
+        }
+        console.log(turn);
+        //genero el turno
+        DB.queryDB.query('INSERT INTO turn SET ?', turn)
+        //si seleccione turno para covid updateo la info de esta manera
+        
+        
+    });
+});
+
+routerVacunator.get('/logout', function (req, res) {
+	req.session.destroy(() => {
+	  res.redirect('/vacunator/login') // siempre se ejecutará después de que se destruya la sesión
+	})
+});
+
+//función para limpiar la caché luego del logout
+routerVacunator.use(function(req, res, next) {
+    if (!req.user)
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    next();
+});
 
 
 routerVacunator.get('/recordVaccination', async(req,res)=>{
