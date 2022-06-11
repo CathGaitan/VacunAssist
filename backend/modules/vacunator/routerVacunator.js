@@ -201,12 +201,21 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     if (vacuna == 'Fiebre'){
         vacuna='Fiebre Amarilla'
     }
-    DB.query('SELECT id FROM personuser WHERE ', async (error, results)=> {
-
-    })
-        DB.query('UPDATE state = Ausencia FROM turn WHERE vaccinename = ? ', async (error, results)=> {
-        
+    DB.query('SELECT * FROM personuser WHERE email = ?', usuarioausente, async (error, results)=> {
+        let id = results[0].id;
+        let ausente= 'ausente'
+        DB.query('UPDATE state = ? FROM turn WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
+            res.render('marcarausente', { 
+                alert: true,
+                alertTitle: "Turno registrado como ausente",
+                alertMessage: "El turno se ha registrado como ausente",
+                alertIcon:'success',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'vacunator/registrarausente' 
+            });
         });
+    })
 });
 
 routerVacunator.post('/infovaccines', async(req,res)=>{
