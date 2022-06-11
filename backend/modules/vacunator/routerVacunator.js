@@ -175,6 +175,40 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
     });
 });
 
+routerVacunator.get('/registrarausente', async(req,res)=>{
+    let vacunador= req.session.name;
+    DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
+        let zonevac = results[0].zonaVacunatorio;
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async(error, results)=>{
+            let newResults=[];
+            for(let i=0; i<results.length; i++){
+                newResults.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
+            }
+            res.render('marcarausente',{results:newResults});
+        });
+    });
+});
+
+routerVacunator.post('/registrarausente', async(req,res)=>{
+    let nameAndLastname=req.body.selectNameUser;
+    let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido posicion2= email
+    let usuarioausente= separacion[3];
+    let date = new Date(Date.now());
+    let fecha = date.toISOString().split('T')[0];
+    let vacuna = separacion[6];
+    if (vacuna == 'Fiebre'){
+        vacuna='Fiebre Amarilla'
+    }
+    DB.query('SELECT id FROM personuser WHERE ', async (error, results)=> {
+
+    })
+        DB.query('UPDATE state = Ausencia FROM turn WHERE vaccinename = ? ', async (error, results)=> {
+        
+        });
+});
+
 routerVacunator.post('/infovaccines', async(req,res)=>{
     const email= userActive;
     let vacturn= req.body.menuvacunas;
