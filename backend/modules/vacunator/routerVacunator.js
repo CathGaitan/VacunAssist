@@ -204,7 +204,8 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     DB.query('SELECT * FROM personuser WHERE email = ?', usuarioausente, async (error, results)=> {
         let id = results[0].id;
         let ausente= 'ausente'
-        DB.query('UPDATE state = ? FROM turn WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
+        console.log('entrooooooooooooooooooo')
+        DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
             res.render('marcarausente', { 
                 alert: true,
                 alertTitle: "Turno registrado como ausente",
@@ -265,7 +266,7 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                 let vacgripedate= req.body.inputDate;
                 let vacfiebre= req.body.menuFiebre;
                 let vacfiebredate= req.body.inputDatefiebre;
-                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosis, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
+                DB.query('UPDATE  personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dosis, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
@@ -292,7 +293,7 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                 let vacgripe= req.body.menuFlue;
                 let vacgripedate= req.body.inputDate;
                 let dosiscovid= req.body.menuCovid;
-                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosiscovid, vacgripe, vacgripedate, 1, Date.now(), email], async (error, results)=>{
+                DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dosiscovid, vacgripe, vacgripedate, 1, Date.now(), email], async (error, results)=>{
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
@@ -319,7 +320,7 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                 let dosiscovid= req.body.menuCovid;
                 let vacfiebre= req.body.menuFiebre;
                 let vacfiebredate= req.body.inputDatefiebre;
-                DB.query('UPDATE coviddoses, fluevaccine, datefluevaccine, fevervaccine, datefevervaccine FROM personuser WHERE email = ?', [dosiscovid, 1, Date.now(), vacfiebre, vacfiebredate, email], async (error, results)=>{
+                DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? FROM personuser WHERE email = ?', [dosiscovid, 1, Date.now(), vacfiebre, vacfiebredate, email], async (error, results)=>{
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
