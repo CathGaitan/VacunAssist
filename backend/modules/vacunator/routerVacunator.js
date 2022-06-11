@@ -40,6 +40,9 @@ routerVacunator.get('/registerVacunator', (req, res)=> {
 routerVacunator.get('/infovaccines', (req, res)=> {
     res.render('infovaccines');
 })
+routerVacunator.get('/viewlist', (req, res)=> {
+    res.render('viewlist');
+})
 
 //autenticacion
 routerVacunator.post('/auth', async (req, res)=>{
@@ -286,6 +289,21 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                 })
             }
         }) 
+    });
+});
+
+routerVacunator.get('/listtodayturns', async (req, res)=> {
+    let vacunador = req.session.name;
+    DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
+        let zonevac= results[0].zonaVacunatorio;
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT name, lastname, zone, vaccinename, dose FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
+            res.render('viewlist',{
+                turnsinfo:results,
+                zonav: zonevac
+            });
+        });
     });
 });
 
