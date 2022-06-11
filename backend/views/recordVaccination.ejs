@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar vacuna aplicada</title>
+    <link rel="stylesheet" href="/resources/style.css">
+<body>
+    <h1>Marcar vacuna como aplicada</h1>
+    <br>
+    <h2>Seleccione a la persona que se vacuno: </h2>
+    <% if (results.length != 0) { 
+        for(let i=0;i<results.length;i++){ %>
+        <% console.log(results[i].name) %>
+        <% console.log(results[i].lastname) %>
+        <text for=""><% results[i].name %></text>
+        <text for=""><% results[i].lastname %></text>
+    <%  }
+        } else {  %>
+        <p>No hay personas para hoy</p>
+        <%  
+        } %>
+        <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
+        <br>
+        <br>
+    </body>
+</html>
