@@ -726,7 +726,7 @@ routerPersonUser.get('/listvaccines', async (req, res)=>{
             fechaFeverVaccine="---"
         }else{
             feverVaccineString="Ya se aplico la vacuna"
-            fechaFeverVaccine=FechaFeverVaccine.toLocaleDateString()
+            fechaFeverVaccine=fechaFeverVaccine.toLocaleDateString()
         }
         res.render('viewvaccines',{
             coviddoses:results[0].coviddoses,
