@@ -208,7 +208,7 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
         console.log(id)
         console.log(vacuna)
         console.log(fecha)
-        let ausente= 'ausente'
+        let ausente= 'Ausente'
         DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
             res.render('marcarausente', { 
                 alert: true,
