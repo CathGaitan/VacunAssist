@@ -186,6 +186,7 @@ routerVacunator.get('/registrarausente', async(req,res)=>{
             for(let i=0; i<results.length; i++){
                 newResults.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
             }
+            console.log(newResults);
             res.render('marcarausente',{results:newResults});
         });
     });
@@ -367,32 +368,52 @@ routerVacunator.use(function(req, res, next) {
     next();
 });
 
+
+let newResults2=[];
 routerVacunator.get('/recordVaccination', async(req,res)=>{
     DB.query('SELECT name,lastname FROM personuser',async(error, results)=>{
-        let newResults=[];
         for(let i=0; i<results.length; i++){
-            newResults.push(results[i].name+" "+results[i].lastname);
+            newResults2.push(results[i].name+" "+results[i].lastname);
         }
-        console.log(newResults);
-        res.render('recordVaccination',{results:newResults});
+        res.render('recordVaccination',{results:newResults2});
     });
 });
 
 routerVacunator.post('/recordVaccination', async(req,res)=>{
     let nameAndLastname=req.body.selectNameUser;
     let vaccinename=req.body.vaccineName;
+    let observacion=req.body.observacion;
     let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido
     DB.query('SELECT id FROM personuser WHERE (name = ? AND lastname = ?)',[separacion[0],separacion[1]],async(error,results)=>{
         const idpersonuser=results[0].id;
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
-        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND date = ?)',[idpersonuser,fecha],async(error,results)=>{
-            console.log(results);
-            tieneTurno=results.some((turno)=>(turno.vaccinename==vaccinename)&&(turno.state=="Otorgado"));
-            if(tieneTurno){
-                console.log("tiene turno");
+        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND date = ? AND vaccinename = ? AND state = ?)',[idpersonuser,fecha,vaccinename,"Otorgado"],async(error,results)=>{
+            if(results.length!=0){
+                DB.query('UPDATE turn SET state = ?, observation = ? WHERE (idpersonuser = ? AND date = ? AND vaccinename = ? AND state = ?)' ,["Aplicada",observacion,idpersonuser,fecha,vaccinename,"Otorgado"]);
+                res.render('recordVaccination', {
+                    alert: true,
+                    alertTitle: "Actualizacion exitosa",
+                    alertMessage: "Se ha registrado la vacunacion",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: false,
+                    results:newResults2,
+                    ruta: 'vacunator/recordVaccination'
+                });
+                newResults2.splice(0,newResults2.length);
             }else{
-                console.log("no tiene turno para hoy");
+                res.render('recordVaccination', {
+                    alert: true,
+                    alertTitle: "Actualizacion fallida",
+                    alertMessage: "No se ha podido marcar la vacuna como Aplicada, debido a que el usuario no tiene turno",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: false,
+                    results:newResults2,
+                    ruta: 'vacunator/recordVaccination'
+                });
+                newResults2.splice(0,newResults2.length);
             }
         })
     });
