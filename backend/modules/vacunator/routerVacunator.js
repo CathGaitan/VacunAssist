@@ -120,7 +120,7 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
             DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
                 if (error){
                     if (error.code == 'ER_DUP_ENTRY'){
-                        res.render('register', { //animacion de dni no validado
+                        res.render('registerVacunator', { //animacion de dni no validado
                             alert: true,
                             alertTitle: "Error en el registro",
                             alertMessage: "Ese email ya existe en el sistema",
@@ -138,7 +138,7 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
                         subject: "Nueva cuenta en vacunassist!", // Subject line
                         text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
                     });
-                    res.render('register', { //animacion de registro exitoso
+                    res.render('registerVacunator', { //animacion de registro exitoso
                         alert: true,
                         alertTitle: "Registro",
                         alertMessage: "Registro exitoso!",
@@ -150,7 +150,7 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
                 }
             });
         } else {
-            res.render('register', { //animacion de dni no validado
+            res.render('registerVacunator', { //animacion de dni no validado
                 alert: true,
                 alertTitle: "Error en el registro",
                 alertMessage: "El DNI no esta validado por RENAPER",

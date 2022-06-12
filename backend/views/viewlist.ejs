@@ -10,17 +10,10 @@
 </head>
 <body>
     <br>
-    <h2>Listado de personas con turno para vacunacion en zona <%= zonav %> el dia de la fecha</h2>
+    <h1>Listado de personas con turno para vacunacion  </h1>
+    <h1>en zona <%= zonav %> para el dia de hoy:</h1>
     <br>
-    <h4>Filtrar por zonas: </h4>
-        <select name="zonafilter" id="zonafilter">
-            <option value="ver todas las zonas">Todas las zonas</option>
-            <option value="cementerio">Cementerio</option>
-            <option value="municipalidad">Municipalidad</option>
-            <option value="terminal">Terminal de omnibus</option>
-        </select>
-        <br>
-        <br>
+    <br>
     <% if (turnsinfo.length != 0) {
         for(let i=0;i<turnsinfo.length;i++){ %>
         <label for="">Nombre:</label>

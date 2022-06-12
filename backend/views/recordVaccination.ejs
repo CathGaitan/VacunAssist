@@ -20,10 +20,10 @@
                     <option value="<%= results[i] %>"><%= results[i] %></option>
                 <% } %>
             </select>
+            <br><br>
+            <label>Observaciones de la vacunacion (opcional): </label>
             <br>
-            <label>Observaciones de la vacunacion (minimo 10 caracteres)</label>
-            <br>
-            <input type="text" name="observacion" style="width:500px;height:15px" minlength="10" required>
+            <input type="text" name="observacion" style="width:500px;height:15px">
             <br>
             <input type="submit" class="indexbtn" value="Seleccionar persona" href="/vacunator/recordVaccination">
         <% }else{ %>
