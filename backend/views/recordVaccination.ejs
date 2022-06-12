@@ -10,30 +10,25 @@
 <body>
     <h1>Marcar vacuna como aplicada</h1>
     <br>
-    <h2>Seleccione a la persona que se vacuno: </h2>
-    <br>
     <form name="recordVaccination" method="POST">
         <% if (results.length != 0) { %>
+            <h2>Seleccione a la persona que se vacuno: </h2>
+            <br>
             <select name="selectNameUser" required>
                 <option></option>
                 <% for(let i=0;i<results.length;i++){ %>
                     <option value="<%= results[i] %>"><%= results[i] %></option>
-        <%      } %>
+                <% } %>
             </select>
+            <br>
+            <label>Observaciones de la vacunacion (minimo 10 caracteres)</label>
+            <br>
+            <input type="text" name="observacion" style="width:500px;height:15px" minlength="10" required>
+            <br>
+            <input type="submit" class="indexbtn" value="Seleccionar persona" href="/vacunator/recordVaccination">
+        <% }else{ %>
+            <h4>No hay turnos para hoy</h4>
         <% } %>
-        <br>
-        <select name="vaccineName" required>
-            <option></option>
-            <option value="Covid-19">Covid-19</option>
-            <option value="Gripe">Gripe</option>
-            <option value="Fiebre Amarilla">Fiebre Amarilla</option>
-        </select>
-        <br>
-        <label>Observaciones de la vacunacion (minimo 10 caracteres)</label>
-        <br>
-        <input type="text" name="observacion" style="width:500px;height:15px" minlength="10" required>
-        <br>
-    <input type="submit" class="indexbtn" value="Seleccionar persona" href="/vacunator/recordVaccination">
     </form>
     <a class="indexbtn" href="/vacunator/dashboard">Volver al inicio</a>
     </body>
