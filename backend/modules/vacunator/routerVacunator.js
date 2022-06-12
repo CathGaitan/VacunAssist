@@ -384,9 +384,10 @@ routerVacunator.post('/recordVaccination', async(req,res)=>{
     let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido
     DB.query('SELECT id FROM personuser WHERE (name = ? AND lastname = ?)',[separacion[0],separacion[1]],async(error,results)=>{
         const idpersonuser=results[0].id;
-        DB.query('SELECT * FROM turn WHERE idpersonuser = ?',idpersonuser,async(error,results)=>{
-            let hoy = new Date(Date.now());
-            let hoyformateada = hoy.toISOString().split('T')[0];
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND date = ?)',[idpersonuser,fecha],async(error,results)=>{
+            console.log(results);
             tieneTurno=results.some((turno)=>(turno.vaccinename==vaccinename)&&(turno.state=="Otorgado"));
             if(tieneTurno){
                 console.log("tiene turno");
