@@ -175,6 +175,7 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
     });
 });
 
+let newResults=[];
 routerVacunator.get('/registrarausente', async(req,res)=>{
     let vacunador= req.session.name;
     DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
@@ -182,11 +183,9 @@ routerVacunator.get('/registrarausente', async(req,res)=>{
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
         DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async(error, results)=>{
-            let newResults=[];
             for(let i=0; i<results.length; i++){
                 newResults.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
             }
-            console.log(newResults);
             res.render('marcarausente',{results:newResults});
         });
     });
@@ -196,7 +195,6 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     let nameAndLastname=req.body.selectNameUser;
     let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido posicion2= email
     let usuarioausente= separacion[3];
-    console.log('usuario ',usuarioausente)
     let date = new Date(Date.now());
     let fecha = date.toISOString().split('T')[0];
     let vacuna = separacion[6];
@@ -205,9 +203,6 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     }
     DB.query('SELECT * FROM personuser WHERE email = ?', usuarioausente, async (error, results)=> {
         let id = results[0].id;
-        console.log(id)
-        console.log(vacuna)
-        console.log(fecha)
         let ausente= 'ausente'
         DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
             res.render('marcarausente', { 
@@ -371,25 +366,33 @@ routerVacunator.use(function(req, res, next) {
 
 let newResults2=[];
 routerVacunator.get('/recordVaccination', async(req,res)=>{
-    DB.query('SELECT name,lastname FROM personuser',async(error, results)=>{
-        newResults2.splice(0,newResults2.length);
-        for(let i=0; i<results.length; i++){
-            newResults2.push(results[i].name+" "+results[i].lastname);
-        }
-        res.render('recordVaccination',{results:newResults2});
+    let vacunador= req.session.name;
+    DB.query('SELECT * FROM vacunator WHERE email = ?', vacunador, async (error, results)=> {
+        let zonevac = results[0].zonaVacunatorio;
+        let date = new Date(Date.now());
+        let fecha = date.toISOString().split('T')[0];
+        DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id) AND (turn.state= ?)', [fecha, zonevac,"Otorgado"], async(error, results)=>{
+            let newResults2=[];
+            for(let i=0; i<results.length; i++){
+                newResults2.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
+            }
+            res.render('recordVaccination',{results:newResults2});
+        });
     });
 });
 
 routerVacunator.post('/recordVaccination', async(req,res)=>{
     let nameAndLastname=req.body.selectNameUser;
-    let vaccinename=req.body.vaccineName;
     let observacion=req.body.observacion;
     let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido
-    DB.query('SELECT id FROM personuser WHERE (name = ? AND lastname = ?)',[separacion[0],separacion[1]],async(error,results)=>{
+    let vaccinename = separacion[6];
+    let emailUsuario= separacion[3];
+    if (vaccinename == 'Fiebre') vaccinename='Fiebre Amarilla'
+    DB.query('SELECT id FROM personuser WHERE email = ?',emailUsuario,async(error,results)=>{
         const idpersonuser=results[0].id;
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
-        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND date = ? AND vaccinename = ? AND state = ?)',[idpersonuser,fecha,vaccinename,"Otorgado"],async(error,results)=>{
+        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND date = ? AND state = ?)',[idpersonuser,fecha,"Otorgado"],async(error,results)=>{
             if(results.length!=0){
                 DB.query('UPDATE turn SET state = ?, observation = ? WHERE (idpersonuser = ? AND date = ? AND vaccinename = ? AND state = ?)' ,["Aplicada",observacion,idpersonuser,fecha,vaccinename,"Otorgado"]);
                 res.render('recordVaccination', {
