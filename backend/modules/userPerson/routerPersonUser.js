@@ -98,6 +98,7 @@ routerPersonUser.get('/sobreNosotros',async(req,res)=>{
 })
 
 
+
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
     let pass= req.body.password;
@@ -237,6 +238,24 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
                 newlastname= req.body.lastname;
                 datoACambiar+=" apellido";
                 DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email])
+            }
+            if (req.body.mayor18){
+                f= new Date();
+                f.setMonth(11);
+                f.setDate(12)
+                f.setFullYear(2000)
+                let fecha = f.toISOString().split('T')[0];
+                console.log(fecha)
+                DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
+            }
+            if (req.body.mayor60){
+                f= new Date();
+                f.setMonth(11);
+                f.setDate(12)
+                f.setFullYear(1952)
+                let fecha = f.toISOString().split('T')[0];
+                console.log(fecha)
+                DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
             }
             if (req.body.password){
                 if(req.body.password.length >= 6){
