@@ -372,6 +372,7 @@ routerVacunator.use(function(req, res, next) {
 let newResults2=[];
 routerVacunator.get('/recordVaccination', async(req,res)=>{
     DB.query('SELECT name,lastname FROM personuser',async(error, results)=>{
+        newResults2.splice(0,newResults2.length);
         for(let i=0; i<results.length; i++){
             newResults2.push(results[i].name+" "+results[i].lastname);
         }
