@@ -96,6 +96,9 @@ routerPersonUser.get('/FAQ',async(req,res)=>{
 routerPersonUser.get('/sobreNosotros',async(req,res)=>{
     res.render('SobreNosotros');
 })
+routerPersonUser.get('/forgotpassword',async(req,res)=>{
+    res.render('forgotpassword');
+})
 
 
 
@@ -179,7 +182,24 @@ routerPersonUser.post('/register', async (req, res)=>{
         }
     }
 });
-
+routerPersonUser.post('/forgotpassword', async (req, res)=>{
+    let randomCode=Math.floor((Math.random() * (999999 - 100000 + 1)) + 100000);
+    await transporter.sendMail({
+        from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+        to: req.body.emailpsswd, // list of receivers
+        subject: "Olvidaste tu contraseña", // Subject line
+        text: `Aqui tienes una contraseña provisoria, una vez que inicies sesion podras cambiarla: ${randomCode}`
+    });
+    res.render('forgotpassword', { //animacion de registro exitoso
+        alert: true,
+        alertTitle: "Nueva contraseña",
+        alertMessage: "Hemos enviado un email a tu casilla para que puedas inicar sesion!",
+        alertIcon:'success',
+        showConfirmButton: false,
+        timer: false,
+        ruta: '/' 
+    });
+});
 //autenticacion
 routerPersonUser.post('/auth', async (req, res)=>{
     const email = req.body.email;
