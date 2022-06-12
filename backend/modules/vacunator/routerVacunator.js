@@ -116,61 +116,49 @@ routerVacunator.post('/registerVacunator', async (req, res)=> {
             securecode: randomCode
         }
         userActive= user.email;
-        if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
-            res.render('register', { //animacion de registro exitoso
+        if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
+            DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
+                if (error){
+                    if (error.code == 'ER_DUP_ENTRY'){
+                        res.render('register', { //animacion de dni no validado
+                            alert: true,
+                            alertTitle: "Error en el registro",
+                            alertMessage: "Ese email ya existe en el sistema",
+                            alertIcon:'error',
+                            showConfirmButton: false,
+                            timer: false,
+                            ruta: 'vacunator/registerVacunator' 
+                        });
+                    }
+                }else{
+                    userActive= user.email;
+                    await transporter.sendMail({
+                        from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                        to: user.email, // list of receivers
+                        subject: "Nueva cuenta en vacunassist!", // Subject line
+                        text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
+                    });
+                    res.render('register', { //animacion de registro exitoso
+                        alert: true,
+                        alertTitle: "Registro",
+                        alertMessage: "Registro exitoso!",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: false,
+                        ruta: 'vacunator/infovaccines' 
+                    });
+                }
+            });
+        } else {
+            res.render('register', { //animacion de dni no validado
                 alert: true,
-                alertTitle: "Error",
-                alertMessage: "La contraseña debe ser de como minimo 6 caracteres",
+                alertTitle: "Error en el registro",
+                alertMessage: "El DNI no esta validado por RENAPER",
                 alertIcon:'error',
                 showConfirmButton: false,
                 timer: false,
                 ruta: 'vacunator/registerVacunator' 
             });
-        }else{ //si la contrasenia es valida
-            if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
-                DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
-                    if (error){
-                        if (error.code == 'ER_DUP_ENTRY'){
-                            res.render('register', { //animacion de dni no validado
-                                alert: true,
-                                alertTitle: "Error en el registro",
-                                alertMessage: "Ese email ya existe en el sistema",
-                                alertIcon:'error',
-                                showConfirmButton: false,
-                                timer: false,
-                                ruta: 'vacunator/registerVacunator' 
-                            });
-                        }
-                    }else{
-                        userActive= user.email;
-                        await transporter.sendMail({
-                            from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
-                            to: user.email, // list of receivers
-                            subject: "Nueva cuenta en vacunassist!", // Subject line
-                            text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
-                        });
-                        res.render('register', { //animacion de registro exitoso
-                            alert: true,
-                            alertTitle: "Registro",
-                            alertMessage: "Registro exitoso!",
-                            alertIcon:'success',
-                            showConfirmButton: false,
-                            timer: false,
-                            ruta: 'vacunator/infovaccines' 
-                        });
-                    }
-                });
-            } else {
-                res.render('register', { //animacion de dni no validado
-                    alert: true,
-                    alertTitle: "Error en el registro",
-                    alertMessage: "El DNI no esta validado por RENAPER",
-                    alertIcon:'error',
-                    showConfirmButton: false,
-                    timer: false,
-                    ruta: 'vacunator/registerVacunator' 
-                });
-            }
         }
     });
 });
