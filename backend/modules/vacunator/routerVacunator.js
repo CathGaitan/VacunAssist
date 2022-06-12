@@ -182,7 +182,8 @@ routerVacunator.get('/registrarausente', async(req,res)=>{
         let zonevac = results[0].zonaVacunatorio;
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
-        DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async(error, results)=>{
+        DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id) AND (turn.state = ?)', [fecha, zonevac,"Otorgado"], async(error, results)=>{
+            newResults.splice(0,newResults.length);
             for(let i=0; i<results.length; i++){
                 newResults.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
             }
@@ -203,11 +204,7 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     }
     DB.query('SELECT * FROM personuser WHERE email = ?', usuarioausente, async (error, results)=> {
         let id = results[0].id;
-        console.log(id)
-        console.log(vacuna)
-        console.log(fecha)
-        let ausente= 'Ausente'
-        DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
+        DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', ['Ausente', id, vacuna, fecha], async (error, results)=> {
             res.render('marcarausente', { 
                 alert: true,
                 alertTitle: "Turno registrado como ausente",
@@ -215,8 +212,10 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
                 alertIcon:'success',
                 showConfirmButton: false,
                 timer: false,
+                results:newResults,
                 ruta: 'vacunator/registrarausente' 
             });
+            newResults.splice(0,newResults.length);
         });
     })
 });
@@ -375,7 +374,7 @@ routerVacunator.get('/recordVaccination', async(req,res)=>{
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
         DB.query('SELECT name, lastname, email, vaccinename FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id) AND (turn.state= ?)', [fecha, zonevac,"Otorgado"], async(error, results)=>{
-            let newResults2=[];
+            newResults2.splice(0,newResults2.length);
             for(let i=0; i<results.length; i++){
                 newResults2.push(results[i].name+" "+results[i].lastname+" ( "+results[i].email+" ) Vacuna: "+results[i].vaccinename);
             }

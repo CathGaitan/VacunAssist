@@ -13,22 +13,20 @@
     <h2>Seleccione a la persona que no asistio a su turno: </h2>
     <br>
     <form name="registrarausente" method="POST">
-        <% 
-            if (results.length != 0) { %>
+        <% if (results.length != 0) { %>
+            <h2>Seleccione a la persona que se vacuno: </h2>
+            <br>
             <select name="selectNameUser" required>
                 <option></option>
-                <% if (results.length>0){
-                    for(let i=0;i<results.length;i++){ %>
+                <% for(let i=0;i<results.length;i++){ %>
                     <option value="<%= results[i] %>"><%= results[i] %></option>
-        <%          } 
-                }else{ %>
-                    <h5>No hay turnos el dia de la fecha </h5>
-        <%          } %>
+                <% } %>
             </select>
+            <br>
+            <input type="submit" class="indexbtn" value="Marcar ausente" href="/personUser/registrarausente">
+        <% }else{ %>
+            <h4>No hay turnos para hoy</h4>
         <% } %>
-        <br>
-        <br>
-    <input type="submit" class="indexbtn" value="Marcar ausente" href="/personUser/registrarausente">
     </form>
     <a class="indexbtn" href="/vacunator/dashboard">Volver al inicio</a>
     </body>
