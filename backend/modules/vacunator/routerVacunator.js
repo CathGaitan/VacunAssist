@@ -195,6 +195,7 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     let nameAndLastname=req.body.selectNameUser;
     let separacion=nameAndLastname.split(' '); //posicion 0 = nombre, posicion1 = apellido posicion2= email
     let usuarioausente= separacion[3];
+    console.log('usuario ',usuarioausente)
     let date = new Date(Date.now());
     let fecha = date.toISOString().split('T')[0];
     let vacuna = separacion[6];
@@ -203,8 +204,10 @@ routerVacunator.post('/registrarausente', async(req,res)=>{
     }
     DB.query('SELECT * FROM personuser WHERE email = ?', usuarioausente, async (error, results)=> {
         let id = results[0].id;
+        console.log(id)
+        console.log(vacuna)
+        console.log(fecha)
         let ausente= 'ausente'
-        console.log('entrooooooooooooooooooo')
         DB.query('UPDATE turn SET state = ?  WHERE (idpersonuser = ?) AND (vaccinename = ?) AND (date = ?)', [ausente, id, vacuna, fecha], async (error, results)=> {
             res.render('marcarausente', { 
                 alert: true,
@@ -342,7 +345,7 @@ routerVacunator.get('/listtodayturns', async (req, res)=> {
         let zonevac= results[0].zonaVacunatorio;
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
-        DB.query('SELECT name, lastname, zone, vaccinename, dose FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
+        DB.query('SELECT name, lastname, zone, vaccinename, dose, turn.state FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
             res.render('viewlist',{
                 turnsinfo:results,
                 zonav: zonevac

@@ -17,14 +17,18 @@
             if (results.length != 0) { %>
             <select name="selectNameUser" required>
                 <option></option>
-                <% for(let i=0;i<results.length;i++){ %>
+                <% if (results.length>0){
+                    for(let i=0;i<results.length;i++){ %>
                     <option value="<%= results[i] %>"><%= results[i] %></option>
-        <%      } %>
+        <%          } 
+                }else{ %>
+                    <h5>No hay turnos el dia de la fecha </h5>
+        <%          } %>
             </select>
         <% } %>
         <br>
         <br>
-    <input type="submit" class="indexbtn" value="Marcar ausente" href="/personUser/marcarausente">
+    <input type="submit" class="indexbtn" value="Marcar ausente" href="/personUser/registrarausente">
     </form>
     <a class="indexbtn" href="/vacunator/dashboard">Volver al inicio</a>
     </body>
