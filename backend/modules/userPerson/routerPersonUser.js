@@ -19,7 +19,7 @@ routerPersonUser.use(session({
 }));
 
 const pastAYear=(dateflueString)=>{
-    if(dateflueString!= undefined){
+    if(dateflueString != undefined){
         let today=Date.now();
         const datefluevaccine=Date.parse(dateflueString);
         let dif=today-datefluevaccine;
@@ -28,11 +28,6 @@ const pastAYear=(dateflueString)=>{
         return true;
     }
 
-}
-
-const formatDate = (date)=>{
-    let formatted_date = date.getDay() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()
-    return formatted_date;
 }
 
 function getEdad(dateString) {
@@ -627,8 +622,8 @@ routerPersonUser.post('/requestcovidturn', async (req, res)=>{
 routerPersonUser.post('/requestflueturn', async (req, res)=>{
     const email= req.session.name;
     DB.query('SELECT * FROM personuser WHERE email = ?', [email], async (error, results)=>{
-        console.log(results.datefluevaccine)
-        if (results.fluevaccine == 0 || pastAYear(results.datefluevaccine)){ //si no tiene la vacuna de la gripe
+        let date = new Date(Date.now());
+        if (results[0].fluevaccine == 0 || pastAYear(results[0].datefluevaccine)){ //si no tiene la vacuna de la gripe
             const hoy = Date.now();
             const fecha = new Date(hoy);
             fechanac= results[0].dateofbirth;

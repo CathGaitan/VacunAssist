@@ -16,29 +16,25 @@
     <br>
     <% if (turnsinfo.length != 0) {
         for(let i=0;i<turnsinfo.length;i++){ %>
-        <label for="">Nombre:</label>
         <br>
+        <label for="">Nombre:</label>
         <label for=""><%= turnsinfo[i].name %></label>
         <br>
-        <br>
         <label for="">Apellido:</label>
-        <br>
         <label for=""><%= turnsinfo[i].lastname %></label>
         <br>
-        <br>
         <label for="">Vacuna:</label>
-        <br>
         <label for=""><%= turnsinfo[i].vaccinename %></label>
-        <br>
         <br>
         <label for="">Numero de dosis:</label>
         <label for=""><%= turnsinfo[i].dose %></label>
         <br>
-        <br>
         <label for="">Estado del turno:</label>
         <label for=""><%= turnsinfo[i].state %></label>
         <br>
-        <br>
+        <label for="">Observaciones: </label>
+        <label for=""><%= turnsinfo[i].observation %></label>
+        <br><br>
         <label for="">--------------------------------------------------------------------------------------</label>
         <br>
     <%  }
