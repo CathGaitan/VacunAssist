@@ -315,13 +315,13 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
             });
         }
         //si seleccione turno para gripe, updateo de esta manera
-        if (vacturn = 'Gripe') {
+        if (vacturn == 'Gripe') {
             let dosiscovid= req.body.menuCovid;
-            let vacfiebre= req.body.menuFiebre;
-            let vacfiebredate= req.body.inputDatefiebre;
+            let vacfiebre= req.body.fevervaccine;
+            let vacfiebredate= req.body.datefevervaccine;
             let date = new Date(Date.now());
             let fecha = date.toISOString().split('T')[0];
-            DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? FROM personuser WHERE email = ?', [dosiscovid, 1, fecha, vacfiebre, vacfiebredate, email], async (error, results)=>{
+            DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dosiscovid, 1, fecha, vacfiebre, vacfiebredate, email], async (error, results)=>{
                 res.render('infovaccines', {
                     alert: true,
                     alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
