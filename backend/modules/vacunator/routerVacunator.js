@@ -212,8 +212,8 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
     const email= userActive;
     let vacturn= req.body.menuvacunas;
     let dosis;
-    const hoy = Date.now();
-    const fecha = new Date(hoy);
+    let date = new Date(Date.now());
+    let fecha = date.toISOString().split('T')[0];
     if (vacturn == 'Covid-19'){
         dosis= req.body.nrodosisc;
     } else{
@@ -232,12 +232,14 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
         }else{
             esmayor18= false;
         }
+        console.log(esmayor18)
         let esmayor60;
         if (edad > 59){
             esmayor60= true;
         }else{
             esmayor60= false;
         }
+        console.log(esmayor60)
         let turn={
             idpersonuser: results[0].id,
             vaccinename: vacturn,
@@ -246,16 +248,19 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
             date: fecha
         }
         //genero el turno
-        DB.query('INSERT INTO turn SET ?', turn, async (error, results)=> {    
-            //si seleccione turno para covid updateo la info de esta manera
-            if (vacturn == 'Covid-19' && esmayor18){//updateo todos los campos
-                //info covid
-                let dos= req.body.nrodosisc;
-                let vacgripe= req.body.fevervaccine;
-                let vacgripedate= req.body.datefevervaccine;
-                let vacfiebre= req.body.fluevaccine;
-                let vacfiebredate= req.body.datefluevaccine;
-                DB.query('UPDATE  personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dos, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
+        if ((esmayor18 && vacturn == 'Covid-19') || (!esmayor60 && vacturn == 'Fiebre Amarilla') || (vacturn == 'Gripe')){
+            DB.query('INSERT INTO turn SET ?', turn);
+        }
+        //si seleccione turno para covid updateo la info de esta manera
+        if (vacturn == 'Covid-19'){//updateo todos los campos
+            //info covid
+            let dos= req.body.nrodosisc;
+            let vacfiebre= req.body.fevervaccine;
+            let vacfiebredate= req.body.datefluevaccine;
+            let vacgripe= req.body.fluevaccine;
+            let vacgripedate= req.body.datefevervaccine;
+            DB.query('UPDATE  personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dos, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
+                if (esmayor18){
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
@@ -264,10 +269,8 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                         showConfirmButton: false,
                         timer: false,
                         ruta: 'vacunator/dashboard'
-                    });       
-                })
-            } else {
-                if (vacturn == 'Covid-19' && !esmayor18) {
+                    });
+                } else {
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Los datos se han almacenado pero el turno no ha sido asignado ya que el usuario es menor de edad",
@@ -277,14 +280,18 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                         timer: false,
                         ruta: 'vacunator/dashboard'
                     });    
-                }
-            }
-            //si seleccione turno para la fiebre, updateo de esta manera
-            if (vacturn == 'Fiebre Amarilla' && !esmayor60) {
-                let vacgripe= req.body.menuFlue;
-                let vacgripedate= req.body.inputDate;
-                let dosiscovid= req.body.menuCovid;
-                DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dosiscovid, vacgripe, vacgripedate, 1, Date.now(), email], async (error, results)=>{
+                }        
+                })
+        }
+        //si seleccione turno para la fiebre, updateo de esta manera
+        if (vacturn == 'Fiebre Amarilla') {
+            let dos= req.body.nrodosisc;
+            let vacgripe= req.body.fluevaccine;
+            let vacgripedate= req.body.datefluevaccine;
+            let date = new Date(Date.now());
+            let fecha = date.toISOString().split('T')[0];
+            DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dos, vacgripe, vacgripedate, 1, fecha, email], async (error, results)=>{
+                if (!esmayor60){
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
@@ -293,10 +300,8 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                         showConfirmButton: false,
                         timer: false,
                         ruta: 'vacunator/dashboard'
-                    });       
-                })
-            } else {
-                if (vacturn == 'Fiebre Amarilla' && esmayor60){
+                    }); 
+                } else {
                     res.render('infovaccines', {
                         alert: true,
                         alertTitle: "Los datos se han almacenado pero el turno no ha sido asignado ya que el usuario es mayor de 60",
@@ -306,27 +311,29 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
                         timer: false,
                         ruta: 'vacunator/dashboard'
                     });  
-                } 
-            }
-            //si seleccione turno para gripe, updateo de esta manera
-            if (vacturn = 'Gripe') {
-                let dosiscovid= req.body.menuCovid;
-                let vacfiebre= req.body.menuFiebre;
-                let vacfiebredate= req.body.inputDatefiebre;
-                DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? FROM personuser WHERE email = ?', [dosiscovid, 1, Date.now(), vacfiebre, vacfiebredate, email], async (error, results)=>{
-                    res.render('infovaccines', {
-                        alert: true,
-                        alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
-                        alertMessage: "¡INFORMACION GUARDADA!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: 'vacunator/dashboard'
-                    });       
-                })
-            }
-        }) 
-    });
+                }     
+            });
+        }
+        //si seleccione turno para gripe, updateo de esta manera
+        if (vacturn = 'Gripe') {
+            let dosiscovid= req.body.menuCovid;
+            let vacfiebre= req.body.menuFiebre;
+            let vacfiebredate= req.body.inputDatefiebre;
+            let date = new Date(Date.now());
+            let fecha = date.toISOString().split('T')[0];
+            DB.query('UPDATE personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? FROM personuser WHERE email = ?', [dosiscovid, 1, fecha, vacfiebre, vacfiebredate, email], async (error, results)=>{
+                res.render('infovaccines', {
+                    alert: true,
+                    alertTitle: "Tu informacion se guardo exitosamente y se le ha asignado un turno para hoy",
+                    alertMessage: "¡INFORMACION GUARDADA!",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: false,
+                    ruta: 'vacunator/dashboard'
+                });       
+            })
+        }
+    })
 });
 
 routerVacunator.get('/listtodayturns', async (req, res)=> {
