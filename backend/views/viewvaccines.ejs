@@ -21,15 +21,27 @@
     <br>
     <div name="Fiebre">
         <h2>Fiebre amarilla: </h2>
-        <label for="">Estado: <%= fluevaccine  %></label><br>
+        <label for="">Dosis: <%= fluevaccine  %></label><br>
         <label for="">Fecha: <%= datefluevaccine  %></label><br>
     </div>
     <br>
-    <div>
+    <div name="Gripe">
         <h2>Gripe: </h2>
-        <label for="">Estado: <%= fevervaccine  %></label><br>
+        <label for="">Dosis: <%= fevervaccine  %></label><br>
         <label for="">Fecha: <%= datefevervaccine  %></label>
-    </div>  
+    </div>
+    <br>
+    <div name="OtrosTurnos"">
+      <% if (result.length != 0) {
+        for(let i=0;i<result.length;i++){ %>
+          <h2 for=""><%= result[i].vaccinename %></h2>
+          <label for="">Dosis: <%= result[i].dose %></label><br>
+          <label for="">Fecha: <%= result[i].date %></label><br>
+          <label for="">Observaciones: <%= result[i].observation %></label>
+          <br><br>
+      <%  }
+        } %>
+    </div>
     <a class="indexbtn" href="/personUser/cancelTurn">Cancelar un turno</a><label for="">  </label><a class="indexbtn" href="/personUser/dashboard">Volver al inicio</a>
     <br>
     <br>

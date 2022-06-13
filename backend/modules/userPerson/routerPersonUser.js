@@ -748,6 +748,7 @@ routerPersonUser.get('/listvaccines', async (req, res)=>{
     DB.query('SELECT * FROM personuser WHERE email = ?',email,async(error, results)=>{
         let fechaFlueVaccine=results[0].datefluevaccine;
         let fechaFeverVaccine=results[0].datefevervaccine;
+        let idpersonuser=results[0].id;
         if(results[0].fluevaccine==0){
             flueVaccineString="Usted no tiene aplicada la vacuna de la fiebre amarrilla"
             fechaFlueVaccine="---"
@@ -762,12 +763,19 @@ routerPersonUser.get('/listvaccines', async (req, res)=>{
             feverVaccineString="Ya se aplico la vacuna"
             fechaFeverVaccine=fechaFeverVaccine.toLocaleDateString()
         }
-        res.render('viewvaccines',{
-            coviddoses:results[0].coviddoses,
-            fluevaccine: flueVaccineString,
-            datefluevaccine: fechaFlueVaccine,
-            fevervaccine: feverVaccineString,
-            datefevervaccine: fechaFeverVaccine,
+        DB.query('SELECT * FROM turn WHERE (idpersonuser = ? AND state = ?)',[idpersonuser,"Aplicada"],async(error,result)=>{
+            newResult=result.slice();
+            for(let i=0;i<result.length;i++){
+                newResult[i].date=result[i].date.toLocaleDateString();
+            }
+            res.render('viewvaccines',{
+                coviddoses:results[0].coviddoses,
+                fluevaccine: flueVaccineString,
+                datefluevaccine: fechaFlueVaccine,
+                fevervaccine: feverVaccineString,
+                datefevervaccine: fechaFeverVaccine,
+                result:newResult
+            });
         });
     });
 });
