@@ -750,14 +750,14 @@ routerPersonUser.get('/listvaccines', async (req, res)=>{
         let fechaFeverVaccine=results[0].datefevervaccine;
         let idpersonuser=results[0].id;
         if(results[0].fluevaccine==0){
-            flueVaccineString="Usted no tiene aplicada la vacuna de la fiebre amarrilla"
+            flueVaccineString="Usted no tiene aplicada la vacuna de la gripe"
             fechaFlueVaccine="---"
         }else{
             flueVaccineString="Ya se aplico la vacuna"
             fechaFlueVaccine=fechaFlueVaccine.toLocaleDateString()
         }
         if(results[0].fevervaccine==0){
-            feverVaccineString="Usted no tiene aplicada la vacuna de la gripe"
+            feverVaccineString="Usted no tiene aplicada la vacuna de la fiebre amarilla"
             fechaFeverVaccine="---"
         }else{
             feverVaccineString="Ya se aplico la vacuna"
