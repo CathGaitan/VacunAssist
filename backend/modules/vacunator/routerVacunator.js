@@ -335,7 +335,7 @@ routerVacunator.get('/listtodayturns', async (req, res)=> {
         let zonevac= results[0].zonaVacunatorio;
         let date = new Date(Date.now());
         let fecha = date.toISOString().split('T')[0];
-        DB.query('SELECT name, lastname, zone, vaccinename, dose, turn.state FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
+        DB.query('SELECT name, lastname, zone, vaccinename, dose, turn.state,turn.observation FROM turn JOIN personuser WHERE (turn.date = ?) AND (personuser.zone = ?) AND (turn.idpersonuser = personuser.id)', [fecha, zonevac], async (req, results)=> {
             res.render('viewlist',{
                 turnsinfo:results,
                 zonav: zonevac
