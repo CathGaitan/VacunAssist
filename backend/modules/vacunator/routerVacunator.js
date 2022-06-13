@@ -256,9 +256,9 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
             //info covid
             let dos= req.body.nrodosisc;
             let vacfiebre= req.body.fevervaccine;
-            let vacfiebredate= req.body.datefluevaccine;
+            let vacfiebredate= req.body.datefevervaccine;
             let vacgripe= req.body.fluevaccine;
-            let vacgripedate= req.body.datefevervaccine;
+            let vacgripedate= req.body.datefluevaccine;
             DB.query('UPDATE  personuser SET coviddoses = ?, fluevaccine = ?, datefluevaccine = ?, fevervaccine = ?, datefevervaccine = ? WHERE email = ?', [dos, vacgripe, vacgripedate, vacfiebre, vacfiebredate, email], async (error, results)=>{
                 if (esmayor18){
                     res.render('infovaccines', {
@@ -285,7 +285,7 @@ routerVacunator.post('/infovaccines', async(req,res)=>{
         }
         //si seleccione turno para la fiebre, updateo de esta manera
         if (vacturn == 'Fiebre Amarilla') {
-            let dos= req.body.nrodosisc;
+            let dos= req.body.menuCovid;
             let vacgripe= req.body.fluevaccine;
             let vacgripedate= req.body.datefluevaccine;
             let date = new Date(Date.now());
