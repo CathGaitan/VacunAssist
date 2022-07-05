@@ -80,7 +80,9 @@ routerPersonUser.get('/cancelturn', (req, res)=>{
     res.render('cancelturn')
 })
 routerPersonUser.get('/viewMap',async(req,res)=>{
-    res.render('viewMap');
+    res.render('viewMap',{
+        name:""
+    });
 })
 routerPersonUser.get('/solicitarbaja',async(req,res)=>{
     res.render('solicitarbaja');

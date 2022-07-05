@@ -20,6 +20,11 @@ routerAdministrator.get('/login', (req, res)=> {
     });
 });
 
+routerAdministrator.get('/viewMap',async(req,res)=>{
+    res.render('viewMap',{
+        name:""
+    });
+})
 
 
 //autenticacion
@@ -74,6 +79,19 @@ routerAdministrator.get('/dashboard', (req, res)=> { //controla el dashboard
 		});
         res.end();			
 	}
+});
+
+routerAdministrator.get('/logout', function (req, res) {
+	req.session.destroy(() => {
+	  res.redirect('/administrator/login') // siempre se ejecutará después de que se destruya la sesión
+	})
+});
+
+//función para limpiar la caché luego del logout
+routerAdministrator.use(function(req, res, next) {
+    if (!req.user)
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    next();
 });
 
 module.exports=routerAdministrator;
