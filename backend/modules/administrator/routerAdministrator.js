@@ -15,12 +15,11 @@ routerAdministrator.use(session({
 }));
 
 routerAdministrator.get('/login', (req, res)=> {
-    res.render('loginVacunator');
+    res.render('loginVacunator',{
+        name:"Administrador"
+    });
 });
 
-routerAdministrator.get('/login', (req, res)=> {
-    res.render('loginVacunator');
-});
 
 
 //autenticacion
@@ -37,6 +36,7 @@ routerAdministrator.post('/auth', async (req, res)=>{
                     alertIcon:'error',
                     showConfirmButton: true,
                     timer: false,
+                    name:"Administrador",
                     ruta: 'administrator/login'    
                 }); 
             } else { //login exitoso
@@ -50,27 +50,13 @@ routerAdministrator.post('/auth', async (req, res)=>{
 					alertIcon:'success',
 					showConfirmButton: false,
 					timer: 1500,
-					ruta: 'vacunator/dashboard'
+                    name:"Administrador",
+					ruta: 'administrator/dashboard'
 				});       
             }
         });
     }
 })
 
-routerAdministrator.get('/dashboard', (req, res)=> { //controla el dashboard
-	if (req.session.loggedin) {
-        const email= req.session.email;
-        DB.query('SELECT id FROM vacunator WHERE email = ?',email,async(error, results)=>{
-            res.render('dashboardVacunator',{
-                login: true,
-                name: req.session.name,	
-            });
-        });	
-	} else {
-		res.render('dashboard',{
-			login:false,
-			name:'Debe iniciar sesión',			
-		});
-        res.end();			
-	}
-});
+
+module.exports=routerAdministrator;

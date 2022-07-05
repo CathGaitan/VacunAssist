@@ -32,7 +32,9 @@ routerVacunator.use(session({
 }));
 
 routerVacunator.get('/login', (req, res)=> {
-    res.render('loginVacunator');
+    res.render('loginVacunator',{
+        name:"Vacunador"
+    });
 });
 routerVacunator.get('/registerVacunator', (req, res)=> {
     res.render('registerVacunator');
@@ -58,6 +60,7 @@ routerVacunator.post('/auth', async (req, res)=>{
                     alertIcon:'error',
                     showConfirmButton: true,
                     timer: false,
+                    name: "Vacunador",
                     ruta: 'vacunator/login'    
                 }); 
             } else { //login exitoso
@@ -71,6 +74,7 @@ routerVacunator.post('/auth', async (req, res)=>{
 					alertIcon:'success',
 					showConfirmButton: false,
 					timer: 1500,
+                    name:"Vacunador",
 					ruta: 'vacunator/dashboard'
 				});       
             }
