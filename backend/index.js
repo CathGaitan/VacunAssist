@@ -5,9 +5,11 @@ const express = require('express');
 const app = express();
 const routerPersonUser = require('./modules/userPerson/routerPersonUser');
 const routerVacunator=require('./modules/vacunator/routerVacunator');
+const routerAdministrator=require('./modules/administrator/routerAdministrator');
 
 app.use('/personUser',routerPersonUser);
 app.use('/vacunator',routerVacunator);
+app.use('/administrator',routerAdministrator);
 
 // seteamos url encoded para caputar los datos del formulario
 app.use(express.urlencoded({extended: false}));
