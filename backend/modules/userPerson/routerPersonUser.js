@@ -185,6 +185,8 @@ routerPersonUser.post('/forgotpassword', async (req, res)=>{
         subject: "Olvidaste tu contraseña", // Subject line
         text: `Aqui tienes una contraseña provisoria, una vez que inicies sesion podras cambiarla: ${randomCode}`
     });
+    let email= req.body.emailpsswd;
+    DB.query('UPDATE personuser SET password = ? WHERE email= ?',[randomCode, email])
     res.render('forgotpassword', { //animacion de registro exitoso
         alert: true,
         alertTitle: "Nueva contraseña",
