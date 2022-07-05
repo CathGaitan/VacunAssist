@@ -58,5 +58,22 @@ routerAdministrator.post('/auth', async (req, res)=>{
     }
 })
 
+routerAdministrator.get('/dashboard', (req, res)=> { //controla el dashboard
+	if (req.session.loggedin) {
+        const email= req.session.email;
+        DB.query('SELECT id FROM administrator WHERE email = ?',email,async(error, results)=>{
+            res.render('dashboardAdministrator',{
+                login: true,
+                name: req.session.name,	
+            });
+        });	
+	} else {
+		res.render('dashboard',{
+			login:false,
+			name:'Debe iniciar sesión',			
+		});
+        res.end();			
+	}
+});
 
 module.exports=routerAdministrator;
