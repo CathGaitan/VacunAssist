@@ -696,8 +696,8 @@ routerPersonUser.post('/solicitarbaja', async (req, res)=>{
         DB.query('UPDATE  personUser SET unsubscribemotive = ? WHERE email = ?',[motivo,email], async (error, results)=>{
             res.render('solicitarbaja', {
                 alert: true,
-                alertTitle: "Baja de cuenta solicitada",
-                alertMessage: "Se ha solicitado la baja de su cuenta",
+                alertTitle: "Enviado",
+                alertMessage: "Solicitud de peticion de baja exitosa",
                 alertIcon:'success',
                 showConfirmButton: false,
                 timer: 5000,
