@@ -30,6 +30,11 @@ routerAdministrator.get('/otorgarBaja', (req, res)=>{
 
 
 
+routerAdministrator.get('/viewMap',async(req,res)=>{
+    res.render('viewMap',{
+        name:""
+    });
+})
 
 //autenticacion
 routerAdministrator.post('/auth', async (req, res)=>{
@@ -85,34 +90,48 @@ routerAdministrator.get('/dashboard', (req, res)=> { //controla el dashboard
 	}
 });
 
-routerAdministrator.get('/verBajasAdministrator', async (req, res)=> {
-    let cancel= 'accountcancelationreq';
-    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
-        res.render('verbajas',{
-        accounts:results,
+routerAdministrator.get('/logout', function (req, res) {
+	req.session.destroy(() => {
+	  res.redirect('/administrator/login') // siempre se ejecutará después de que se destruya la sesión
+	})
+});
+
+//función para limpiar la caché luego del logout
+routerAdministrator.use(function(req, res, next) {
+    if (!req.user)
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    next();
+});
+
+routerAdministrator.get('/changeNameVaccinationCentre',async(req,res)=>{
+    DB.query('SELECT * FROM vaccinationcentres', async (error, results)=>{
+        res.render('changeNameVaccinationCentre',{
+            name:"",
+            centres:results
         });
     });
 });
 
-routerAdministrator.post('/otorgarBaja', async (req, res)=>{
-    let cancel= 'accountcancelationreq';
-    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
-        for (let i=0; i<results.length; i++){
-            console.log(req.body[results[i].id]);
-            if (req.body[results[i].id]){
-                DB.query ('DELETE FROM personuser WHERE id = ?', req.body.results[i].id, async (req, results)=>{
-                    console.log('eliminado ;)');
+routerAdministrator.post('/changeNameVaccinationCentre',async(req,res)=>{
+    let oldName=req.body.changeName;
+    let newName=req.body.newName;
+    DB.query('UPDATE vaccinationcentres SET name = ? WHERE name = ?',[newName,oldName],async (error, results)=>{
+        DB.query('UPDATE vacunator SET zonaVacunatorio = ? WHERE zonaVacunatorio = ?',[newName,oldName],async (error, results)=>{
+            DB.query('UPDATE personUser SET zone = ? WHERE zone = ?',[newName,oldName],async (error, results)=>{
+                DB.query('SELECT * FROM vaccinationcentres', async (error, nombrescentros)=>{
+                    res.render('changeNameVaccinationCentre', {
+                        alert: true,
+                        alertTitle: "Cambio exitoso",
+                        alertMessage: "Se ha cambiado el nombre del vacunatorio",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        centres:nombrescentros,
+                        ruta: 'administrator/changeNameVaccinationCentre'
+                    });     
                 });
-            }
-        };
-        res.render('otorgarBaja', {
-            alert: true,
-            alertTitle: "Usuarios eliminados",
-            alertMessage: "La baja de los usuarios seleccionados fue exitosa",
-            alertIcon:'success',
-            showConfirmButton: false,
-            timer: 5000,
-            ruta: 'administrator/dashboard'
+
+            });
         });
     });
 });
