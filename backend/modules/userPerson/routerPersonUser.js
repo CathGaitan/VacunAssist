@@ -50,11 +50,19 @@ routerPersonUser.get('/login', (req, res)=> {
     res.render('login');
 })
 routerPersonUser.get('/register', (req, res)=> {
-    res.render('register');
+    DB.query('SELECT * FROM vaccinationcentres', async (error, results)=>{
+        res.render('register',{
+            centres:results
+        });
+    });
 })
 routerPersonUser.get('/updatedata', (req, res)=>{
-    res.render('updatedata')
-})
+    DB.query('SELECT * FROM vaccinationcentres', async (error, nombrescentros)=>{
+        res.render('updatedata',{
+            centres:nombrescentros
+        })
+    });
+});
 routerPersonUser.get('/viewdata', (req, res)=>{
     res.render('viewdata')
 })
@@ -80,7 +88,9 @@ routerPersonUser.get('/cancelturn', (req, res)=>{
     res.render('cancelturn')
 })
 routerPersonUser.get('/viewMap',async(req,res)=>{
-    res.render('viewMap');
+    res.render('viewMap',{
+        name:""
+    });
 })
 routerPersonUser.get('/solicitarbaja',async(req,res)=>{
     res.render('solicitarbaja');
@@ -96,86 +106,90 @@ routerPersonUser.get('/forgotpassword',async(req,res)=>{
 })
 
 
-
 // registracion
 routerPersonUser.post('/register', async (req, res)=>{
-    let pass= req.body.password;
-    let passwordHash = await bcryptjs.hash(req.body.password, 8);
-    let randomCode=Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000);
-    let user = {
-        email:req.body.email, 
-        name:req.body.name, 
-        lastname: req.body.lastname,
-        password: passwordHash,
-        DNI: req.body.DNI,
-        dateofbirth: req.body.dateofbirth,
-        risk: req.body.risk,
-        zone: req.body.zone,
-        securecode: randomCode
-    }
-    console.log(user.securecode);
-    userActive= user.email;
-    if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
-        res.render('register', { //animacion de registro exitoso
-            alert: true,
-            alertTitle: "Error",
-            alertMessage: "La contraseña debe ser de como minimo 6 caracteres",
-            alertIcon:'error',
-            showConfirmButton: false,
-            timer: false,
-            ruta: 'personUser/register' 
-        });
-    }else{ //si la contrasenia es valida
-        let route;
-        if (getEdad(user.dateofbirth)>=18){ //si es mayor carga info
-            route= 'personUser/infoCovid'
-        }else{ //si es menor va a dashboard
-            route= 'personUser/infoGripe'
+    DB.query('SELECT * FROM vaccinationcentres', async (error,nombrescentros)=>{
+        let pass= req.body.password;
+        let passwordHash = await bcryptjs.hash(req.body.password, 8);
+        let randomCode=Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000);
+        let user = {
+            email:req.body.email, 
+            name:req.body.name, 
+            lastname: req.body.lastname,
+            password: passwordHash,
+            DNI: req.body.DNI,
+            dateofbirth: req.body.dateofbirth,
+            risk: req.body.risk,
+            zone: req.body.zone,
+            securecode: randomCode
         }
-        if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
-            DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
-                if (error){
-                    if (error.code == 'ER_DUP_ENTRY'){
-                        res.render('register', { //animacion de dni no validado
-                            alert: true,
-                            alertTitle: "Error en el registro",
-                            alertMessage: "Ese email ya existe en el sistema",
-                            alertIcon:'error',
-                            showConfirmButton: false,
-                            timer: false,
-                            ruta: 'personUser/register' 
-                        });
-                    }
-                }else{
-                    await transporter.sendMail({
-                        from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
-                        to: user.email, // list of receivers
-                        subject: "Nueva cuenta en vacunassist!", // Subject line
-                        text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
-                    });
-                    res.render('register', { //animacion de registro exitoso
-                        alert: true,
-                        alertTitle: "Registro",
-                        alertMessage: "Registro exitoso!",
-                        alertIcon:'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: route 
-                    });
-                }
-            });
-        } else {
-            res.render('register', { //animacion de dni no validado
+        userActive= user.email;
+        if (pass.length < 6){ //si la contrasenia tiene menos de 6 dig
+            res.render('register', { //animacion de registro exitoso
                 alert: true,
-                alertTitle: "Error en el registro",
-                alertMessage: "El DNI no esta validado por RENAPER",
+                alertTitle: "Error",
+                alertMessage: "La contraseña debe ser de como minimo 6 caracteres",
                 alertIcon:'error',
                 showConfirmButton: false,
                 timer: false,
+                centres:nombrescentros,
                 ruta: 'personUser/register' 
             });
+        }else{ //si la contrasenia es valida
+            let route;
+            if (getEdad(user.dateofbirth)>=18){ //si es mayor carga info
+                route= 'personUser/infoCovid'
+            }else{ //si es menor va a dashboard
+                route= 'personUser/infoGripe'
+            }
+            if (user.DNI>0 && user.DNI<9999999999999 && user.DNI != 41777666){ //verificacion RENAPER (?)
+                DB.query('INSERT INTO personuser SET ?', user, async (error, results)=> {
+                    if (error){
+                        if (error.code == 'ER_DUP_ENTRY'){
+                            res.render('register', { //animacion de dni no validado
+                                alert: true,
+                                alertTitle: "Error en el registro",
+                                alertMessage: "Ese email ya existe en el sistema",
+                                alertIcon:'error',
+                                showConfirmButton: false,
+                                timer: false,
+                                centres:nombrescentros,
+                                ruta: 'personUser/register' 
+                            });
+                        }
+                    }else{
+                        await transporter.sendMail({
+                            from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                            to: user.email, // list of receivers
+                            subject: "Nueva cuenta en vacunassist!", // Subject line
+                            text: `Felicidades, se ha creado una cuenta en vacunassist, el siguiente codigo debera ingresarlo al iniciar sesion: ${randomCode}`
+                        });
+                        res.render('register', { //animacion de registro exitoso
+                            alert: true,
+                            alertTitle: "Registro",
+                            alertMessage: "Registro exitoso!",
+                            alertIcon:'success',
+                            showConfirmButton: false,
+                            timer: false,
+                            centres:nombrescentros,
+                            ruta: route 
+                        });
+                    }
+                });
+            } else {
+                res.render('register', { //animacion de dni no validado
+                    alert: true,
+                    alertTitle: "Error en el registro",
+                    alertMessage: "El DNI no esta validado por RENAPER",
+                    alertIcon:'error',
+                    showConfirmButton: false,
+                    timer: false,
+                    centres:nombrescentros,
+                    ruta: 'personUser/register' 
+                });
+            }
         }
-    }
+    });
 });
 routerPersonUser.post('/forgotpassword', async (req, res)=>{
     let randomCode=Math.floor((Math.random() * (999999 - 100000 + 1)) + 100000);
@@ -244,85 +258,90 @@ routerPersonUser.post('/updatedata', async (req, res)=>{
     let datoACambiar="";
     const oldpassword=req.body.oldpassword;
     const email= req.session.name;
-    DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
-        if (await bcryptjs.compare(oldpassword, results[0].password)){
-            if (req.body.name){ 
-                newname= req.body.name;
-                datoACambiar+="nombre";
-                DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email])
-            }
-            if (req.body.lastname){
-                newlastname= req.body.lastname;
-                datoACambiar+=" apellido";
-                DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email])
-            }
-            if (req.body.mayor18){
-                f= new Date();
-                f.setMonth(11);
-                f.setDate(12)
-                f.setFullYear(2000)
-                let fecha = f.toISOString().split('T')[0];
-                console.log(fecha)
-                DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
-            }
-            if (req.body.mayor60){
-                f= new Date();
-                f.setMonth(11);
-                f.setDate(12)
-                f.setFullYear(1952)
-                let fecha = f.toISOString().split('T')[0];
-                console.log(fecha)
-                DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
-            }
-            if (req.body.password){
-                if(req.body.password.length >= 6){
-                    datoACambiar+=" contraseña";
-                    newHasshedPassword=await bcryptjs.hash(req.body.password, 8);
-                    DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email])
-                }else{
-                    return res.render('updatedata', {
-                        alert: true,
-                        alertTitle: "Error",
-                        alertMessage: "La contraseña debe tener tener 6 o mas caracteres",
-                        alertIcon:'error',
-                        showConfirmButton: true,
-                        timer: false,
-                        ruta: 'personUser/updatedata'    
-                    }); 
+    DB.query('SELECT * FROM vaccinationcentres', async (error, nombrescentros)=>{
+        DB.query('SELECT * FROM personuser WHERE email = ?', email, async (error, results)=>{
+            if (await bcryptjs.compare(oldpassword, results[0].password)){
+                if (req.body.name){ 
+                    newname= req.body.name;
+                    datoACambiar+="nombre";
+                    DB.query('UPDATE personuser SET name = ? WHERE email = ?', [newname, email])
                 }
+                if (req.body.lastname){
+                    newlastname= req.body.lastname;
+                    datoACambiar+=" apellido";
+                    DB.query('UPDATE personuser SET lastname = ? WHERE email = ?', [newlastname, email])
+                }
+                if (req.body.mayor18){
+                    f= new Date();
+                    f.setMonth(11);
+                    f.setDate(12)
+                    f.setFullYear(2000)
+                    let fecha = f.toISOString().split('T')[0];
+                    console.log(fecha)
+                    DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
+                }
+                if (req.body.mayor60){
+                    f= new Date();
+                    f.setMonth(11);
+                    f.setDate(12)
+                    f.setFullYear(1952)
+                    let fecha = f.toISOString().split('T')[0];
+                    console.log(fecha)
+                    DB.query('UPDATE personuser SET dateofbirth = ? WHERE email = ?', [fecha, email])
+                }
+                if (req.body.password){
+                    if(req.body.password.length >= 6){
+                        datoACambiar+=" contraseña";
+                        newHasshedPassword=await bcryptjs.hash(req.body.password, 8);
+                        DB.query('UPDATE personuser SET password = ? WHERE email = ?', [newHasshedPassword, email])
+                    }else{
+                        return res.render('updatedata', {
+                            alert: true,
+                            alertTitle: "Error",
+                            alertMessage: "La contraseña debe tener tener 6 o mas caracteres",
+                            alertIcon:'error',
+                            showConfirmButton: true,
+                            timer: false,
+                            centres:nombrescentros,
+                            ruta: 'personUser/updatedata'    
+                        }); 
+                    }
+                }
+                if (req.body.zone != null){
+                    newzone= req.body.zone;
+                    datoACambiar+=" zona"
+                    DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email])
+                }
+                await transporter.sendMail({
+                    from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
+                    to: email, // list of receivers
+                    subject: "Se han cambiado tus datos!", // Subject line
+                    text: `Se han cambiado exitosamente los siguientes datos de tu cuenta de vacunassist: ${datoACambiar}`
+                });
+                return res.render('updatedata', {
+                    alert: true,
+                    alertTitle: "Actualizacion de datos exitosa",
+                    alertMessage: "¡ACTUALIZACION CORRECTA!",
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    centres:nombrescentros,
+                    timer: false,
+                    ruta: 'personUser/updatedata'
+                });
+            }else{
+                res.render('updatedata', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Contraseña incorrecta",
+                    alertIcon:'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    centres:nombrescentros,
+                    ruta: 'personUser/updatedata'    
+                }); 
             }
-            if (req.body.zone != null){
-                newzone= req.body.zone;
-                datoACambiar+=" zona"
-                DB.query('UPDATE personuser SET zone = ? WHERE email = ?', [newzone, email])
-            }
-            await transporter.sendMail({
-                from: '"Vacunassist" <code.guess2022@gmail.com>', // sender address
-                to: email, // list of receivers
-                subject: "Se han cambiado tus datos!", // Subject line
-                text: `Se han cambiado exitosamente los siguientes datos de tu cuenta de vacunassist: ${datoACambiar}`
-            });
-            return res.render('updatedata', {
-                alert: true,
-                alertTitle: "Actualizacion de datos exitosa",
-                alertMessage: "¡ACTUALIZACION CORRECTA!",
-                alertIcon:'success',
-                showConfirmButton: false,
-                timer: false,
-                ruta: 'personUser/updatedata'
-            });
-        }else{
-            res.render('updatedata', {
-                alert: true,
-                alertTitle: "Error",
-                alertMessage: "Contraseña incorrecta",
-                alertIcon:'error',
-                showConfirmButton: true,
-                timer: false,
-                ruta: 'personUser/updatedata'    
-            }); 
-        }
-    })
+        });
+    });
 });
 
 
