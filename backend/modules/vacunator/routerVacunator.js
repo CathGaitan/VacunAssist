@@ -45,6 +45,9 @@ routerVacunator.get('/infovaccines', (req, res)=> {
 routerVacunator.get('/viewlist', (req, res)=> {
     res.render('viewlist');
 })
+routerVacunator.get('/changeRisk', (req, res)=> {
+    res.render('changeRiskStatus');
+})
 
 //autenticacion
 routerVacunator.post('/auth', async (req, res)=>{
@@ -428,5 +431,37 @@ routerVacunator.post('/recordVaccination', async(req,res)=>{
     });
 });
 
+
+routerVacunator.post('/changeRisk',async(req,res)=>{
+    let usermail=req.body.usermail;
+    let newRisk=req.body.risk;
+    DB.query('SELECT * FROM personuser WHERE email = ?',usermail,async (error,user)=>{
+        console.log(newRisk);
+        console.log(usermail);
+        if(user.length==1){
+            DB.query('UPDATE personuser SET risk = ? WHERE email = ?',[newRisk,usermail],async (error, results)=>{
+                res.render('changeRiskStatus', {
+                    alert: true,
+                    alertTitle: "Estado cambiado",
+                    alertMessage: `Se ha cambiado el estado de riesgo del usuario ${usermail}`,
+                    alertIcon:'success',
+                    showConfirmButton: false,
+                    timer: false,
+                    ruta: 'vacunator/changeRisk'
+                });
+            });
+        }else{
+            res.render('changeRiskStatus', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "Ese usuario no existe en el sistema",
+                alertIcon:'error',
+                showConfirmButton: false,
+                timer: false,
+                ruta: 'vacunator/changeRisk'
+            });
+        }
+    });
+});
 
 module.exports=routerVacunator;
