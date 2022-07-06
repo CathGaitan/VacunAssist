@@ -20,6 +20,15 @@ routerAdministrator.get('/login', (req, res)=> {
     });
 });
 
+routerAdministrator.get('/verbajas', (req, res)=> {
+    res.render('verbajas');
+})
+
+routerAdministrator.get('/otorgarBaja', (req, res)=>{
+    res.render('otorgarBaja')
+})
+
+
 
 
 //autenticacion
@@ -74,6 +83,38 @@ routerAdministrator.get('/dashboard', (req, res)=> { //controla el dashboard
 		});
         res.end();			
 	}
+});
+
+routerAdministrator.get('/verBajasAdministrator', async (req, res)=> {
+    let cancel= 'accountcancelationreq';
+    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
+        res.render('verbajas',{
+        accounts:results,
+        });
+    });
+});
+
+routerAdministrator.post('/otorgarBaja', async (req, res)=>{
+    let cancel= 'accountcancelationreq';
+    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
+        for (let i=0; i<results.length; i++){
+            console.log(req.body[results[i].id]);
+            if (req.body[results[i].id]){
+                DB.query ('DELETE FROM personuser WHERE id = ?', req.body.results[i].id, async (req, results)=>{
+                    console.log('eliminado ;)');
+                });
+            }
+        };
+        res.render('otorgarBaja', {
+            alert: true,
+            alertTitle: "Usuarios eliminados",
+            alertMessage: "La baja de los usuarios seleccionados fue exitosa",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: 5000,
+            ruta: 'administrator/dashboard'
+        });
+    });
 });
 
 module.exports=routerAdministrator;
