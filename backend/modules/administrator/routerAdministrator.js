@@ -20,7 +20,6 @@ routerAdministrator.get('/login', (req, res)=> {
     });
 });
 
-
 routerAdministrator.get('/viewMap',async(req,res)=>{
     res.render('viewMap',{
         name:""
@@ -136,11 +135,33 @@ routerAdministrator.post('/changeNameVaccinationCentre',async(req,res)=>{
     });
 });
 
+routerAdministrator.get('/usersList', async (req, res)=> {
+    DB.query('SELECT * FROM personuser', async (req, results)=> {
+        for(let i=0; i<results.length; i++){
+            results[i].dateofbirth= (results[i].dateofbirth).toLocaleDateString();
+    }
+        res.render('veruserlist',{
+            accounts:results,
+        });
+    });
+})
+
+routerAdministrator.get('/vaccinesList', async (req, res)=> {
+    DB.query('SELECT turn.vaccinename, turn.dose, personuser.name, personuser.lastname, personuser.zone, personuser.email, personuser.DNI, turn.date FROM turn JOIN personuser WHERE turn.state = ?', "Aplicada", async (req, results)=> {
+        for(let i=0; i<results.length; i++){
+            results[i].date= (results[i].date).toLocaleDateString();
+    }
+        res.render('vervaccinelist',{
+            accounts:results,
+        });
+    });
+})
+
 routerAdministrator.get('/verBajasAdministrator', async (req, res)=> {
     let cancel= 'accountcancelationreq';
     DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
         res.render('verbajas',{
-        accounts:results,
+            accounts:results,
         });
     });
 });

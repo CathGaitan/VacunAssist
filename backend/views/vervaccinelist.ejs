@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de vacunas aplicadas</title>
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <link rel="stylesheet" href="/resources/style.css">
+</head>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<br>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<br>
+<script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script> 
+
+<script>
+    let temp = $("#btn1").clone();
+    $("#btn1").click(function(){
+        $("#btn1").after(temp);
+    });
+
+    $(document).ready(function(){
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true 
+        });
+
+        //Creamos una fila en el head de la tabla y lo clonamos para cada columna
+        $('#example thead tr').clone(true).appendTo( '#example thead' );
+
+        $('#example thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text(); //es el nombre de la columna
+            $(this).html( '<input type="text" placeholder="Filtrar por '+title.toLocaleLowerCase()+'" />' );
+
+            $( 'input', this ).on( 'keyup change', function () {
+                if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );   
+    });
+</script>
+
+<body>
+    <br>
+    <h1>Listado de vacunas aplicadas</h1>
+    <br>
+    <% if (accounts.length != 0) { %>
+            <table id="example" class="display" >
+                <thead>
+                    <tr>
+                        <th>Nombre </th>
+                        <th>Apellido </th>
+                        <th>Email </th>
+                        <th>DNI </th>
+                        <th>Tipo de vacuna </th>
+                        <th>Dosis </th>
+                        <th>Fecha </th>
+                        <th>Vacunatorio </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(let i=0;i<accounts.length;i++){ %>
+                    <tr>
+                      <td><%= accounts[i].name %></td>
+                      <td><%= accounts[i].lastname %></td>
+                      <td><%= accounts[i].email %></td>
+                      <td><%= accounts[i].DNI %></td>
+                      <td><%= accounts[i].vaccinename %></td>
+                      <td><%= accounts[i].dose %></td>
+                      <td><%= accounts[i].date %></td>
+                      <td><%= accounts[i].zone %></td>
+                    </tr>
+                    <%  }  %>
+                  </tbody>
+            </table>
+            <br>
+    <%  }  %>
+
+    <a href="/administrator/dashboard" class="indexbtn">Volver al inicio</a>
+    <br>
+    <br>
+</body>
+</html>

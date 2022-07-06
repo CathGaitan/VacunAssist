@@ -84,6 +84,17 @@ body, .body{
     box-sizing: border-box;
 }
 
+.inputlistado{
+    width: 25%;
+    border-radius: 20px;
+    padding: 6px;
+    font-weight: bold;
+    font-family: 'Roboto';
+    border: 1px solid #000000;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
 label{
     font-weight: bolder;
 }
@@ -202,4 +213,28 @@ ul, ol {
     top:0px;
     width: 100%;
 }
+
+table {
+    width: 70%;
+    border: 1px solid #000;
+    align-content: center;
+    margin: auto;
+ }
+ th, td {
+    width: 25%;
+    text-align: center;
+    align-self: center;
+    vertical-align: top;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    padding: 0.3em;
+    caption-side: bottom;
+    background-color: rgb(227, 242, 220);
+ }
+ caption {
+    padding: 0.3em;
+    color: #fff;
+     background: #000;
+ }
+
 
