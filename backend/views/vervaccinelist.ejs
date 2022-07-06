@@ -50,15 +50,13 @@
     <h1>Listado de vacunas aplicadas</h1>
     <br>
     <% if (accounts.length != 0) { %>
-            <table id="example" class="display" >
+            <table id="example" class="display tablavac">
                 <thead>
                     <tr>
-                        <th>Nombre </th>
-                        <th>Apellido </th>
+                        <th>Nombre y Apellido</th>
                         <th>Email </th>
                         <th>DNI </th>
                         <th>Tipo de vacuna </th>
-                        <th>Dosis </th>
                         <th>Fecha </th>
                         <th>Vacunatorio </th>
                     </tr>
@@ -66,17 +64,15 @@
                 <tbody>
                     <% for(let i=0;i<accounts.length;i++){ %>
                     <tr>
-                      <td><%= accounts[i].name %></td>
-                      <td><%= accounts[i].lastname %></td>
-                      <td><%= accounts[i].email %></td>
-                      <td><%= accounts[i].DNI %></td>
-                      <td><%= accounts[i].vaccinename %></td>
-                      <td><%= accounts[i].dose %></td>
-                      <td><%= accounts[i].date %></td>
-                      <td><%= accounts[i].zone %></td>
+                        <td><%= accounts[i].name %> <%= accounts[i].lastname %></td>
+                        <td><%= accounts[i].email %></td>
+                        <td><%= accounts[i].DNI %></td>
+                        <td><%= accounts[i].vaccinename %></td>
+                        <td><%= accounts[i].date %></td>
+                        <td><%= accounts[i].zone %></td>
                     </tr>
                     <%  }  %>
-                  </tbody>
+                </tbody>
             </table>
             <br>
     <%  }  %>
