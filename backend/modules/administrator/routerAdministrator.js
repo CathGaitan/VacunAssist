@@ -127,19 +127,4 @@ routerAdministrator.post('/changeNameVaccinationCentre',async(req,res)=>{
     });
 });
 
-
-function userExist(usermail){
-    DB.query('SELECT COUNT(*) FROM personuser WHERE email = ?',usermail,async (error,results)=>{
-        return results===0
-    });
-}
-
-
-routerAdministrator.post('/changeToRisk',async(req,res)=>{
-    let usermail=req.body.usermail;
-
-    DB.query('UPDATE vaccinationcentres SET name = ? WHERE name = ?',usermail,async (error, results)=>{});
-
-});
-
 module.exports=routerAdministrator;
