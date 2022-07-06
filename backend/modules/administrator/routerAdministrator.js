@@ -26,7 +26,6 @@ routerAdministrator.get('/viewMap',async(req,res)=>{
     });
 })
 
-
 //autenticacion
 routerAdministrator.post('/auth', async (req, res)=>{
     const email = req.body.email;
@@ -93,5 +92,39 @@ routerAdministrator.use(function(req, res, next) {
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
 });
+
+routerAdministrator.get('/changeNameVaccinationCentre',async(req,res)=>{
+    DB.query('SELECT * FROM vaccinationcentres', async (error, results)=>{
+        res.render('changeNameVaccinationCentre',{
+            name:"",
+            centres:results
+        });
+    });
+});
+
+routerAdministrator.post('/changeNameVaccinationCentre',async(req,res)=>{
+    let oldName=req.body.changeName;
+    let newName=req.body.newName;
+    DB.query('UPDATE vaccinationcentres SET name = ? WHERE name = ?',[newName,oldName],async (error, results)=>{
+        DB.query('UPDATE vacunator SET zonaVacunatorio = ? WHERE zonaVacunatorio = ?',[newName,oldName],async (error, results)=>{
+            DB.query('UPDATE personUser SET zone = ? WHERE zone = ?',[newName,oldName],async (error, results)=>{
+                DB.query('SELECT * FROM vaccinationcentres', async (error, nombrescentros)=>{
+                    res.render('changeNameVaccinationCentre', {
+                        alert: true,
+                        alertTitle: "Cambio exitoso",
+                        alertMessage: "Se ha cambiado el nombre del vacunatorio",
+                        alertIcon:'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        centres:nombrescentros,
+                        ruta: 'administrator/changeNameVaccinationCentre'
+                    });     
+                });
+
+            });
+        });
+    });
+});
+
 
 module.exports=routerAdministrator;

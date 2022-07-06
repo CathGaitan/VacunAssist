@@ -46,9 +46,9 @@
             <label class="label" for="">Seleccione una zona de vacunatorio</label>
             <br>
             <select class="select" type="menu" name="zone" required>
-                <option value="municipalidad">Zona Municipalidad (51 e/10 y 11 nro 770)</option>
-                <option value="cementerio">Zona Cementerio (138 e/73 y 74 Nro 2035)</option>
-                <option value="terminal">Zona Terminal (3 e/41 y 42 nro 770)</option>
+                <option value="<%= centres[0].name %>"><%= centres[0].name %></option>
+                <option value="<%= centres[1].name %>"><%= centres[1].name %></option>
+                <option value="<%= centres[2].name %>"><%= centres[2].name %></option>
             </select>
             <div style="display: inline;">
                 <input type="submit" class="btn-save" value="Guardar" href="/personUser/saveInfoCovid">

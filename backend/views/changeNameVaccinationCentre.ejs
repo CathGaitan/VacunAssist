@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <title>Ver mis turnos</title>
+</head>
+<body>
+  <br>
+    <h1>Seleccione al vacuantorio que quiere cambiar el nombre</h1>
+    <br>
+    <form action="changeNameVaccinationCentre" method="post">
+        <select type="menu" name="changeName" required>
+          <option selected="true" disabled="disabled" value="empty">Zona vacunatorio</option>
+          <option value="<%= centres[0].name %>"><%= centres[0].name %></option>
+          <option value="<%= centres[1].name %>"><%= centres[1].name %></option>
+          <option value="<%= centres[2].name %>"><%= centres[2].name %></option>
+        </select>
+        <br><br>
+        <h3>Nuevo nombre del vacunatorio: </h3>
+        <input type="text" name="newName" required>
+        <br>
+        <input type="submit" class="indexbtn" value="Cambiar nombre">
+    </form>
+      <a href="/administrator/dashboard" class="indexbtn">Volver a inicio</a>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+      <% if (typeof alert != "undefined")  { %>
+        <script>
+        Swal.fire({
+          title:'<%= alertTitle %>',
+          text:'<%= alertMessage %>',
+          icon:'<%= alertIcon %>',
+          showConfirmButton: '<%= showConfirmButton %>',
+          timer: false
+        }).then(()=>{
+          window.location='/<%= ruta %>'
+        })
+        </script>
+       <% } %>
+</body>
+</html>
