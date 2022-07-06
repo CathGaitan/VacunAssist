@@ -27,6 +27,15 @@ routerAdministrator.get('/viewMap',async(req,res)=>{
     });
 })
 
+routerAdministrator.get('/verbajas', (req, res)=> {
+    res.render('verbajas');
+})
+
+routerAdministrator.get('/otorgarBaja', (req, res)=>{
+    res.render('otorgarBaja')
+})
+
+
 //autenticacion
 routerAdministrator.post('/auth', async (req, res)=>{
     const email = req.body.email;
@@ -125,6 +134,53 @@ routerAdministrator.post('/changeNameVaccinationCentre',async(req,res)=>{
             });
         });
     });
+});
+
+routerAdministrator.get('/verBajasAdministrator', async (req, res)=> {
+    let cancel= 'accountcancelationreq';
+    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
+        res.render('verbajas',{
+        accounts:results,
+        });
+    });
+});
+
+routerAdministrator.post('/otorgarBaja', async (req, res)=>{
+    let cancel= 'accountcancelationreq';
+    DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (req, results)=> {
+        for (let i=0; i<results.length; i++){
+            console.log(req.body[results[i].id]);
+            if (req.body[results[i].id]){
+                DB.query ('DELETE FROM personuser WHERE id = ?', req.body.results[i].id, async (req, results)=>{
+                    console.log('eliminado ;)');
+                });
+            }
+        };
+        res.render('otorgarBaja', {
+            alert: true,
+            alertTitle: "Usuarios eliminados",
+            alertMessage: "La baja de los usuarios seleccionados fue exitosa",
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: 5000,
+            ruta: 'administrator/dashboard'
+        });
+    });
+});
+
+
+function userExist(usermail){
+    DB.query('SELECT COUNT(*) FROM personuser WHERE email = ?',usermail,async (error,results)=>{
+        return results===0
+    });
+}
+
+
+routerAdministrator.post('/changeToRisk',async(req,res)=>{
+    let usermail=req.body.usermail;
+
+    DB.query('UPDATE vaccinationcentres SET name = ? WHERE name = ?',usermail,async (error, results)=>{});
+
 });
 
 module.exports=routerAdministrator;
