@@ -20,6 +20,16 @@ routerAdministrator.get('/login', (req, res)=> {
     });
 });
 
+routerAdministrator.get('/verbajas', (req, res)=> {
+    res.render('verbajas');
+})
+
+routerAdministrator.get('/otorgarBaja', (req, res)=>{
+    res.render('otorgarBaja')
+})
+
+
+
 routerAdministrator.get('/viewMap',async(req,res)=>{
     res.render('viewMap',{
         name:""
