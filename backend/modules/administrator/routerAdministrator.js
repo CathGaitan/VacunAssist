@@ -170,11 +170,8 @@ routerAdministrator.post('/otorgarBaja', async (req, res)=>{
     let cancel= 'accountcancelationreq';
     DB.query('SELECT * FROM personuser WHERE state = ?', cancel, async (requ, results)=> {
         for (let i=0; i<results.length; i++){
-            console.log("user id:",req.body[results[i].id]);
             if (req.body[results[i].id]){
-                DB.query ('DELETE FROM personuser WHERE id = ?', req.body[results[i].id], async (req, results)=>{
-                    console.log('eliminado');
-                });
+                DB.query ('DELETE FROM personuser WHERE id = ?', req.body[results[i].id], async (req, results)=>{});
             }
         };
         res.render('verbajas', {
