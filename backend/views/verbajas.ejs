@@ -17,7 +17,7 @@
     <% if (accounts.length != 0) {
         for(let i=0;i<accounts.length;i++){ %>
             <br>
-                <input type="checkbox" value="1" name=<%= accounts[i].id %> id=<%= accounts[i].id %> > Nombre y apellido: <%= accounts[i].name %> <%= accounts[i].lastname %>
+                <input type="checkbox" value=<%= accounts[i].id %> name=<%= accounts[i].id %> id=<%= accounts[i].id %> > Nombre y apellido: <%= accounts[i].name %> <%= accounts[i].lastname %>
                 <p>Email: <%= accounts[i].email %></p>
                 <p>Motivo: <%= accounts[i].unsubscribemotive %></p>
     <%  }  %>
