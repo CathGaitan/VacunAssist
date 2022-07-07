@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <title>dar turno</title>
+</head>
+<body>
+    <h1>Asignarle un turno a un usuario</h1>
+    <br>
+    <form action="elegirvacuna" method="post">
+        <label class="label" for="">Elija una vacuna:</label>
+        <br>
+        <select class="select" type="menu" name="elegirnombrevacuna" required>
+            <option selected="true" disabled="disabled" value="empty" required></option>
+            <option value="Covid-19">Covid-19</option>
+            <option value="Fiebre Amarilla">Fiebre Amarilla</option>
+        </select>
+        <div style="display: inline;"><input type="submit" class="btn-save" value="Elegir vacuna"></div>
+        <br>
+    </form>
+    <% if(turnosvacuna.length != 0){ %>
+        <% for(let i=0;i<turnosvacuna.length;i++){ %>
+            <br>
+            <form action="elegirTurno" method="post">
+                    <input type="radio" name="eleccionTurno" required value=<%= turnosvacuna[i].id %>>
+                    <label>Nombre: <%= turnosvacuna[i].name %> <%= turnosvacuna[i].lastname %></label><br>
+                    <label>Nombre vacuna: <%= turnosvacuna[i].vaccinename %></label><br>
+                    <label>Dosis: <%= turnosvacuna[i].dose %></label><br>
+        <%  }  %>
+                <input type="submit" class="btn-save" value="Elegir turno">
+            </form>
+    <% } %>
+    <% if(activate){ %>
+        <br>
+        <p>No hay turnos pendientes para esa vacuna.</p>
+    <% } %>
+    <a href="/administrator/dashboard" class="indexbtn">Volver a inicio</a>
+    <br>
+    <br>
+</body>
+</html>

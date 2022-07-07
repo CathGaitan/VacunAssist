@@ -187,4 +187,52 @@ routerAdministrator.post('/otorgarBaja', async (req, res)=>{
     });
 });
 
+routerAdministrator.get('/elegirVacuna',async(req, res)=>{
+    res.render('elegirVacuna',{
+        turnosvacuna:[],
+        activate:false
+
+    });
+});
+
+routerAdministrator.post('/elegirvacuna',async(req, res)=>{
+    let vaccinename=req.body.elegirnombrevacuna;
+    let activar;
+    DB.query('SELECT turn.id,name,lastname,vaccinename,dose FROM turn JOIN personuser WHERE turn.vaccinename = ? AND turn.state = ? AND turn.idpersonuser = personuser.id',[vaccinename,"Pendiente"], async(error, results)=>{
+        if(results.length==0) activar=true;
+        res.render('elegirVacuna',{
+            turnosvacuna:results,
+            activate:activar
+        })
+    });
+});
+
+routerAdministrator.get('/elegirTurno',async(req, res)=>{
+    res.render('darTurno');
+});
+
+let idturno;
+routerAdministrator.post('/elegirTurno',async(req, res)=>{
+    res.render('darTurno');
+    idturno=req.body.eleccionTurno;
+});
+
+routerAdministrator.post('/darTurno',async(req, res)=>{
+    let fechaTurno=req.body.fechaturno;
+    console.log(fechaTurno);
+    console.log(idturno);
+    DB.query('UPDATE turn SET state = ?, date = ? WHERE id = ?',["Otorgado",fechaTurno,idturno], async(error, results)=>{
+        res.render('darTurno', {
+            alert: true,
+            alertTitle: "Turno asignado",
+            alertMessage: `Se ha asignado el turno exitosamente para el dia: ${fechaTurno}`,
+            alertIcon:'success',
+            showConfirmButton: false,
+            timer: 5000,
+            accounts:results,
+            ruta: 'administrator/elegirVacuna'
+        });
+    });
+});
+
 module.exports=routerAdministrator;

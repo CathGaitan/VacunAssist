@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/resources/logoFINAL.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/style.css">
+    <title>dar Turno</title>
+</head>
+<body>
+    <br>
+    <h1>Ingrese que asignara al turno</h1>
+    <form action="darTurno" method="post">
+        <input class="datef" type="date" name="fechaturno"/>
+        <input type="submit" class="indexbtn" value="dar Turno">
+    </form>
+      <a href="/administrator/dashboard" class="indexbtn">Volver a inicio</a>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+      <% if (typeof alert != "undefined")  { %>
+        <script>
+        Swal.fire({
+          title:'<%= alertTitle %>',
+          text:'<%= alertMessage %>',
+          icon:'<%= alertIcon %>',
+          showConfirmButton: '<%= showConfirmButton %>',
+          timer: false
+        }).then(()=>{
+          window.location='/<%= ruta %>'
+        })
+        </script>
+       <% } %>
+</body>
+</html>
