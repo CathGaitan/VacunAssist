@@ -139,6 +139,11 @@ routerAdministrator.get('/usersList', async (req, res)=> {
     DB.query('SELECT * FROM personuser', async (req, results)=> {
         for(let i=0; i<results.length; i++){
             results[i].dateofbirth= (results[i].dateofbirth).toLocaleDateString();
+            if (results[i].risk == 1){
+                results[i].risk= "Si";
+            }else{
+                results[i].risk= "No";
+            }
     }
         res.render('veruserlist',{
             accounts:results,
