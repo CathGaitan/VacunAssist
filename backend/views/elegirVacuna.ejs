@@ -19,7 +19,7 @@
             <option value="Covid-19">Covid-19</option>
             <option value="Fiebre Amarilla">Fiebre Amarilla</option>
         </select>
-        <div style="display: inline;"><input type="submit" class="btn-save" value="Elegir vacuna"></div>
+        <div style="display: inline;"><input type="submit" class="indexbtn" value="Elegir vacuna"></div>
         <br>
     </form>
     <% if(turnosvacuna.length != 0){ %>
@@ -31,7 +31,7 @@
                     <label>Nombre vacuna: <%= turnosvacuna[i].vaccinename %></label><br>
                     <label>Dosis: <%= turnosvacuna[i].dose %></label><br>
         <%  }  %>
-                <input type="submit" class="btn-save" value="Elegir turno">
+                <input type="submit" class="indexbtn" value="Elegir turno">
             </form>
     <% } %>
     <% if(activate){ %>
