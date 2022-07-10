@@ -152,7 +152,7 @@ routerAdministrator.get('/usersList', async (req, res)=> {
 })
 
 routerAdministrator.get('/vaccinesList', async (req, res)=> {
-    DB.query('SELECT turn.vaccinename, turn.dose, personuser.name, personuser.lastname, personuser.zone, personuser.email, personuser.DNI, turn.date FROM turn JOIN personuser WHERE turn.state = ? AND turn.idpersonuser = personuser.id', "Aplicada", async (req, results)=> {
+    DB.query('SELECT turn.vaccinename, turn.dose,turn.observation, personuser.name, personuser.lastname, personuser.zone, personuser.email, personuser.DNI, turn.date FROM turn JOIN personuser WHERE turn.state = ? AND turn.idpersonuser = personuser.id', "Aplicada", async (req, results)=> {
         for(let i=0; i<results.length; i++){
             results[i].date= (results[i].date).toLocaleDateString();
     }
