@@ -15,9 +15,10 @@
 <script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script> 
 
 <script>
-    let temp = $("#btn1").clone();
-    $("#btn1").click(function(){
-        $("#btn1").after(temp);
+
+    let temp = $("#btn1 ").clone();
+    $("#btn1 ").click(function(){
+        $("#btn1 ").after(temp);
     });
 
     $(document).ready(function(){
@@ -33,10 +34,10 @@
             var title = $(this).text(); //es el nombre de la columna
             $(this).html( '<input type="text" placeholder="Filtrar por '+title.toLocaleLowerCase()+'" />' );
 
-            $( 'input', this ).on( 'keyup change', function () {
+            $( 'input ', this ).on( 'keyup change ', function () {
                 if ( table.column(i).search() !== this.value ) {
                     table
-                        .column(i)
+                        .column(i )
                         .search( this.value )
                         .draw();
                 }
