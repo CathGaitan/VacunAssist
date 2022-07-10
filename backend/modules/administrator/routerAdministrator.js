@@ -172,6 +172,7 @@ routerAdministrator.post('/otorgarBaja', async (req, res)=>{
         for (let i=0; i<results.length; i++){
             if (req.body[results[i].id]){
                 DB.query ('DELETE FROM personuser WHERE id = ?', req.body[results[i].id], async (req, results)=>{});
+                DB.query ('DELETE FROM turn WHERE idpersonuser = ?', req.body[results[i].id], async (req, results)=>{});
             }
         };
         res.render('verbajas', {
